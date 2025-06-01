@@ -1,0 +1,516 @@
+﻿@model Soccer.Font_end.ViewModels.OrderDto
+@{
+    ViewData["Title"] = $"Chi tiết đơn hàng - #{Model.OrderID}";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4>Chi tiết đơn hàng - #@Model.OrderID</h4>
+                            <small>Đặt hàng vào ngày @Model.OrderDate.ToString("dd/MM/yyyy 'lúc' HH:mm")</small>
+                        </div>
+                        <div>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Quay lại danh sách
+                            </a>
+                            <button class="btn btn-primary" onclick="window.print()">
+                                <i class="fa fa-printer"></i> In đơn hàng
+                            </button>
+                            <button class="btn btn-info" onclick="exportOrderPDF(@Model.OrderID)">
+                                <i class="fa fa-download"></i> Xuất PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <!-- Thông tin đơn hàng -->
+            <div class="col-xl-8 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin đơn hàng</h3>
+                        <div class="card-options">
+                            @{
+                                var statusClass = Model.Status switch
+                                {
+                                    "Pending" => "badge-warning",
+                                    "Processing" => "badge-info",
+                                    "Completed" => "badge-success",
+                                    "Cancelled" => "badge-danger",
+                                    "Shipped" => "badge-primary",
+                                    "Delivered" => "badge-success",
+                                    _ => "badge-secondary"
+                                };
+
+                                var statusIcon = Model.Status switch
+                                {
+                                    "Pending" => "fa fa-clock-o",
+                                    "Processing" => "fa fa-cog",           // hoặc "fa fa-spinner"
+                                    "Completed" => "fa fa-check-circle",
+                                    "Cancelled" => "fa fa-times-circle",
+                                    "Shipped" => "fa fa-truck",
+                                    "Delivered" => "fa fa-check",
+                                    _ => "fa fa-question-circle"
+                                };
+                            }
+                            <span class="badge @statusClass">
+                                <i class="fa @statusIcon mr-1"></i>@Model.Status
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label font-weight-bold text-muted">Mã đơn hàng</label>
+                                    <p class="form-control-plaintext font-weight-bold">#@Model.OrderID</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label font-weight-bold text-muted">Tên khách hàng</label>
+                                    <p class="form-control-plaintext">
+                                        <i class="fa fa-user mr-2 text-muted"></i>@Model.UserName
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label font-weight-bold text-muted">Ngày đặt hàng</label>
+                                    <p class="form-control-plaintext">
+                                        <i class="fa fa-calendar mr-2 text-muted"></i>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label font-weight-bold text-muted">Phương thức thanh toán</label>
+                                    <p class="form-control-plaintext">
+                                        <i class="fa fa-credit-card mr-2 text-muted"></i>@Model.PaymentMethod
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label font-weight-bold text-muted">Phương thức vận chuyển</label>
+                                    <p class="form-control-plaintext">
+                                        <i class="fa fa-truck mr-2 text-muted"></i>@Model.ShippingMethod
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label font-weight-bold text-muted">Tổng tiền</label>
+                                    <p class="form-control-plaintext font-weight-bold text-success font-20">
+                                        @Model.TotalAmount.ToString("C")
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label font-weight-bold text-muted">Địa chỉ giao hàng</label>
+                            <div class="card bg-light">
+                                <div class="card-body py-2">
+                                    <p class="mb-0">
+                                        <i class="fa fa-map-marker mr-2 text-muted"></i>@Model.Address
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sản phẩm trong đơn hàng -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Sản phẩm đã đặt (@Model.Items.Count sản phẩm)</h3>
+                        <div class="card-options">
+                            <span class="badge badge-info">
+                                Tổng: @Model.Items.Sum(i => i.Quantity) sản phẩm
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-vcenter mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th class="text-center">Số lượng</th>
+                                        <th class="text-right">Đơn giá</th>
+                                        <th class="text-right">Giá vốn</th>
+                                        <th class="text-right">Lợi nhuận</th>
+                                        <th class="text-right">Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        var profit = (item.UnitPrice - item.UnitCost) * item.Quantity;
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar avatar-md mr-3 bg-primary text-white">
+                                                        @item.ProductName.Substring(0, 1).ToUpper()
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0 font-weight-bold">@item.ProductName</h6>
+                                                        <small class="text-muted">
+                                                            Thiết bị bóng đá chất lượng cao
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge badge-primary badge-pill">@item.Quantity</span>
+                                            </td>
+                                            <td class="text-right font-weight-bold">@item.UnitPrice.ToString("C")</td>
+                                            <td class="text-right text-muted">@item.UnitCost.ToString("C")</td>
+                                            <td class="text-right">
+                                                <span class="@(profit > 0 ? "text-success" : "text-danger") font-weight-bold">
+                                                    @profit.ToString("C")
+                                                </span>
+                                            </td>
+                                            <td class="text-right font-weight-bold text-primary">@item.Total.ToString("C")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot class="bg-light">
+                                    <tr>
+                                        <th colspan="5" class="text-right">Tạm tính:</th>
+                                        <th class="text-right">@Model.Items.Sum(i => i.Total).ToString("C")</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="5" class="text-right">Phí vận chuyển:</th>
+                                        <th class="text-right">
+                                            @{
+                                                var shipping = Model.TotalAmount - Model.Items.Sum(i => i.Total);
+                                            }
+                                            @shipping.ToString("C")
+                                        </th>
+                                    </tr>
+                                    <tr class="border-top">
+                                        <th colspan="5" class="text-right font-18">Tổng cộng:</th>
+                                        <th class="text-right font-18 text-success font-weight-bold">@Model.TotalAmount.ToString("C")</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="5" class="text-right text-muted">Tổng lợi nhuận:</th>
+                                        <th class="text-right text-success font-weight-bold">
+                                            @Model.Items.Sum(i => (i.UnitPrice - i.UnitCost) * i.Quantity).ToString("C")
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thao tác đơn hàng -->
+            <div class="col-xl-4 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thao tác đơn hàng</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label class="form-label font-weight-bold">Cập nhật trạng thái</label>
+                            <div class="btn-group-vertical w-100" role="group">
+                                <button type="button" class="btn btn-outline-warning mb-2" onclick="updateOrderStatus(@Model.OrderID, 1, 'Pending')">
+                                    <i class="fa fa-clock-o mr-2"></i> Chờ xử lý
+                                </button>
+                                <button type="button" class="btn btn-outline-info mb-2" onclick="updateOrderStatus(@Model.OrderID, 2, 'Processing')">
+                                    <i class="fa fa-cog mr-2"></i> Đang xử lý
+                                </button>
+                                <button type="button" class="btn btn-outline-primary mb-2" onclick="updateOrderStatus(@Model.OrderID, 3, 'Shipped')">
+                                    <i class="fa fa-truck mr-2"></i> Đã giao vận
+                                </button>
+                                <button type="button" class="btn btn-outline-success mb-2" onclick="updateOrderStatus(@Model.OrderID, 4, 'Delivered')">
+                                    <i class="fa fa-check mr-2"></i> Đã giao hàng
+                                </button>
+                                <button type="button" class="btn btn-outline-success mb-2" onclick="updateOrderStatus(@Model.OrderID, 5, 'Completed')">
+                                    <i class="fa fa-check-circle mr-2"></i> Hoàn thành
+                                </button>
+                                <button type="button" class="btn btn-outline-danger" onclick="updateOrderStatus(@Model.OrderID, 6, 'Cancelled')">
+                                    <i class="fa fa-times-circle mr-2"></i> Hủy đơn
+                                </button>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-4">
+                            <label class="form-label font-weight-bold">Thao tác khác</label>
+                            <div class="btn-group-vertical w-100" role="group">
+                                <button type="button" class="btn btn-outline-secondary mb-2" onclick="sendOrderEmail(@Model.OrderID)">
+                                    <i class="fa fa-envelope mr-2"></i> Gửi email xác nhận
+                                </button>
+                                <button type="button" class="btn btn-outline-info mb-2" onclick="trackingOrder(@Model.OrderID)">
+                                    <i class="fa fa-map-marker mr-2"></i> Theo dõi đơn hàng
+                                </button>
+                                <button type="button" class="btn btn-outline-warning mb-2" onclick="editOrder(@Model.OrderID)">
+                                    <i class="fa fa-pencil mr-2"></i> Chỉnh sửa đơn hàng
+                                </button>
+                                <button type="button" class="btn btn-outline-danger" onclick="deleteOrder(@Model.OrderID)">
+                                    <i class="fa fa-trash mr-2"></i> Xóa đơn hàng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thống kê đơn hàng -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thống kê đơn hàng</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h4 class="text-primary">@Model.Items.Count</h4>
+                                    <small class="text-muted">Loại sản phẩm</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h4 class="text-info">@Model.Items.Sum(i => i.Quantity)</h4>
+                                    <small class="text-muted">Tổng số lượng</small>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="text-center">
+                                    <h5 class="text-success">@Model.Items.Sum(i => (i.UnitPrice - i.UnitCost) * i.Quantity).ToString("C")</h5>
+                                    <small class="text-muted">Lợi nhuận từ đơn hàng</small>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-12">
+                                <small class="text-muted">
+                                    <strong>Tỷ lệ lợi nhuận:</strong>
+                                    @{
+                                        var profitMargin = Model.TotalAmount > 0 ?
+                                        (Model.Items.Sum(i => (i.UnitPrice - i.UnitCost) * i.Quantity) / Model.TotalAmount * 100) : 0;
+                                    }
+                                    <span class="text-success font-weight-bold">@profitMargin.ToString("F1")%</span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline trạng thái -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Lịch sử đơn hàng</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-item-marker">
+                                    <div class="timeline-item-marker-text">@Model.OrderDate.ToString("HH:mm")</div>
+                                    <div class="timeline-item-marker-indicator bg-success"></div>
+                                </div>
+                                <div class="timeline-item-content">
+                                    <h6 class="timeline-item-title">Đơn hàng được tạo</h6>
+                                    <p class="timeline-item-desc">Khách hàng @Model.UserName đã đặt đơn hàng</p>
+                                    <span class="timeline-item-time">@Model.OrderDate.ToString("dd/MM/yyyy")</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-item-marker">
+                                    <div class="timeline-item-marker-indicator bg-@(Model.Status == "Completed" ? "success" : "warning")"></div>
+                                </div>
+                                <div class="timeline-item-content">
+                                    <h6 class="timeline-item-title">Trạng thái hiện tại</h6>
+                                    <p class="timeline-item-desc">@Model.Status</p>
+                                    <span class="timeline-item-time">Cập nhật lần cuối</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Cập nhật trạng thái đơn hàng
+        function updateOrderStatus(orderId, statusId, statusName) {
+            if (confirm(`Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng thành "${statusName}"?`)) {
+                $.ajax({
+                    url: '@Url.Action("UpdateStatus", "Order")',
+                    type: 'POST',
+                    data: {
+                        orderId: orderId,
+                        statusId: statusId
+                    },
+                    success: function(response) {
+                        toastr.success('Cập nhật trạng thái thành công!');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500);
+                    },
+                    error: function() {
+                        toastr.error('Có lỗi xảy ra khi cập nhật trạng thái!');
+                    }
+                });
+            }
+        }
+
+        // Xóa đơn hàng
+        function deleteOrder(orderId) {
+            if (confirm('Bạn có chắc chắn muốn xóa đơn hàng này? Hành động này không thể hoàn tác!')) {
+                $.ajax({
+                    url: '@Url.Action("Delete", "Order")',
+                    type: 'POST',
+                    data: { id: orderId },
+                    success: function(response) {
+                        toastr.success('Xóa đơn hàng thành công!');
+                        setTimeout(function() {
+                            window.location.href = '@Url.Action("Index", "Order")';
+                        }, 1500);
+                    },
+                    error: function() {
+                        toastr.error('Có lỗi xảy ra khi xóa đơn hàng!');
+                    }
+                });
+            }
+        }
+
+        // Gửi email xác nhận
+        function sendOrderEmail(orderId) {
+            toastr.info('Đang gửi email...');
+            // Implement email sending logic
+            setTimeout(function() {
+                toastr.success('Email xác nhận đã được gửi!');
+            }, 2000);
+        }
+
+        // Theo dõi đơn hàng
+        function trackingOrder(orderId) {
+            window.open('/Admin/Order/Tracking/' + orderId, '_blank');
+        }
+
+        // Chỉnh sửa đơn hàng
+        function editOrder(orderId) {
+            window.location.href = '/Admin/Order/Edit/' + orderId;
+        }
+
+        // Xuất PDF
+        function exportOrderPDF(orderId) {
+            window.open('/Admin/Order/ExportPDF/' + orderId, '_blank');
+        }
+
+        // Print styles
+        window.addEventListener('beforeprint', function() {
+            document.querySelectorAll('.btn, .card-options').forEach(el => {
+                el.style.display = 'none';
+            });
+        });
+
+        window.addEventListener('afterprint', function() {
+            document.querySelectorAll('.btn, .card-options').forEach(el => {
+                el.style.display = '';
+            });
+        });
+
+        // Auto refresh status every 30 seconds
+        setInterval(function() {
+            // Check for status updates
+        }, 30000);
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                    toastr.success('@TempData["SuccessMessage"]');
+            </text>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+                    toastr.error('@TempData["ErrorMessage"]');
+            </text>
+        }
+    </script>
+}
+
+<style>
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-bottom: 20px;
+    }
+
+        .timeline-item:not(:last-child):before {
+            content: '';
+            position: absolute;
+            left: -21px;
+            top: 30px;
+            height: calc(100% - 10px);
+            width: 2px;
+            background-color: #e9ecef;
+        }
+
+    .timeline-item-marker {
+        position: absolute;
+        left: -30px;
+        top: 0;
+    }
+
+    .timeline-item-marker-text {
+        font-size: 11px;
+        color: #6c757d;
+        margin-bottom: 5px;
+    }
+
+    .timeline-item-marker-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 2px #e9ecef;
+    }
+
+    .timeline-item-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .timeline-item-desc {
+        font-size: 13px;
+        color: #6c757d;
+        margin-bottom: 5px;
+    }
+
+    .timeline-item-time {
+        font-size: 11px;
+        color: #adb5bd;
+    }
+
+    @@media print {
+        .btn, .card-options, .timeline
+
+    {
+        display: none !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #dee2e6 !important;
+    }
+
+    }
+</style>

@@ -1,0 +1,167 @@
+﻿@using Soccer.Font_end.ViewModels
+@model List<PaymentMethodDto>
+@{
+    ViewData["Title"] = "Payment Methods";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <!-- Notification Messages -->
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                @TempData["Error"]
+            </div>
+        }
+
+        <!-- Add Payment Method Form -->
+        <div class="row clearfix row-deck">
+            <div class="col-xl-4 col-lg-12 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thêm phương thức thanh toán</h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Create" method="post">
+                            <div class="form-group">
+                                <label for="methodName">Tên phương thức</label>
+                                <input type="text" class="form-control" id="methodName" name="methodName" placeholder="Nhập tên phương thức thanh toán" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Thêm phương thức</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Methods Table -->
+            <div class="col-xl-8 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Phương thức thanh toán</h3>
+                        <div class="card-options">
+                            <a href="#" class="card-options-collapse" data-toggle="card-collapse">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a href="#" class="card-options-fullscreen" data-toggle="card-fullscreen">
+                                <i class="fa fa-expand"></i>
+                            </a>
+                            <a href="#" class="card-options-remove" data-toggle="card-remove">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="paymentMethodChart" width="400" height="200"></canvas>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped table-vcenter mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tên phương thức</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        foreach (var method in Model)
+                                        {
+                                            <tr>
+                                                <td>@method.PaymentMethodID</td>
+                                                <td>@method.MethodName</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editModal-@method.PaymentMethodID">Sửa</button>
+                                                    <form asp-action="Delete" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc là bạn muốn xóa phương thức thanh toán này?');">
+                                                        <input type="hidden" name="id" value="@method.PaymentMethodID" />
+                                                        <button type="submit" class="btn btn-sm btn-danger">Xóa bỏ</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Edit Modal -->
+                                            <div class="modal fade" id="editModal-@method.PaymentMethodID" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Chỉnh sửa phương thức thanh toán</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <form asp-action="Update" method="post">
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="id" value="@method.PaymentMethodID" />
+                                                                <div class="form-group">
+                                                                    <label for="methodName-@method.PaymentMethodID">Tên phương thức</label>
+                                                                    <input type="text" class="form-control" id="methodName-@method.PaymentMethodID" name="methodName" value="@method.MethodName" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                                <button type="submit" class="btn btn-primary">Lưu các thay đổi</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="3" class="text-center">Không tìm thấy phương thức thanh toán.</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.alert').delay(5000).fadeOut('slow'); // Auto-hide alerts after 5 seconds
+            var chartData = {
+                type: 'bar',
+                data: {
+                    labels: @Json.Serialize(Model.Select(m => m.MethodName)),
+                    datasets: [{
+                        label: 'Payment Methods',
+                        data: @Json.Serialize(Model.Select(m => m.PaymentMethodID)), // Replace with actual transaction counts
+                        backgroundColor: ['#007bff', '#28a745', '#dc3545', '#ffc107'],
+                        borderColor: ['#0056b3', '#218838', '#c82333', '#e0a800'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    }
+                }
+            };
+
+            new Chart(document.getElementById('paymentMethodChart'), chartData);
+        });
+    </script>
+}

@@ -1,0 +1,21 @@
+﻿services:
+  soccer.business-logic:
+    image: ${DOCKER_REGISTRY-}soccerbusinesslogic
+    build:
+      context: .
+      dockerfile: Soccer.Business-Logic/Dockerfile
+    networks:
+      - demo
+    ports:
+      - "8444:443"  # Cổng HTTPS
+      - "8085:80"   # Cổng HTTP 
+    environment:
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=GaDev#32
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - /root/.aspnet/https:/https:ro
+networks:
+  demo:
+    driver: bridge

@@ -1,0 +1,94 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model CreateRoleViewModel
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Tạo vai trò mới</h4>
+                    <small>Thêm vai trò mới vào hệ thống để phân quyền người dùng</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin vai trò</h3>
+                        <div class="card-options">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["Error"]</div>
+                        }
+
+                        <form asp-action="Create" method="post">
+                            <div class="form-group">
+                                <label asp-for="RoleName" class="form-label">Tên vai trò <span class="text-danger">*</span></label>
+                                <input asp-for="RoleName" class="form-control" placeholder="Nhập tên vai trò (VD: Admin, User, Manager...)">
+                                <span asp-validation-for="RoleName" class="text-danger"></span>
+                                <small class="form-text text-muted">Tên vai trò phải là duy nhất trong hệ thống</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description" class="form-label">Mô tả</label>
+                                <textarea asp-for="Description" class="form-control" rows="3" placeholder="Mô tả về vai trò này và quyền hạn của nó"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Tạo vai trò
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary ml-2">Hủy</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role Guidelines -->
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Hướng dẫn tạo vai trò</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6><i class="fa fa-lightbulb text-warning"></i> Gợi ý tên vai trò:</h6>
+                            <ul class="list-unstyled ml-3">
+                                <li><span class="badge badge-danger">Admin</span> - Quản trị viên</li>
+                                <li><span class="badge badge-warning">Manager</span> - Quản lý</li>
+                                <li><span class="badge badge-primary">User</span> - Người dùng</li>
+                                <li><span class="badge badge-info">Customer</span> - Khách hàng</li>
+                                <li><span class="badge badge-success">Staff</span> - Nhân viên</li>
+                            </ul>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6><i class="fa fa-exclamation-circle text-info"></i> Lưu ý:</h6>
+                            <ul class="small text-muted">
+                                <li>Tên vai trò phải duy nhất</li>
+                                <li>Sử dụng tên có ý nghĩa</li>
+                                <li>Tránh ký tự đặc biệt</li>
+                                <li>Nên viết hoa chữ cái đầu</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle"></i>
+                            <strong>Mẹo:</strong> Sau khi tạo vai trò, bạn có thể gán quyền cụ thể cho vai trò này trong phần quản lý quyền hạn.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

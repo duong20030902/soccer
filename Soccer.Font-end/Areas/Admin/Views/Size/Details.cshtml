@@ -1,0 +1,296 @@
+﻿@using Soccer.Font_end.ViewModels
+@model SizeDto
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Chi tiết kích thước</h4>
+                    <small>Thông tin đầy đủ về kích thước: <strong>@Model.SizeName</strong></small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin kích thước</h3>
+                        <div class="card-options">
+                            <a asp-action="Edit" asp-route-id="@Model.SizeID" class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Chỉnh sửa
+                            </a>
+                            <a asp-action="Index" class="btn btn-secondary btn-sm ml-2">
+                                <i class="fa fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="size-info-section">
+                                    <div class="size-icon-large text-center mb-4">
+                                        @if (Model.SizeName.Contains("XS"))
+                                        {
+                                            <i class="fa fa-compress-arrows-alt fa-5x text-info"></i>
+                                            <h5 class="mt-2 text-info">Rất nhỏ</h5>
+                                        }
+                                        else if (Model.SizeName.Contains("S") && !Model.SizeName.Contains("XL"))
+                                        {
+                                            <i class="fa fa-compress fa-5x text-primary"></i>
+                                            <h5 class="mt-2 text-primary">Nhỏ</h5>
+                                        }
+                                        else if (Model.SizeName.Contains("M"))
+                                        {
+                                            <i class="fa fa-expand-arrows-alt fa-5x text-success"></i>
+                                            <h5 class="mt-2 text-success">Vừa</h5>
+                                        }
+                                        else if (Model.SizeName.Contains("L") && !Model.SizeName.Contains("XL"))
+                                        {
+                                            <i class="fa fa-expand fa-5x text-warning"></i>
+                                            <h5 class="mt-2 text-warning">Lớn</h5>
+                                        }
+                                        else if (Model.SizeName.Contains("XL"))
+                                        {
+                                            <i class="fa fa-arrows-alt fa-5x text-danger"></i>
+                                            <h5 class="mt-2 text-danger">Rất lớn</h5>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-ruler fa-5x text-secondary"></i>
+                                            <h5 class="mt-2 text-secondary">Kích thước tùy chỉnh</h5>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="size-details">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>ID kích thước:</strong></td>
+                                            <td>
+                                                <span class="badge badge-secondary">#@Model.SizeID</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Tên kích thước:</strong></td>
+                                            <td>
+                                                <span class="h4 text-primary">@Model.SizeName</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Thứ tự hiển thị:</strong></td>
+                                            <td>
+                                                <span class="badge badge-info">@Model.SizeOrder</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Loại kích thước:</strong></td>
+                                            <td>
+                                                @if (Model.SizeName.Contains("XS"))
+                                                {
+                                                    <span class="badge badge-info">Rất nhỏ</span>
+                                                }
+                                                else if (Model.SizeName.Contains("S") && !Model.SizeName.Contains("XL"))
+                                                {
+                                                    <span class="badge badge-primary">Nhỏ</span>
+                                                }
+                                                else if (Model.SizeName.Contains("M"))
+                                                {
+                                                    <span class="badge badge-success">Vừa</span>
+                                                }
+                                                else if (Model.SizeName.Contains("L") && !Model.SizeName.Contains("XL"))
+                                                {
+                                                    <span class="badge badge-warning">Lớn</span>
+                                                }
+                                                else if (Model.SizeName.Contains("XL"))
+                                                {
+                                                    <span class="badge badge-danger">Rất lớn</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-secondary">Tùy chỉnh</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Trạng thái:</strong></td>
+                                            <td>
+                                                <span class="badge badge-success">
+                                                    <i class="fa fa-check-circle"></i> Hoạt động
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products using this Size (Placeholder) -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Sản phẩm sử dụng kích thước này</h3>
+                        <div class="card-options">
+                            <span class="badge badge-primary">0 sản phẩm</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center py-4">
+                            <i class="fa fa-box-open fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Chưa có sản phẩm nào</h5>
+                            <p class="text-muted">Chưa có sản phẩm nào sử dụng kích thước này</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Size Actions & Statistics -->
+            <div class="col-lg-4 col-md-12">
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thao tác nhanh</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <a asp-action="Edit" asp-route-id="@Model.SizeID" class="list-group-item list-group-item-action">
+                                <i class="fa fa-edit text-warning"></i>
+                                <span class="ml-2">Chỉnh sửa kích thước</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <i class="fa fa-copy text-info"></i>
+                                <span class="ml-2">Sao chép kích thước</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <i class="fa fa-sort text-success"></i>
+                                <span class="ml-2">Thay đổi thứ tự</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action text-danger"
+                               onclick="deleteSize(@Model.SizeID, '@Model.SizeName')">
+                                <i class="fa fa-trash text-danger"></i>
+                                <span class="ml-2">Xóa kích thước</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Size Statistics -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Thống kê</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h4 class="text-primary">0</h4>
+                                    <small class="text-muted">Sản phẩm</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h4 class="text-success">@Model.SizeOrder</h4>
+                                    <small class="text-muted">Thứ tự</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Size Guide -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Hướng dẫn kích thước</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            @if (Model.SizeName.Contains("S") || Model.SizeName.Contains("M") || Model.SizeName.Contains("L"))
+                            {
+                                <h6>Kích thước quần áo</h6>
+                                <p class="text-muted small">
+                                    Kích thước này thường được sử dụng cho quần áo thể thao, áo đấu, và phụ kiện.
+                                </p>
+                            }
+                            else if (char.IsDigit(Model.SizeName[0]))
+                            {
+                                <h6>Kích thước giày</h6>
+                                <p class="text-muted small">
+                                    Kích thước này thường được sử dụng cho giày bóng đá và giày thể thao.
+                                </p>
+                            }
+                            else
+                            {
+                                <h6>Kích thước tùy chỉnh</h6>
+                                <p class="text-muted small">
+                                    Kích thước đặc biệt cho các sản phẩm cụ thể.
+                                </p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa kích thước</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fa fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                    <p>Bạn có chắc chắn muốn xóa kích thước <strong id="sizeNameToDelete"></strong>?</p>
+                    <p class="text-danger">Hành động này không thể hoàn tác!</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa fa-trash"></i> Xóa kích thước
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteSize(id, name) {
+        document.getElementById('sizeNameToDelete').textContent = name;
+        document.getElementById('deleteForm').action = '@Url.Action("Delete", "Size")/' + id;
+        $('#deleteModal').modal('show');
+    }
+</script>
+
+<style>
+    .size-icon-large {
+        padding: 30px;
+        background: linear-gradient(135deg, #f8f9fc 0%, #e3e6f0 100%);
+        border-radius: 15px;
+        border: 2px solid #dee2e6;
+    }
+
+    .stat-item {
+        padding: 15px 0;
+    }
+
+    .list-group-item {
+        border: none;
+        border-radius: 8px !important;
+        margin-bottom: 5px;
+    }
+
+        .list-group-item:hover {
+            background-color: #f8f9fc;
+            transform: translateX(5px);
+        }
+</style>

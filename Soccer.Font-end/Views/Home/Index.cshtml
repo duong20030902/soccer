@@ -1,0 +1,1377 @@
+﻿@using Soccer.Font_end.ViewModels
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Trang Chủ";
+}
+
+<!-- Banner chính -->
+<div class="hero-banner" id="mainBanner">
+    <div class="banner-background">
+        <img src="images/banner/background01.jpg" class="bg-image" alt="Sân bóng đá">
+        <div class="overlay"></div>
+    </div>
+
+    <div class="banner-content loading">
+        <div class="content-left">
+            <div class="main-offer">
+                <span class="offer-badge">🔥 ưu đãi hot</span>
+                <h1 class="main-title">
+                    Mua <span class="highlight">5 đơn đội</span><br>
+                    Tặng <span class="free-text">1 trận đá miễn phí</span>
+                </h1>
+                <p class="offer-description" style="font-size:14px;">
+                    Cơ hội vàng để sở hữu đồ bóng đá chính hãng và trải nghiệm sân chất lượng cao!
+                </p>
+
+                <div class="cta-buttons">
+                    <a style ="font-size:14px;" href="#products" class="btn-primary pulse-animation" onclick="trackClick('buy_now')">
+                        <span class="icon-cart"></span>
+                        Mua ngay - Nhận ưu đãi
+                    </a>
+                    <a style="font-size:14px;" href="#booking" class="btn-secondary" onclick="trackClick('book_field')">
+                        <span class="icon-field"></span>
+                        Đặt sân & bắt đối ngay
+                    </a>
+                </div>
+
+                <div class="urgency-timer">
+                    <span class="timer-text" style="font-size:20px;">⏰ Ưu đãi kết thúc trong:</span>
+                    <div class="countdown" style="font-size:14px;">
+                        <span class="time-unit" id="hours">23<small>giờ</small></span>
+                        <span class="time-unit" id="minutes">45<small>phút</small></span>
+                        <span class="time-unit" id="seconds">12<small>giây</small></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-right loading">
+            <div class="floating-player">
+                <img src="images/banner/player.png" alt="Cầu thủ bóng đá" class="player-image">
+                <div class="action-ball">
+                    <img src="images/banner/ball.png" alt="Quả bóng" class="ball-spinning">
+                </div>
+            </div>
+
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <span style="font-size:24px;" class="stat-number" data-target="1000">0</span>
+                    <span style="font-size:18px;" class="stat-label">Khách hàng hài lòng</span>
+                </div>
+                <div class="stat-item">
+                    <span style="font-size:24px;" class="stat-number" data-target="50">0</span>
+                    <span style="font-size:18px;" class="stat-label">Sân bóng chất lượng</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-offers">
+        <div class="mini-offer">
+            <span class="discount-badge" style="font-size:12px;">-30%</span>
+            <span class="offer-text" style="font-size:12px;">Giảm giá sân cuối tuần</span>
+        </div>
+        <div class="mini-offer">
+            <span class="new-badge" style="font-size:12px;">MỚI</span>
+            <span class="offer-text" style="font-size:12px;">Sân cỏ nhân tạo 5 sao</span>
+        </div>
+    </div>
+</div>
+
+<!-- Banner dưới -->
+<div class="banner-bottom-cta">
+    <div class="container">
+        <div class="bottom-offer-strip">
+            <div class="offer-content" style="font-size:16px;">
+                <span class="flash-icon">⚡</span>
+                <strong >Flash Sale:</strong> Mua bất kỳ sản phẩm nào - Giảm ngay 20% tiền đặt sân!
+            </div>
+            <a href="#flash-sale" class="btn-flash" onclick="trackClick('flash_sale')">Áp dụng ngay</a>
+        </div>
+    </div>
+</div>
+
+<!-- Phần Combo Booking -->
+<div class="combo-booking-section" id="booking">
+    <div class="container">
+        <h3>🎯 Combo Tiết Kiệm</h3>
+        <div class="combo-options">
+            <div class="combo-item">
+                <span class="combo-badge" style="font-size:14px;">Phổ biến</span>
+                <h4 style="font-size:18px;">Mua 3 sản phẩm + Đặt sân</h4>
+                <p class="combo-price" style="font-size:14px;">Giảm ngay <strong>25%</strong> tổng hóa đơn</p>
+                <button class="btn-combo" onclick="selectCombo('combo1')">Chọn combo này</button>
+            </div>
+            <div class="combo-item featured">
+                <span class="combo-badge hot" style="font-size:15px;">Hot deal</span>
+                <h4 style="font-size:18px;">Mua 5 sản phẩm + Đặt 2 sân</h4>
+                <p style ="font-size:14px;" class="combo-price">Giảm <strong>40%</strong> + Tặng 1 sân miễn phí</p>
+                <button class="btn-combo" onclick="selectCombo('combo2')">Đặt ngay</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class=matchSchedule>
+    <div class=container>
+        <div class=row>
+            <h2 class=heading>Đặt sân <span>& Bắt đối</span></h2>
+
+            <p class=headParagraph>
+                Hệ thống đặt sân bóng đá và tìm kiếm đối thủ hiện đại, tiện lợi. Dễ dàng tìm kiếm sân phù hợp
+                với thời gian và địa điểm mong muốn của bạn. Tạo trận đấu, mời đối thủ hoặc tham gia vào các trận
+                đấu sẵn có. Trải nghiệm đặt sân nhanh chóng và thuận tiện nhất!
+            </p>
+
+            <div class="matchSchedule_details row">
+                <div class="match_next right-triangle">
+                    <div class="wrap_match_next right-triangle">
+                        <div class=right-padding>
+                            <h4 class=headline03>Đặt sân ngay</h4>
+
+                            <p>Chọn thời gian và địa điểm phù hợp với lịch trình của bạn.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class=match_versus>
+                    <div class="bg-blackimg match_versus02">
+                        <div class=nextmatchDetails>
+                            <p>
+                                Đặt sân bóng đá dễ dàng chỉ với vài bước đơn giản.
+                                Chọn ngày, giờ và địa điểm phù hợp với bạn.
+                            </p>
+
+                            <div class="booking-form">
+                                <form asp-action="SearchFields" method="get">
+                                    <div class="form-group">
+                                        <input type="date" name="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="Chọn ngày">
+                                    </div>
+                                    <div class="form-group">
+                                        <select name="timeslotId" class="form-control">
+                                            <option value="">Chọn giờ</option>
+                                            <option value="1">17:00 - 18:00</option>
+                                            <option value="2">18:00 - 19:00</option>
+                                            <option value="3">19:00 - 20:00</option>
+                                            <option value="4">20:00 - 21:00</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" name="fieldName" class="form-control" placeholder="Tên sân (tùy chọn)">
+                                    </div>
+                                    <button type="submit" class="btn btn-book">Kiểm tra và đặt sân</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="special-offers">
+                    <div class="special-offers-header">
+                        <h4>Ưu đãi đặc biệt</h4>
+                    </div>
+                    <div class="special-offers-content">
+                        <div class="promo-item">
+                            <div class="promo-badge">-20%</div>
+                            <p class="promo-text">Giảm giá giờ vàng (14:00-17:00)</p>
+                        </div>
+                        <div class="promo-item">
+                            <div class="promo-badge deal">DEAL</div>
+                            <p class="promo-text">Đặt 4 buổi liên tiếp - Tặng 1 buổi</p>
+                        </div>
+                        <div class="promo-item">
+                            <div class="promo-badge new">NEW</div>
+                            <p class="promo-text">Sân mới mở - Giảm 10%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần Sân bóng nổi bật - Dữ liệu từ API -->
+            <div class="matchSchedule_details row">
+                <div class=match_next>
+                    <div class="wrap_match_next right-triangle">
+                        <div class=right-padding>
+                            <h4 class=headline03>Sân bóng nổi bật</h4>
+
+                            <p>Các sân bóng được đánh giá cao và ưa chuộng nhất.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class=match_versus-wrap>
+                    <div class=wrap_match-innerdetails>
+                        @if (Model.FeaturedFields != null && Model.FeaturedFields.Any())
+                        {
+                            <ul class="point_table scrollable">
+                                @foreach (var field in Model.FeaturedFields)
+                                {
+                                    <li class=clearfix>
+                                        <div class=subPoint_table>
+                                            <div class="headline01 smallpoint"><i class="fa fa-star"></i></div>
+                                            <div class="headline01 largepoint" title="@field.FieldName - @field.Location">
+                                                @field.FieldName
+                                                <small class="field-location">(@field.Location)</small>
+                                            </div>
+                                            <div class="headline01 smallpoint row">
+                                                <span><i class="fa fa-money"></i></span>
+                                                <span style="font-size: 12px;">@field.PriceDisplay</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <div class="no-fields-message">
+                                <p style="text-align: center; color: #666; padding: 20px;">
+                                    @if (!string.IsNullOrEmpty(ViewBag.FieldError as string))
+                                    {
+                                        <span>@ViewBag.FieldError</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Không có sân bóng nào để hiển thị</span>
+                                    }
+                                </p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="center">
+                <a asp-action="SearchFields" class="btn btn-red find-stadium">Xem tất cả sân bóng</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="booking bookticket">
+    <div class=container>
+        <div class=booking-fig><h2>SCC football club</h2></div>
+        <div class=booking-content><a asp-action="Index" asp-controller="Book" class="btn btn-white">Đặt sân ngay</a></div>
+    </div>
+</section>
+
+@if (Model.Products != null && Model.Products.Any())
+{
+    <section class="product bg-white" id="products">
+        <div class=container>
+            <div class=row>
+                <h2 class=heading>Sản phẩm hàng đầu & <span>Hàng hóa</span></h2>
+                @{
+                    string GetImageUrl(string imageUrl)
+                    {
+                        if (string.IsNullOrEmpty(imageUrl))
+                            return "/images/default-product.jpg";
+
+                        // Kiểm tra nếu là URL đầy đủ
+                        if (imageUrl.StartsWith("http://") || imageUrl.StartsWith("https://"))
+                            return imageUrl;
+
+                        // Nếu là đường dẫn local
+                        return $"/images/{imageUrl}.jpg";
+                    }
+                }
+                <p class=headParagraph>
+                    Khám phá bộ sưu tập những sản phẩm được yêu thích nhất của chúng tôi, nơi chất lượng và sự đa dạng hội tụ. Từ những mặt hàng thiết yếu hàng ngày đến các sản phẩm độc đáo, được tuyển chọn kỹ lưỡng, chúng tôi cam kết mang đến trải nghiệm mua sắm tuyệt vời. Hãy cùng khám phá những lựa chọn hàng đầu, được đánh giá cao bởi cộng đồng người dùng và đừng bỏ lỡ những ưu đãi đặc biệt đang chờ bạn!
+                </p>
+                <ul class=product_details>
+                    @foreach (var product in Model.Products)
+                    {
+                        <li>
+                            <a asp-action="Detail" asp-controller="Shop" asp-route-id="@product.ProductID">
+                                <div>
+                                    <div class="product-img" style="background:url(@GetImageUrl(product.ImageURL)) center no-repeat"></div>
+                                </div>
+                                <div class="product-details">
+                                    <h3 class="product-name oswald16" style="background-color: black; color: #fff; padding: 5px;">@product.ProductName</h3>
+                                    <div class="product-rating">
+                                        <span class="stars">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= Math.Floor(product.AverageRating))
+                                                {
+                                                    <i class="fa fa-star" style="color: #daa520;"></i>
+                                                }
+                                                else if (i == Math.Ceiling(product.AverageRating) && product.AverageRating % 1 != 0)
+                                                {
+                                                    <i class="fa fa-star-half-o" style="color: #daa520;"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa fa-star-o" style="color: #daa520;"></i>
+                                                }
+                                            }
+                                        </span>
+                                        <span class="review-count">(@product.ReviewCount reviews)</span>
+                                    </div>
+                                </div>
+                                <ul class="oswald16 product_info">
+                                    <li class="detailsContainer">
+                                        <span>Còn lại</span>
+                                        @if (product.StockQuantity > 0)
+                                        {
+                                            <span style="color: green;"><i class="fa fa-cubes"></i>@product.StockQuantity</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color: red;"><i class="fa fa-cubes"></i>Hết hàng</span>
+                                        }
+                                    </li>
+                                    <li class="cartContainer">
+                                        <span>Thêm vào giỏ hàng</span>
+                                        <span><i class="fa fa-shopping-cart"></i></span>
+                                        <span class="price">@string.Format("{0:N0}đ", product.SalePrice)</span>
+                                    </li>
+                                </ul>
+                            </a>
+                        </li>
+                    }
+                </ul>
+                <div class=center><a asp-area="" asp-action="Index" asp-controller="Shop" class="btn btn-red">xem thêm</a></div>
+            </div>
+        </div>
+    </section>
+}
+
+<style>
+   
+    /* Banner chính */
+    .hero-banner {
+        position: relative;
+        height: 100vh;
+        min-height: 600px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+    }
+
+    .banner-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    .bg-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(227, 30, 37, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+    }
+
+    .banner-content {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .content-left {
+        flex: 1;
+        max-width: 600px;
+    }
+
+    .offer-badge {
+        display: inline-block;
+        background: linear-gradient(45deg, #ff6b35, #f7931e);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 14px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        animation: bounce 2s infinite;
+    }
+
+    .main-title {
+        font-family: 'Oswald', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: white;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .highlight {
+        color: #f7931e;
+        text-decoration: underline;
+        text-decoration-color: #e31e25;
+    }
+
+    .free-text {
+        color: #00ff88;
+        text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    }
+
+    .offer-description {
+        font-size: 1.2rem;
+        color: #f0f0f0;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    /* Nút CTA */
+    .cta-buttons {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary, .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px 30px;
+        font-family: 'Oswald', sans-serif;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #e31e25, #ff4757);
+        color: white;
+        box-shadow: 0 4px 15px rgba(227, 30, 37, 0.4);
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(227, 30, 37, 0.6);
+        }
+
+    .btn-secondary {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #e31e25;
+        }
+
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+
+    /* Icon cho nút */
+    .icon-cart::before {
+        content: "🛒";
+        margin-right: 5px;
+    }
+
+    .icon-field::before {
+        content: "⚽";
+        margin-right: 5px;
+    }
+
+    /* Đếm ngược thời gian */
+    .urgency-timer {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .timer-text {
+        color: #f7931e;
+        font-weight: bold;
+    }
+
+    .countdown {
+        display: flex;
+        gap: 10px;
+    }
+
+    .time-unit {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 8px 12px;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        backdrop-filter: blur(10px);
+    }
+
+        .time-unit small {
+            display: block;
+            font-size: 0.7em;
+            opacity: 0.8;
+        }
+
+    /* Phần bên phải */
+    .content-right {
+        flex: 1;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .floating-player {
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+    .player-image {
+        max-width: 400px;
+        height: auto;
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .action-ball {
+        position: absolute;
+        top: 20%;
+        right: -50px;
+    }
+
+    .ball-spinning {
+        width: 80px;
+        height: 80px;
+        animation: spin 2s linear infinite;
+    }
+
+    .quick-stats {
+        display: flex;
+        gap: 30px;
+    }
+
+    .stat-item {
+        text-align: center;
+        color: white;
+    }
+
+    .stat-number {
+        display: block;
+        font-size: 2rem;
+        font-weight: bold;
+        color: #f7931e;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    /* Ưu đãi nổi */
+    .floating-offers {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 15;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .mini-offer {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 10px 15px;
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        animation: slideInRight 1s ease-out;
+    }
+
+    .discount-badge, .new-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: white;
+    }
+
+    .discount-badge {
+        background: #e31e25;
+    }
+
+    .new-badge {
+        background: #00a651;
+    }
+
+    .offer-text {
+        font-size: 0.9rem;
+        color: #333;
+        font-weight: 500;
+    }
+
+    /* Banner dưới */
+    .banner-bottom-cta {
+        background: linear-gradient(90deg, #1a1a1a 0%, #333 100%);
+        padding: 15px 0;
+    }
+
+    .bottom-offer-strip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .offer-content {
+        color: white;
+        font-size: 1.1rem;
+    }
+
+    .flash-icon {
+        color: #f7931e;
+        margin-right: 10px;
+    }
+
+    .btn-flash {
+        background: #f7931e;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+        .btn-flash:hover {
+            background: #e6820e;
+            transform: scale(1.05);
+        }
+
+    /* Phần Combo Booking */
+    .combo-booking-section {
+        background: #f8f9fa;
+        padding: 60px 0;
+    }
+
+        .combo-booking-section h3 {
+            text-align: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 4rem;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+    .combo-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .combo-item {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+        .combo-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .combo-item.featured {
+            border: 3px solid #e31e25;
+            transform: scale(1.05);
+        }
+
+    .combo-badge {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #00a651;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+        .combo-badge.hot {
+            background: #e31e25;
+            animation: pulse 2s infinite;
+        }
+
+    .combo-item h4 {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.3rem;
+        color: #333;
+        margin: 20px 0 15px;
+    }
+
+    .combo-price {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+        .combo-price strong {
+            color: #e31e25;
+            font-size: 1.3em;
+        }
+
+    .btn-combo {
+        background: linear-gradient(45deg, #e31e25, #ff4757);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+    }
+
+        .btn-combo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(227, 30, 37, 0.4);
+        }
+
+    /* Animations */
+    @@keyframes bounce {
+        0%, 20%, 50%, 80%, 100%
+
+    {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+
+    }
+
+    @@keyframes pulse {
+        0%
+
+    {
+        box-shadow: 0 4px 15px rgba(227, 30, 37, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 4px 25px rgba(227, 30, 37, 0.8);
+    }
+
+    100% {
+        box-shadow: 0 4px 15px rgba(227, 30, 37, 0.4);
+    }
+
+    }
+
+    @@keyframes float {
+        0%, 100%
+
+    {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+
+    }
+
+    @@keyframes spin {
+        from
+
+    {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    @@keyframes slideInRight {
+        from
+
+    {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .banner-content
+
+    {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .main-title {
+        font-size: 2.5rem;
+    }
+
+    .cta-buttons {
+        justify-content: center;
+    }
+
+    .floating-offers {
+        position: static;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .bottom-offer-strip {
+        text-align: center;
+        flex-direction: column;
+    }
+
+    .quick-stats {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .combo-options {
+        grid-template-columns: 1fr;
+    }
+
+    .combo-item.featured {
+        transform: none;
+    }
+
+    }
+
+    /* Loading animation */
+    .loading {
+        opacity: 0;
+        animation: fadeIn 1s ease-in forwards;
+    }
+
+    @@keyframes fadeIn {
+        to
+
+    {
+        opacity: 1;
+    }
+
+    }
+</style>
+
+<style>
+    /* Phần đặt sân */
+    .booking-form {
+        padding: 15px 0;
+    }
+
+        .booking-form .form-control {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            height: 40px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            color: #333;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .booking-form select.form-control {
+            padding: 0 10px;
+        }
+
+    .btn-book {
+        background-color: #e31e25;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-family: 'Oswald', sans-serif;
+        text-transform: uppercase;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .btn-book:hover {
+            background-color: #c41920;
+        }
+
+    /* Phần tìm đối */
+    .team-looking {
+        color: #e31e25;
+        font-weight: bold;
+    }
+
+    .match-location {
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 2px 8px;
+        border-radius: 3px;
+        margin-left: 10px;
+    }
+
+    .join-match {
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-join {
+        background-color: #e31e25;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 3px;
+        font-size: 14px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+    }
+
+        .btn-join:hover {
+            background-color: #c41920;
+            color: white;
+            text-decoration: none;
+        }
+
+    /* Phần ưu đãi */
+    .booking-options {
+        background-color: rgba(0, 0, 0, 0.7);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        color: white;
+    }
+
+        .booking-options h4 {
+            color: #e31e25;
+            margin-bottom: 15px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+    .promo-list {
+        list-style: none;
+        padding: 0;
+    }
+
+        .promo-list li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 5px;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+    .promo-badge {
+        background-color: #e31e25;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 3px;
+        margin-right: 8px;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    /* Phần rating sân bóng */
+    .fa-star {
+        color: #daa520;
+    }
+</style>
+<style>
+    /* Phần CSS cho Ưu đãi đặc biệt */
+    .special-offers {
+        background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        height: 40%; /* Giảm xuống còn 40% */
+        position: relative;
+        padding: 0 0 2px 0;
+    }
+
+    .special-offers-header {
+        background-color: #e31e25;
+        padding: 5px 10px; /* Giảm padding thêm nữa */
+        position: relative;
+    }
+
+        .special-offers-header h4 {
+            color: white;
+            margin: 0;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            font-size: 16px; /* Giảm font size thêm */
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.5px; /* Giảm letter spacing */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+    .special-offers-content {
+        padding: 6px;
+    }
+
+    .promo-item {
+        background-color: rgba(255, 255, 255, 0.1);
+        margin-bottom: 5px; /* Giảm margin */
+        padding: 5px 10px; /* Giảm padding thêm */
+        border-radius: 6px; /* Giảm border radius */
+        transition: all 0.2s ease; /* Tăng tốc hiệu ứng */
+        position: relative;
+        overflow: hidden;
+        border-left: 3px solid #e31e25; /* Giảm border */
+    }
+
+        .promo-item:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px); /* Giảm hiệu ứng nhấc thêm */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .promo-item:last-child {
+            margin-bottom: 0;
+        }
+
+    .promo-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: #e31e25;
+        color: white;
+        padding: 2px 6px;
+        font-weight: bold;
+        font-size: 10px;
+        clip-path: polygon(100% 0, 100% 100%, 50% 80%, 0 100%, 0 0);
+        min-width: 30px; /* Giảm kích thước badge thêm */
+        height: 30px; /* Giảm kích thước badge thêm */
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 3px;
+    }
+
+        .promo-badge.deal {
+            background-color: #ff9900;
+        }
+
+        .promo-badge.new {
+            background-color: #00a651;
+        }
+
+    .promo-text {
+        font-family: 'Open Sans', sans-serif;
+        color: white;
+        font-size: 12px; /* Giảm font size thêm */
+        padding-right: 35px; /* Giảm padding để phù hợp với badge nhỏ hơn */
+        margin: 0;
+        line-height: 1.2; /* Giảm line height thêm */
+    }
+
+    .shine-effect {
+        display: none; /* Loại bỏ hiệu ứng shine */
+    }
+
+    @@keyframes shine {
+        100%
+
+    {
+        transform: translateX(100%);
+    }
+
+    }
+
+    .special-offers::after, .special-offers::before {
+        display: none; /* Loại bỏ các hiệu ứng bổ sung */
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .special-offers-header h4
+
+    {
+        font-size: 16px;
+    }
+
+    .promo-text {
+        font-size: 12px;
+    }
+
+    .promo-badge {
+        min-width: 30px;
+        height: 30px;
+        font-size: 10px;
+    }
+
+    }
+
+    .scroll-indicator {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        z-index: 10;
+    }
+
+        .scroll-indicator .fa-chevron-down {
+            font-size: 24px;
+            color: #e31e25; /* Match your theme color */
+            animation: bounce 2s infinite;
+        }
+
+    /* Bounce Animation */
+    @@keyframes bounce {
+        0%, 20%, 50%, 80%, 100%
+
+    {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+
+    }
+
+    /* Hide the indicator when the container is fully scrolled */
+    .scrollable.scrolled-to-bottom .scroll-indicator {
+        display: none;
+    }
+</style>
+<script>
+    // Đếm ngược thời gian
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+
+        const distance = tomorrow.getTime() - now;
+
+        if (distance > 0) {
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('hours').innerHTML = `${hours.toString().padStart(2, '0')}<small>giờ</small>`;
+            document.getElementById('minutes').innerHTML = `${minutes.toString().padStart(2, '0')}<small>phút</small>`;
+            document.getElementById('seconds').innerHTML = `${seconds.toString().padStart(2, '0')}<small>giây</small>`;
+        } else {
+            // Reset về 24 giờ khi hết thời gian
+            document.getElementById('hours').innerHTML = `24<small>giờ</small>`;
+            document.getElementById('minutes').innerHTML = `00<small>phút</small>`;
+            document.getElementById('seconds').innerHTML = `00<small>giây</small>`;
+        }
+    }
+
+    // Animation cho số liệu thống kê
+    function animateStats() {
+        const stats = document.querySelectorAll('.stat-number');
+
+        stats.forEach(stat => {
+            const target = parseInt(stat.getAttribute('data-target'));
+            const increment = target / 100;
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                stat.textContent = Math.floor(current) + (target >= 1000 ? '+' : '+');
+            }, 20);
+        });
+    }
+
+    // Tracking clicks cho analytics
+    function trackClick(action) {
+        console.log(`User clicked: ${action}`);
+        // Có thể gửi dữ liệu đến Google Analytics hoặc tracking service khác
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'click', {
+                'event_category': 'CTA',
+                'event_label': action
+            });
+        }
+    }
+
+    // Xử lý chọn combo
+    function selectCombo(comboType) {
+        trackClick(`combo_${comboType}`);
+
+        // Hiển thị thông báo
+        const message = comboType === 'combo1'
+            ? 'Bạn đã chọn Combo 3 sản phẩm + Đặt sân (Giảm 25%)'
+            : 'Bạn đã chọn Combo 5 sản phẩm + Đặt 2 sân (Giảm 40% + Tặng 1 sân)';
+
+        alert(message + '\n\nChúng tôi sẽ liên hệ với bạn trong ít phút!');
+
+        // Có thể redirect đến trang đặt hàng
+        // window.location.href = `/booking?combo=${comboType}`;
+    }
+
+    // Smooth scroll cho các liên kết
+    function smoothScroll(target) {
+        const element = document.querySelector(target);
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }
+
+    // Xử lý click cho các liên kết anchor
+    document.addEventListener('DOMContentLoaded', function() {
+        const links = document.querySelectorAll('a[href^="#"]');
+        links.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('href');
+                smoothScroll(target);
+            });
+        });
+    });
+
+    // Lazy loading cho hình ảnh
+    function lazyLoadImages() {
+        const images = document.querySelectorAll('img[data-src]');
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.classList.remove('lazy');
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+
+        images.forEach(img => imageObserver.observe(img));
+    }
+
+    // Hiệu ứng parallax cho banner
+    function parallaxEffect() {
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.bg-image');
+            const speed = scrolled * 0.5;
+
+            if (parallax) {
+                parallax.style.transform = `translateY(${speed}px)`;
+            }
+        });
+    }
+
+    // Khởi tạo khi trang load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Bắt đầu đếm ngược
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Animation cho stats sau 1 giây
+        setTimeout(animateStats, 1000);
+
+        // Khởi tạo lazy loading
+        lazyLoadImages();
+
+        // Khởi tạo parallax
+        parallaxEffect();
+
+        // Thêm class loading để trigger animation
+        const loadingElements = document.querySelectorAll('.loading');
+        loadingElements.forEach((element, index) => {
+            setTimeout(() => {
+                element.style.opacity = '1';
+            }, index * 200);
+        });
+    });
+
+    // Xử lý responsive menu (nếu có)
+    function toggleMobileMenu() {
+        const menu = document.querySelector('.mobile-menu');
+        if (menu) {
+            menu.classList.toggle('active');
+        }
+    }
+
+    // Popup cho ưu đãi đặc biệt - PHIÊN BẢN MỚI
+    function showSpecialOffer() {
+        // Sử dụng sessionStorage để popup xuất hiện mỗi session
+        const hasSeenOfferThisSession = sessionStorage.getItem('hasSeenOfferThisSession');
+
+        if (!hasSeenOfferThisSession) {
+            // Đặt timeout 30 giây
+            setTimeout(() => {
+                if (confirm('🎉 Ưu đãi đặc biệt! Giảm ngay 15% cho đơn hàng đầu tiên. Bạn có muốn xem ngay?')) {
+                    smoothScroll('#booking');
+                }
+                // Đánh dấu đã hiển thị trong session này
+                sessionStorage.setItem('hasSeenOfferThisSession', 'true');
+            }, 3000); // 30 giây
+        }
+    }
+
+    // Gọi popup sau khi trang load xong
+        window.addEventListener('load', function() {
+            showSpecialOffer();
+
+            const loadTime = performance.now();
+            console.log(`Trang load trong: ${loadTime.toFixed(2)}ms`);
+        });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const scrollableContainers = document.querySelectorAll('.scrollable');
+        scrollableContainers.forEach(container => {
+            // Check scroll position on load
+            if (container.scrollTop + container.clientHeight >= container.scrollHeight - 5) {
+                container.classList.add('scrolled-to-bottom');
+            } else {
+                container.classList.remove('scrolled-to-bottom');
+            }
+
+            // Check scroll position on scroll
+            container.addEventListener('scroll', function () {
+                if (container.scrollTop + container.clientHeight >= container.scrollHeight - 5) {
+                    container.classList.add('scrolled-to-bottom');
+                } else {
+                    container.classList.remove('scrolled-to-bottom');
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,6 @@
+@Soccer.Business_Logic_HostAddress = http://localhost:5194
+
+GET {{Soccer.Business_Logic_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

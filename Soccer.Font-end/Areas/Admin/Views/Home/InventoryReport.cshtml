@@ -1,0 +1,572 @@
+﻿@model List<Soccer.Font_end.ViewModels.InventoryReportDto>
+
+@{
+    ViewData["Title"] = "Báo cáo Kho hàng";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Báo cáo Kho hàng</h4>
+                    <small>Theo dõi mức tồn kho và giá trị thiết bị bóng đá của bạn</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row clearfix row-deck">
+            @{
+                var totalProducts = Model?.Count ?? 0;
+                var lowStockProducts = Model?.Count(p => p.IsLowStock) ?? 0;
+                var totalStockValue = Model?.Sum(p => p.StockValue) ?? 0;
+                var totalStockQuantity = Model?.Sum(p => p.StockQuantity) ?? 0;
+                var averageStockValue = totalProducts > 0 ? totalStockValue / totalProducts : 0;
+                var outOfStockProducts = Model?.Count(p => p.StockQuantity == 0) ?? 0;
+            }
+
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tổng sản phẩm</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-primary">@totalProducts</h5>
+                        <span class="font-12 text-muted">Thiết bị bóng đá</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Cảnh báo tồn kho</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-danger">@lowStockProducts</h5>
+                        <span class="font-12 text-muted">Cần nhập thêm</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Hết hàng</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-warning">@outOfStockProducts</h5>
+                        <span class="font-12 text-muted">Sản phẩm hết hàng</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Giá trị tồn kho</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-success">@totalStockValue.ToString("C")</h5>
+                        <span class="font-12 text-muted">Tổng giá trị</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tổng số lượng</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-info">@totalStockQuantity</h5>
+                        <span class="font-12 text-muted">Đơn vị sản phẩm</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Giá trị TB</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-secondary">@averageStockValue.ToString("C")</h5>
+                        <span class="font-12 text-muted">Mỗi sản phẩm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stock Status Overview -->
+        <div class="row clearfix row-deck">
+            <div class="col-xl-8 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Phân tích tình trạng kho</h3>
+                        <div class="card-options">
+                            <button class="btn btn-sm btn-outline-secondary mr-1" onclick="refreshInventory()">Làm mới</button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="exportInventory()">Xuất Excel</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <div class="mb-3">
+                                    <h4 class="text-success">@(totalProducts - lowStockProducts - outOfStockProducts)</h4>
+                                    <small class="text-muted">Đủ hàng</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="mb-3">
+                                    <h4 class="text-warning">@lowStockProducts</h4>
+                                    <small class="text-muted">Sắp hết</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="mb-3">
+                                    <h4 class="text-danger">@outOfStockProducts</h4>
+                                    <small class="text-muted">Hết hàng</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="mb-3">
+                                    <h4 class="text-info">@totalProducts</h4>
+                                    <small class="text-muted">Tổng cộng</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress mb-3" style="height: 20px;">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 style="width: @((totalProducts - lowStockProducts - outOfStockProducts) * 100.0 / Math.Max(totalProducts, 1))%"
+                                 title="Đủ hàng"></div>
+                            <div class="progress-bar bg-warning" role="progressbar"
+                                 style="width: @(lowStockProducts * 100.0 / Math.Max(totalProducts, 1))%"
+                                 title="Sắp hết"></div>
+                            <div class="progress-bar bg-danger" role="progressbar"
+                                 style="width: @(outOfStockProducts * 100.0 / Math.Max(totalProducts, 1))%"
+                                 title="Hết hàng"></div>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <small class="text-success">
+                                    ● Đủ hàng (@(((totalProducts - lowStockProducts - outOfStockProducts) * 100.0 / Math.Max(totalProducts, 1)).ToString("F1"))%)
+                                </small>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-warning">● Sắp hết (@((lowStockProducts * 100.0 / Math.Max(totalProducts, 1)).ToString("F1"))%)</small>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-danger">● Hết hàng (@((outOfStockProducts * 100.0 / Math.Max(totalProducts, 1)).ToString("F1"))%)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Top sản phẩm giá trị cao</h3>
+                    </div>
+                    <div class="card-body">
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var product in Model.OrderByDescending(p => p.StockValue).Take(5))
+                            {
+                                <div class="mb-3">
+                                    <div class="clearfix">
+                                        <div class="float-left"><strong>@product.ProductName</strong></div>
+                                        <div class="float-right"><span class="badge badge-info">@product.StockValue.ToString("C")</span></div>
+                                    </div>
+                                    <small class="text-muted">@product.BrandName - @product.CategoryName</small>
+                                    <div class="progress progress-xs mt-1">
+                                        <div class="progress-bar bg-azure" role="progressbar"
+                                             style="width: @((product.StockValue * 100 / Math.Max(Model.Max(p => p.StockValue), 1)))%"
+                                             aria-valuenow="@product.StockValue" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">Không có dữ liệu sản phẩm</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Table -->
+        <div class="row clearfix">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Chi tiết kho hàng</h3>
+                        <div class="card-options">
+                            <div class="input-group" style="width: 300px;">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="searchProducts()">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Filter Options -->
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <select class="form-control" id="categoryFilter" onchange="filterProducts()">
+                                    <option value="">Tất cả danh mục</option>
+                                    @if (Model != null)
+                                    {
+                                        @foreach (var category in Model.Select(p => p.CategoryName).Distinct().OrderBy(c => c))
+                                        {
+                                            <option value="@category">@category</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control" id="brandFilter" onchange="filterProducts()">
+                                    <option value="">Tất cả thương hiệu</option>
+                                    @if (Model != null)
+                                    {
+                                        @foreach (var brand in Model.Select(p => p.BrandName).Distinct().OrderBy(b => b))
+                                        {
+                                            <option value="@brand">@brand</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control" id="stockFilter" onchange="filterProducts()">
+                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="instock">Còn hàng</option>
+                                    <option value="lowstock">Sắp hết</option>
+                                    <option value="outofstock">Hết hàng</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-outline-secondary btn-block" onclick="clearFilters()">
+                                    <i class="fa fa-refresh mr-1"></i>Xóa bộ lọc
+                                </button>
+                            </div>
+                        </div>
+
+                        @if (Model != null && Model.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped text-nowrap table-vcenter mb-0" id="inventoryTable">
+                                    <thead>
+                                        <tr>
+                                            <th onclick="sortTable(0)">Mã SP <i class="fa fa-sort"></i></th>
+                                            <th onclick="sortTable(1)">Tên sản phẩm <i class="fa fa-sort"></i></th>
+                                            <th onclick="sortTable(2)">Danh mục <i class="fa fa-sort"></i></th>
+                                            <th onclick="sortTable(3)">Thương hiệu <i class="fa fa-sort"></i></th>
+                                            <th onclick="sortTable(4)">Số lượng <i class="fa fa-sort"></i></th>
+                                            <th onclick="sortTable(5)">Giá vốn <i class="fa fa-sort"></i></th>
+                                            <th onclick="sortTable(6)">Giá bán <i class="fa fa-sort"></i></th>
+                                            <th onclick="sortTable(7)">Giá trị tồn <i class="fa fa-sort"></i></th>
+                                            <th onclick="sortTable(8)">Trạng thái <i class="fa fa-sort"></i></th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.OrderBy(p => p.StockQuantity))
+                                        {
+                                            <tr class="inventory-row"
+                                                data-category="@item.CategoryName"
+                                                data-brand="@item.BrandName"
+                                                data-stock="@(item.StockQuantity == 0 ? "outofstock" : item.IsLowStock ? "lowstock" : "instock")">
+                                                <td><strong>#@item.ProductID</strong></td>
+                                                <td>
+                                                    <strong>@item.ProductName</strong>
+                                                    @if (item.IsLowStock)
+                                                    {
+                                                        <i class="fa fa-exclamation-triangle text-warning ml-1" title="Sắp hết hàng"></i>
+                                                    }
+                                                    @if (item.StockQuantity == 0)
+                                                    {
+                                                        <i class="fa fa-times-circle text-danger ml-1" title="Hết hàng"></i>
+                                                    }
+                                                </td>
+                                                <td>@item.CategoryName</td>
+                                                <td>@item.BrandName</td>
+                                                <td>
+                                                    <span class="@(item.StockQuantity == 0 ? "text-danger" : item.IsLowStock ? "text-warning" : "text-success")">
+                                                        <strong>@item.StockQuantity</strong>
+                                                    </span>
+                                                </td>
+                                                <td>@item.CostPrice.ToString("C")</td>
+                                                <td>@item.SalePrice.ToString("C")</td>
+                                                <td><strong>@item.StockValue.ToString("C")</strong></td>
+                                                <td>
+                                                    @if (item.StockQuantity == 0)
+                                                    {
+                                                        <span class="badge badge-danger">Hết hàng</span>
+                                                    }
+                                                    else if (item.IsLowStock)
+                                                    {
+                                                        <span class="badge badge-warning">Sắp hết</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-success">Còn hàng</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <button class="btn btn-sm btn-outline-primary" onclick="viewProduct(@item.ProductID)" title="Xem chi tiết">
+                                                            <i class="fa fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-warning" onclick="updateStock(@item.ProductID)" title="Cập nhật kho">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
+                                                        @if (item.IsLowStock || item.StockQuantity == 0)
+                                                        {
+                                                            <button class="btn btn-sm btn-outline-success" onclick="reorderProduct(@item.ProductID)" title="Đặt hàng">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fa fa-box-open fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Không có dữ liệu kho hàng</h5>
+                                <p class="text-muted">Chưa có sản phẩm nào trong kho</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row clearfix">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thao tác nhanh</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2 mb-2">
+                                <button class="btn btn-block btn-outline-primary" onclick="addNewProduct()">
+                                    <i class="fa fa-plus mr-2"></i>Thêm sản phẩm
+                                </button>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <button class="btn btn-block btn-outline-success" onclick="bulkUpdateStock()">
+                                    <i class="fa fa-upload mr-2"></i>Nhập kho hàng loạt
+                                </button>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <button class="btn btn-block btn-outline-warning" onclick="generateReorderList()">
+                                    <i class="fa fa-list mr-2"></i>Danh sách đặt hàng
+                                </button>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <button class="btn btn-block btn-outline-info" onclick="stockAudit()">
+                                    <i class="fa fa-check mr-2"></i>Kiểm kê kho
+                                </button>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <button class="btn btn-block btn-outline-secondary" onclick="printBarcode()">
+                                    <i class="fa fa-barcode mr-2"></i>In mã vạch
+                                </button>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <button class="btn btn-block btn-outline-dark" onclick="inventorySettings()">
+                                    <i class="fa fa-cog mr-2"></i>Cài đặt kho
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let sortDirection = {};
+
+        // Auto refresh inventory every 10 minutes
+        setInterval(function() {
+            location.reload();
+        }, 600000);
+
+        // Search functionality
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('.inventory-row');
+
+            rows.forEach(row => {
+                const productName = row.cells[1].textContent.toLowerCase();
+                const productId = row.cells[0].textContent.toLowerCase();
+
+                if (productName.includes(searchTerm) || productId.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Filter functionality
+        function filterProducts() {
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const brandFilter = document.getElementById('brandFilter').value;
+            const stockFilter = document.getElementById('stockFilter').value;
+            const rows = document.querySelectorAll('.inventory-row');
+
+            rows.forEach(row => {
+                let show = true;
+
+                if (categoryFilter && row.dataset.category !== categoryFilter) {
+                    show = false;
+                }
+
+                if (brandFilter && row.dataset.brand !== brandFilter) {
+                    show = false;
+                }
+
+                if (stockFilter && row.dataset.stock !== stockFilter) {
+                    show = false;
+                }
+
+                row.style.display = show ? '' : 'none';
+            });
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('brandFilter').value = '';
+            document.getElementById('stockFilter').value = '';
+            document.getElementById('searchInput').value = '';
+
+            const rows = document.querySelectorAll('.inventory-row');
+            rows.forEach(row => {
+                row.style.display = '';
+            });
+        }
+
+        // Sort table functionality
+        function sortTable(columnIndex) {
+            const table = document.getElementById('inventoryTable');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            const isAscending = sortDirection[columnIndex] !== 'asc';
+            sortDirection[columnIndex] = isAscending ? 'asc' : 'desc';
+
+            rows.sort((a, b) => {
+                const aValue = a.cells[columnIndex].textContent.trim();
+                const bValue = b.cells[columnIndex].textContent.trim();
+
+                // Handle numeric values
+                if (columnIndex === 4 || columnIndex === 5 || columnIndex === 6 || columnIndex === 7) {
+                    const aNum = parseFloat(aValue.replace(/[^0-9.-]+/g, ''));
+                    const bNum = parseFloat(bValue.replace(/[^0-9.-]+/g, ''));
+                    return isAscending ? aNum - bNum : bNum - aNum;
+                }
+
+                // Handle text values
+                return isAscending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Product actions
+        function viewProduct(productId) {
+            window.location.href = '/Admin/Products/Details/' + productId;
+        }
+
+        function updateStock(productId) {
+            window.location.href = '/Admin/Products/UpdateStock/' + productId;
+        }
+
+        function reorderProduct(productId) {
+            if (confirm('Bạn có muốn tạo đơn đặt hàng cho sản phẩm này?')) {
+                window.location.href = '/Admin/Purchase/Create?productId=' + productId;
+            }
+        }
+
+        // Quick actions
+        function refreshInventory() {
+            location.reload();
+        }
+
+        function exportInventory() {
+            window.location.href = '/Admin/Reports/ExportInventory';
+        }
+
+        function addNewProduct() {
+            window.location.href = '/Admin/Products/Create';
+        }
+
+        function bulkUpdateStock() {
+            window.location.href = '/Admin/Products/BulkUpdate';
+        }
+
+        function generateReorderList() {
+            window.open('/Admin/Reports/ReorderList', '_blank');
+        }
+
+        function stockAudit() {
+            window.location.href = '/Admin/Inventory/Audit';
+        }
+
+        function printBarcode() {
+            window.open('/Admin/Reports/Barcode', '_blank');
+        }
+
+        function inventorySettings() {
+            window.location.href = '/Admin/Settings/Inventory';
+        }
+
+        // Counter animation
+        $(document).ready(function() {
+            $('.counter').each(function() {
+                var $this = $(this);
+                var countTo = parseInt($this.text().replace(/[^0-9]/g, ''));
+                if (!isNaN(countTo)) {
+                    $({ countNum: 0 }).animate({ countNum: countTo }, {
+                        duration: 2000,
+                        easing: 'linear',
+                        step: function() {
+                            $this.text(Math.floor(this.countNum).toLocaleString());
+                        },
+                        complete: function() {
+                            $this.text(this.countNum.toLocaleString());
+                        }
+                    });
+                }
+            });
+
+            // Enable search on Enter key
+            $('#searchInput').on('keypress', function(e) {
+                if (e.which === 13) {
+                    searchProducts();
+                }
+            });
+        });
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <text>
+                        toastr.error('@ViewBag.ErrorMessage');
+            </text>
+        }
+    </script>
+}

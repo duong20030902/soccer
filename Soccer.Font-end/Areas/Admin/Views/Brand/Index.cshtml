@@ -1,0 +1,144 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model List<BrandDto>
+
+@{
+    ViewData["Title"] = "Brand Management";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-12 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Brand Management</h3>
+                        <div class="card-options">
+                            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#brandModal" onclick="openCreateModal()">Add New Brand</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped text-nowrap table-vcenter mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Brand Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var brand in Model)
+                                    {
+                                        <tr>
+                                            <td>@brand.BrandID</td>
+                                            <td>@brand.BrandName</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" onclick="openEditModal(@brand.BrandID, '@brand.BrandName')"><i class="fa fa-edit"></i> Edit</button>
+                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteBrand(@brand.BrandID)"><i class="fa fa-trash"></i> Delete</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Create/Edit Brand -->
+<div class="modal fade" id="brandModal" tabindex="-1" role="dialog" aria-labelledby="brandModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="brandModalLabel">Add Brand</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="brandForm">
+                    <input type="hidden" id="brandId" />
+                    <div class="form-group">
+                        <label for="brandName">Brand Name</label>
+                        <input type="text" class="form-control" id="brandName" required />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveBrand()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openCreateModal() {
+            document.getElementById('brandModalLabel').innerText = 'Add Brand';
+            document.getElementById('brandId').value = '';
+            document.getElementById('brandName').value = '';
+            $('#brandModal').modal('show');
+        }
+
+        function openEditModal(id, name) {
+            document.getElementById('brandModalLabel').innerText = 'Edit Brand';
+            document.getElementById('brandId').value = id;
+            document.getElementById('brandName').value = name;
+            $('#brandModal').modal('show');
+        }
+
+        async function saveBrand() {
+            const brandId = document.getElementById('brandId').value;
+            const brandName = document.getElementById('brandName').value;
+
+            if (!brandName) {
+                alert('Brand name cannot be empty.');
+                return;
+            }
+
+            const url = brandId ? '/Admin/Brand/Edit/' + brandId : '/Admin/Brand/Create';
+            const method = brandId ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(brandName)
+                });
+
+                if (response.ok) {
+                    $('#brandModal').modal('hide');
+                    location.reload(); // Refresh the page to update the table
+                } else {
+                    alert('Failed to save brand.');
+                }
+            } catch (error) {
+                alert('An error occurred: ' + error.message);
+            }
+        }
+
+        async function deleteBrand(id) {
+            if (!confirm('Are you sure you want to delete this brand?')) return;
+
+            try {
+                const response = await fetch('/Admin/Brand/Delete/' + id, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    location.reload(); // Refresh the page to update the table
+                } else {
+                    alert('Failed to delete brand.');
+                }
+            } catch (error) {
+                alert('An error occurred: ' + error.message);
+            }
+        }
+    </script>
+}

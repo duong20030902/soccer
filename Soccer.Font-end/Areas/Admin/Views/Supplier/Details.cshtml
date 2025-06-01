@@ -1,0 +1,285 @@
+﻿@using Soccer.Font_end.ViewModels
+@model SupplierDto
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Chi tiết nhà cung cấp</h4>
+                    <small>Thông tin đầy đủ về nhà cung cấp: <strong>@Model.SupplierName</strong></small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin nhà cung cấp</h3>
+                        <div class="card-options">
+                            <a asp-action="Edit" asp-route-id="@Model.SupplierID" class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Chỉnh sửa
+                            </a>
+                            <a asp-action="Index" class="btn btn-secondary btn-sm ml-2">
+                                <i class="fa fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="supplier-info-section">
+                                    <div class="supplier-icon-large text-center mb-4">
+                                        <i class="fa fa-building fa-5x text-primary"></i>
+                                        <h5 class="mt-2 text-primary">Nhà cung cấp</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="supplier-details">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>ID nhà cung cấp:</strong></td>
+                                            <td>
+                                                <span class="badge badge-secondary">#@Model.SupplierID</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Tên nhà cung cấp:</strong></td>
+                                            <td>
+                                                <span class="h4 text-primary">@Model.SupplierName</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Thông tin liên hệ:</strong></td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(Model.ContactInfo))
+                                                {
+                                                    <span class="text-muted">@Model.ContactInfo</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-warning">
+                                                        <i class="fa fa-exclamation-triangle"></i> Chưa có thông tin
+                                                    </span>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Trạng thái:</strong></td>
+                                            <td>
+                                                <span class="badge badge-success">
+                                                    <i class="fa fa-check-circle"></i> Hoạt động
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Đánh giá:</strong></td>
+                                            <td>
+                                                <div class="rating">
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star-o"></i>
+                                                    <span class="ml-2 text-muted">4.0/5</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products from this Supplier (Placeholder) -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Sản phẩm từ nhà cung cấp này</h3>
+                        <div class="card-options">
+                            <span class="badge badge-primary">0 sản phẩm</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center py-4">
+                            <i class="fa fa-box-open fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Chưa có sản phẩm nào</h5>
+                            <p class="text-muted">Chưa có sản phẩm nào từ nhà cung cấp này</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supplier Actions & Statistics -->
+            <div class="col-lg-4 col-md-12">
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thao tác nhanh</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <a asp-action="Edit" asp-route-id="@Model.SupplierID" class="list-group-item list-group-item-action">
+                                <i class="fa fa-edit text-warning"></i>
+                                <span class="ml-2">Chỉnh sửa thông tin</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <i class="fa fa-plus text-success"></i>
+                                <span class="ml-2">Thêm sản phẩm mới</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <i class="fa fa-file-contract text-info"></i>
+                                <span class="ml-2">Xem hợp đồng</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <i class="fa fa-chart-line text-primary"></i>
+                                <span class="ml-2">Báo cáo bán hàng</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action text-danger"
+                               onclick="deleteSupplier(@Model.SupplierID, '@Model.SupplierName')">
+                                <i class="fa fa-trash text-danger"></i>
+                                <span class="ml-2">Xóa nhà cung cấp</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Supplier Statistics -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Thống kê</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h4 class="text-primary">0</h4>
+                                    <small class="text-muted">Sản phẩm</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h4 class="text-success">0</h4>
+                                    <small class="text-muted">Đơn hàng</small>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h4 class="text-info">0đ</h4>
+                                    <small class="text-muted">Doanh thu</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h4 class="text-warning">4.0</h4>
+                                    <small class="text-muted">Đánh giá</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin liên hệ</h3>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.ContactInfo))
+                        {
+                            <div class="contact-details">
+                                <p class="text-muted">@Model.ContactInfo</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-3">
+                                <i class="fa fa-exclamation-triangle fa-2x text-warning mb-2"></i>
+                                <p class="text-muted">Chưa có thông tin liên hệ</p>
+                                <a asp-action="Edit" asp-route-id="@Model.SupplierID" class="btn btn-sm btn-warning">
+                                    <i class="fa fa-edit"></i> Cập nhật thông tin
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa nhà cung cấp</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fa fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                    <p>Bạn có chắc chắn muốn xóa nhà cung cấp <strong id="supplierNameToDelete"></strong>?</p>
+                    <p class="text-danger">Hành động này không thể hoàn tác!</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa fa-trash"></i> Xóa nhà cung cấp
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteSupplier(id, name) {
+        document.getElementById('supplierNameToDelete').textContent = name;
+        document.getElementById('deleteForm').action = '@Url.Action("Delete", "Supplier")/' + id;
+        $('#deleteModal').modal('show');
+    }
+</script>
+
+<style>
+    .supplier-icon-large {
+        padding: 30px;
+        background: linear-gradient(135deg, #f8f9fc 0%, #e3e6f0 100%);
+        border-radius: 15px;
+        border: 2px solid #dee2e6;
+    }
+
+    .stat-item {
+        padding: 15px 0;
+    }
+
+    .list-group-item {
+        border: none;
+        border-radius: 8px !important;
+        margin-bottom: 5px;
+    }
+
+        .list-group-item:hover {
+            background-color: #f8f9fc;
+            transform: translateX(5px);
+        }
+
+    .rating {
+        display: flex;
+        align-items: center;
+    }
+
+    .contact-details {
+        background: #f8f9fc;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #007bff;
+    }
+</style>

@@ -1,0 +1,221 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model UpdateColorRequest
+@{
+    ViewData["Title"] = "Chỉnh sửa màu sắc";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Chỉnh sửa màu sắc</h4>
+                    <small>Cập nhật thông tin màu sắc</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-edit text-warning"></i>
+                            Thông tin màu sắc
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="ColorName" class="form-label">
+                                            <i class="fa fa-tag"></i> Tên màu *
+                                        </label>
+                                        <input asp-for="ColorName" class="form-control" />
+                                        <span asp-validation-for="ColorName" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="ColorCode" class="form-label">
+                                            <i class="fa fa-code"></i> Mã màu (HEX)
+                                        </label>
+                                        <div class="input-group">
+                                            <input asp-for="ColorCode" class="form-control"
+                                                   placeholder="#FF0000" id="colorCodeInput" />
+                                            <input type="color" class="form-control form-control-color"
+                                                   id="colorPicker" title="Chọn màu">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Color Preview -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Xem trước màu</label>
+                                        <div class="color-preview-container">
+                                            <div id="colorPreview" class="color-preview-large"></div>
+                                            <div class="color-preview-info">
+                                                <strong id="previewName">@Model.ColorName</strong>
+                                                <code id="previewCode">@Model.ColorCode</code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fa fa-save"></i> Cập nhật
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fa fa-arrow-left"></i> Quay lại
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-history text-success"></i>
+                            Thông tin hiện tại
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="current-color-info">
+                            <div class="d-flex align-items-center mb-3">
+                                @if (!string.IsNullOrEmpty(Model.ColorCode))
+                                {
+                                    <div class="current-color-preview" style="background-color: @Model.ColorCode;"></div>
+                                }
+                                else
+                                {
+                                    <div class="current-color-preview bg-light border"></div>
+                                }
+                                <div class="ms-3">
+                                    <strong>@Model.ColorName</strong>
+                                    @if (!string.IsNullOrEmpty(Model.ColorCode))
+                                    {
+                                        <br>
+
+                                        <code>@Model.ColorCode</code>
+                                    }
+                                    else
+                                    {
+                                        <br>
+
+                                        <small class="text-muted">Không có mã màu</small>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <style>
+        .color-preview-container {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .color-preview-large {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-right: 15px;
+            background: #f8f9fa;
+        }
+
+        .current-color-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .color-preview-info strong {
+            display: block;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .color-preview-info code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function() {
+            const colorCodeInput = $('#colorCodeInput');
+            const colorPicker = $('#colorPicker');
+            const colorPreview = $('#colorPreview');
+            const previewName = $('#previewName');
+            const previewCode = $('#previewCode');
+            const colorNameInput = $('#ColorName');
+
+            // Cập nhật preview khi thay đổi
+            function updatePreview() {
+                const colorCode = colorCodeInput.val() || '#f8f9fa';
+                const colorName = colorNameInput.val() || 'Tên màu sẽ hiển thị ở đây';
+
+                colorPreview.css('background-color', colorCode);
+                previewName.text(colorName);
+                previewCode.text(colorCode);
+            }
+
+            // Sync color picker với input
+            colorPicker.on('input', function() {
+                colorCodeInput.val(this.value.toUpperCase());
+                updatePreview();
+            });
+
+            colorCodeInput.on('input', function() {
+                const value = this.value;
+                if (value.match(/^#[0-9A-Fa-f]{6}$/)) {
+                    colorPicker.val(value);
+                }
+                updatePreview();
+            });
+
+            colorNameInput.on('input', updatePreview);
+
+            // Set initial values
+        @if (!string.IsNullOrEmpty(Model.ColorCode))
+        {
+            <text>
+                    colorPicker.val('@Model.ColorCode');
+            </text>
+        }
+
+            // Initial update
+            updatePreview();
+        });
+    </script>
+}

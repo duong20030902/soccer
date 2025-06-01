@@ -1,0 +1,182 @@
+﻿@using Soccer.Font_end.Helpers
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html" charset=" utf-8" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>@ViewData["Title"] - Soccer</title>
+    <link rel="shortcut icon" href=~/favicon.ico>
+    <link rel=stylesheet href=~/vendor.css>
+    <link rel=stylesheet href=~/style.css>
+    <link rel="stylesheet" href="~/css/layerslider.css" />
+    <script src=~/js/vendor/modernizr.js></script>
+</head>
+<body>
+    <div class=wrapper>
+        <header class=header-main>
+            <div class=header-upper>
+                <div class=container>
+                    <div class=row>
+                        <ul>
+                            @if (User.Identity?.IsAuthenticated ?? false)
+                            {
+                                <li><a asp-action="Authentication" asp-controller="Auth">Đăng xuất</a></li>
+                            }
+                            else
+                            {
+                                <li><a asp-action="Authentication" asp-controller="Auth">Đăng ký/Đăng nhập</a></li>
+                                <li>
+                                    <a href=shopcart.html>
+                                        <i class="fa fa-shopping-cart"></i>
+                                        <span>
+                                            Giỏ hàng(<span class=cartitems>0</span>)
+                                        </span>
+                                    </a>
+                                </li>
+                            }
+                            <li>
+                                <a href=shopcart.html>
+                                    <i class="fa fa-heart"></i>
+                                    <span>
+                                        Yêu thích(<span class=cartitems>0</span>)
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="header-lower clearfix">
+                <div class=container>
+                    <div class=row>
+                        <h1 class=logo><a href="/"><img src=~/images/logo.png alt=image></a></h1>
+                        <div class=menubar>
+                            <nav class=navbar>
+                                <div class=nav-wrapper>
+                                    <div class=navbar-header>
+                                        <button type=button class=navbar-toggle>
+                                            <span class=sr-only>Toggle navigation</span>
+                                            <span class=icon-bar></span>
+                                        </button>
+                                    </div>
+                                    <div class=nav-menu>
+                                        <ul class="nav navbar-nav menu-bar">
+                                            <li>
+                                                <a href="/" class="@Html.IsActive("Home", "Index")">
+                                                    Trang chủ <span></span> <span></span>
+                                                    <span></span> <span></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a asp-action="Index" asp-controller="About" class="@Html.IsActive("About", "Index")">
+                                                    Chúng tôi <span></span> <span></span> <span></span>
+                                                    <span></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a asp-action="Index" asp-controller="Book" class="@Html.IsActiveParent("Book")">
+                                                    Đặt sân <span></span> <span></span>
+                                                    <span></span> <span></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a asp-action="Index" asp-controller="Shop" class="@Html.IsActiveParent("Shop")">
+                                                    Cửa hàng <span></span> <span></span> <span></span>
+                                                    <span></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a asp-action="Index" asp-controller="Contact" class="@Html.IsActive("Contact", "Index")">
+                                                    Liên hệ <span></span> <span></span> <span></span>
+                                                    <span></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        @RenderBody()
+        <footer class=footer-type01>
+            <div class=container>
+                <div class=row>
+                    <ul class=footer-widget>
+                        <li class=widget-about>
+                            <h4 class=footerheading>về <span>soccer club</span></h4>
+                            <p>
+                                Là một website về bóng đá, cung cấp dịch vụ đặt sân, tìm đối thủ,
+                                bán thiết bị thể thao chất lượng cao. Kết nối cộng đồng yêu bóng đá và tạo ra
+                                những trận đấu đáng nhớ.
+                            </p>
+                            <p>
+                                <span class=uppercaseheading>địa chỉ:</span> Khu Công nghệ cao Hòa Lạc,
+                                Thạch Thất, Hà Nội
+                            </p>
+                            <p><span class=uppercaseheading>hotline:</span> <span class=red>1900-1234</span></p>
+                            <p><span class=uppercaseheading>email:</span> <span class=red>info@soccerclub.vn</span></p>
+                        </li>
+
+                        <li class=widget-news style="width:290px">
+                            <h4 class=footerheading>dịch vụ <span>đặt sân</span></h4>
+                            <ul class=widget_productdetails>
+                                <li><a href="#">Sân 5 người</a></li>
+                                <li><a href="#">Sân 7 người</a></li>
+                                <li><a href="#">Sân 11 người</a></li>
+                                <li><a href="#">Đặt sân theo giờ</a></li>
+                                <li><a href="#">Đặt sân theo ngày</a></li>
+                                <li><a href="#">Xem lịch trống</a></li>
+                            </ul>
+                        </li>
+
+                        <li class=widget-about>
+                            <h4 class=footerheading>tìm <span>đối thủ</span></h4>
+                            <ul class=widget_productdetails>
+                                <li><a href="#">Tìm đội bóng</a></li>
+                                <li><a href="#">Tìm cầu thủ</a></li>
+                                <li><a href="#">Tạo trận đấu</a></li>
+                                <li><a href="#">Tham gia giải đấu</a></li>
+                                <li><a href="#">Cộng đồng bóng đá</a></li>
+                                <li><a href="#">Bảng xếp hạng</a></li>
+                            </ul>
+                        </li>
+
+                        <li class=widget-product>
+                            <h4 class=footerheading>cửa hàng <span>thiết bị</span></h4>
+                            <ul class=widget_productdetails>
+                                <li><a href="#">Giày bóng đá (25)</a></li>
+                                <li><a href="#">Áo đấu (18)</a></li>
+                                <li><a href="#">Quần short (12)</a></li>
+                                <li><a href="#">Bóng đá (8)</a></li>
+                                <li><a href="#">Phụ kiện (15)</a></li>
+                                <li><a href="#">Găng tay thủ môn (6)</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <!-- Thêm phần mạng xã hội và thông tin bổ sung -->
+                    <div class="footer-bottom">
+                        <div class="social-links">
+                            <h5>Kết nối với chúng tôi</h5>
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-youtube"></i></a>
+                            <a href="#"><i class="fa fa-zalo"></i></a>
+                        </div>
+                        <div class="quick-info">
+                            <p><strong>Giờ hoạt động:</strong> 6:00 - 22:00 hàng ngày</p>
+                            <p><strong>Hỗ trợ 24/7:</strong> Chat online hoặc gọi hotline</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src=~/js/vendor/vendor.js></script>
+    <script src=~/js/main.js></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

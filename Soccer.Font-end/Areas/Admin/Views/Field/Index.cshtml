@@ -1,0 +1,309 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model List<FieldDto>
+@{
+    ViewData["Title"] = "Quản lý sân bóng";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Quản lý sân bóng đá</h4>
+                    <small>Quản lý thông tin các sân bóng và giá thuê</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row clearfix row-deck mb-4">
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tổng sân bóng</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.Count</h5>
+                        <span class="font-12">Tổng số sân hiện có</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Giá trung bình</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">
+                            @(Model.Any() ? Model.Average(f => f.PricePerHour).ToString("N0") : "0")
+                        </h5>
+                        <span class="font-12">VNĐ/giờ</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Giá cao nhất</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-success">
+                            @(Model.Any() ? Model.Max(f => f.PricePerHour).ToString("N0") : "0")
+                        </h5>
+                        <span class="font-12">VNĐ/giờ</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Có hình ảnh</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-info">
+                            @Model.Count(f => f.ImageUrls.Any())
+                        </h5>
+                        <span class="font-12">Sân có hình ảnh</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row clearfix mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tìm kiếm và lọc</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="get" class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Tìm kiếm</label>
+                                <input type="text" name="search" class="form-control"
+                                       placeholder="Tên sân hoặc địa điểm..." value="@ViewBag.Search">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Giá từ (VNĐ)</label>
+                                <input type="number" name="minPrice" class="form-control"
+                                       placeholder="0" value="@ViewBag.MinPrice">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Giá đến (VNĐ)</label>
+                                <input type="number" name="maxPrice" class="form-control"
+                                       placeholder="1000000" value="@ViewBag.MaxPrice">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">&nbsp;</label>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i> Tìm
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="row clearfix">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách sân bóng</h3>
+                        <div class="card-options">
+                            <a asp-action="Create" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> Thêm sân mới
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Any())
+                        {
+                            <div class="row">
+                                @foreach (var field in Model)
+                                {
+                                    <div class="col-lg-4 col-md-6 mb-4">
+                                        <div class="card field-card h-100">
+                                            <div class="card-img-container">
+                                                @if (field.ImageUrls.Any())
+                                                {
+                                                    <img src="@field.ImageUrls.First()" class="card-img-top field-image" alt="@field.FieldName">
+                                                    @if (field.ImageUrls.Count > 1)
+                                                    {
+                                                        <div class="image-count-badge">
+                                                            <i class="fa fa-picture-o"></i> @field.ImageUrls.Count
+                                                        </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <div class="no-image-placeholder">
+                                                        <i class="fa fa-image fa-3x text-muted"></i>
+                                                        <p class="text-muted mt-2">Chưa có hình ảnh</p>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="card-body d-flex flex-column">
+                                                <h5 class="card-title">@field.FieldName</h5>
+                                                <p class="card-text">
+                                                    <i class="fa fa-map-marker text-danger"></i>
+                                                    @field.Location
+                                                </p>
+                                                <div class="price-info mt-auto">
+                                                    <div class="price-tag">
+                                                        <span class="price">@field.PricePerHour.ToString("N0")</span>
+                                                        <span class="currency">VNĐ/giờ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer bg-transparent">
+                                                <div class="btn-group w-100" role="group">
+                                                    <a asp-action="Details" asp-route-id="@field.FieldID"
+                                                       class="btn btn-info btn-sm">
+                                                        <i class="fa fa-eye"></i> Chi tiết
+                                                    </a>
+                                                    <a asp-action="Edit" asp-route-id="@field.FieldID"
+                                                       class="btn btn-warning btn-sm">
+                                                        <i class="fa fa-edit"></i> Sửa
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                            onclick="confirmDelete(@field.FieldID, '@field.FieldName')">
+                                                        <i class="fa fa-trash"></i> Xóa
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fa fa-futbol-o fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Chưa có sân bóng nào</h5>
+                                <p class="text-muted">Hãy thêm sân bóng đầu tiên cho hệ thống</p>
+                                <a asp-action="Create" class="btn btn-primary">
+                                    <i class="fa fa-plus"></i> Thêm sân đầu tiên
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa sân bóng <strong id="fieldName"></strong>?</p>
+                <p class="text-danger"><small>Hành động này không thể hoàn tác!</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <style>
+        .field-card {
+            transition: all 0.3s;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+            .field-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            }
+
+        .card-img-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .field-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .field-card:hover .field-image {
+            transform: scale(1.05);
+        }
+
+        .image-count-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .no-image-placeholder {
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+        }
+
+        .price-info {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .price-tag {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            display: inline-block;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .currency {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+    </style>
+
+@section Scripts {
+    <script>
+        function confirmDelete(id, name) {
+            document.getElementById('fieldName').textContent = name;
+            document.getElementById('deleteForm').action = '/Admin/Field/Delete/' + id;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+    </script>
+}

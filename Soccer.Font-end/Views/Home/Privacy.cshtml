@@ -1,0 +1,544 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Đăng nhập/Đăng ký - Soccer</title>
+    <link rel="shortcut icon" href="~/favicon.ico">
+    <link rel="stylesheet" href="~/vendor.css">
+    <link rel="stylesheet" href="~/style.css">
+    <link rel="stylesheet" href="~/css/layerslider.css" />
+    <script src="~/js/vendor/modernizr.js"></script>
+    <style>
+        .auth-container {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            color: white;
+            position: relative;
+        }
+
+            .auth-container h2 {
+                text-align: center;
+                color: #e81e25;
+                margin-bottom: 30px;
+                font-family: 'Oswald', sans-serif;
+                text-transform: uppercase;
+            }
+
+        .auth-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-tab {
+            padding: 10px 25px;
+            cursor: pointer;
+            background: transparent;
+            color: white;
+            font-weight: bold;
+            border: none;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+            .auth-tab.active {
+                color: #e81e25;
+                border-bottom: 3px solid #e81e25;
+            }
+
+        .auth-form {
+            display: none;
+        }
+
+            .auth-form.active {
+                display: block;
+            }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: bold;
+                color: #ddd;
+                font-family: 'Oswald', sans-serif;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 12px 15px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                background: rgba(0, 0, 0, 0.5);
+                color: white;
+                border-radius: 3px;
+                font-size: 16px;
+            }
+
+                .form-group input:focus {
+                    outline: none;
+                    border-color: #e81e25;
+                }
+
+        .btn-submit {
+            background: #e81e25;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: 'Oswald', sans-serif;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+            .btn-submit:hover {
+                background: #c61017;
+            }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+            .auth-footer a {
+                color: #e81e25;
+                text-decoration: none;
+            }
+
+        .banner-auth {
+            background: url('images/banner/background01.jpg') center/cover no-repeat;
+            position: relative;
+            padding: 80px 0;
+        }
+
+            .banner-auth::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.6);
+            }
+
+        .banner-auth-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: white;
+        }
+
+            .banner-auth-content h1 {
+                font-size: 48px;
+                font-weight: bold;
+                color: white;
+                text-transform: uppercase;
+                margin-bottom: 20px;
+                font-family: 'Oswald', sans-serif;
+            }
+
+                .banner-auth-content h1 span {
+                    color: #e81e25;
+                }
+
+        .social-login {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 3px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 45%;
+        }
+
+            .social-btn.facebook {
+                background: #3b5998;
+            }
+
+            .social-btn.google {
+                background: #dd4b39;
+            }
+
+            .social-btn i {
+                margin-right: 10px;
+                font-size: 18px;
+            }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+            .checkbox-group input {
+                margin-right: 10px;
+                width: auto;
+            }
+
+        .form-divider {
+            margin: 25px 0;
+            text-align: center;
+            position: relative;
+        }
+
+            .form-divider::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 0;
+                width: 42%;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .form-divider::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                right: 0;
+                width: 42%;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .form-divider span {
+                background: rgba(0, 0, 0, 0.7);
+                position: relative;
+                z-index: 1;
+                padding: 0 10px;
+                color: #aaa;
+            }
+
+        /* Soccer ball animation */
+        .soccer-ball {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: url('images/banner/ball.png') no-repeat;
+            background-size: contain;
+            animation: bounce 6s infinite;
+            opacity: 0.8;
+            z-index: 0;
+        }
+
+        @@keyframes bounce {
+            0%, 100%
+
+        {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-80px) rotate(180deg);
+        }
+
+        }
+
+        .soccer-ball:nth-child(1) {
+            top: 20px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .soccer-ball:nth-child(2) {
+            top: 40px;
+            right: 15%;
+            animation-delay: 1s;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="header-main">
+            <div class="header-upper">
+                <div class="container">
+                    <div class="row">
+                        <ul>
+                            <li><a href="auth.html" class="active">Đăng ký/Đăng nhập</a></li>
+                            <li>
+                                <a href="shopcart.html">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    <span>
+                                        Giỏ hàng(<span class="cartitems">0</span>)
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="header-lower clearfix">
+                <div class="container">
+                    <div class="row">
+                        <h1 class="logo"><a href="/"><img src="~/images/logo.png" alt="logo"></a></h1>
+                        <div class="menubar">
+                            <nav class="navbar">
+                                <div class="nav-wrapper">
+                                    <div class="navbar-header">
+                                        <button type="button" class="navbar-toggle">
+                                            <span class="sr-only">Toggle navigation</span>
+                                            <span class="icon-bar"></span>
+                                        </button>
+                                    </div>
+                                    <div class="nav-menu">
+                                        <ul class="nav navbar-nav menu-bar">
+                                            <li>
+                                                <a href="/">
+                                                    Trang chủ <span></span> <span></span>
+                                                    <span></span> <span></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="about.html">
+                                                    Chúng tôi <span></span> <span></span> <span></span>
+                                                    <span></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="bookTicket.html">
+                                                    Đặt sân <span></span> <span></span>
+                                                    <span></span> <span></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="shop.html">
+                                                    Cửa hàng <span></span> <span></span> <span></span>
+                                                    <span></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="contact.html">
+                                                    Liên hệ <span></span> <span></span> <span></span>
+                                                    <span></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Banner Section -->
+        <div class="banner-auth" style="margin-top: 100px;">
+            <div class="container">
+                <div class="banner-auth-content">
+                    <h1>Tham gia <span>với</span> chúng tôi</h1>
+                    <p>Đăng ký tài khoản để nhận thông tin về các trận đấu, mua sắm sản phẩm và đặt sân bóng!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Section -->
+        <section class="auth-section bg-white">
+            <div class="container">
+                <div class="row">
+                    <div class="auth-container">
+                        <div class="soccer-ball"></div>
+                        <div class="soccer-ball"></div>
+
+                        <div class="auth-tabs">
+                            <button class="auth-tab active" onclick="showTab('login')">Đăng nhập</button>
+                            <button class="auth-tab" onclick="showTab('register')">Đăng ký</button>
+                        </div>
+
+                        <!-- Login Form -->
+                        <form class="auth-form active" id="login-form">
+                            <div class="form-group">
+                                <label for="login-email">Email</label>
+                                <input type="email" id="login-email" placeholder="Nhập email của bạn" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="login-password">Mật khẩu</label>
+                                <input type="password" id="login-password" placeholder="Nhập mật khẩu của bạn" required>
+                            </div>
+
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="remember-me">
+                                <label for="remember-me">Ghi nhớ đăng nhập</label>
+                            </div>
+
+                            <button type="submit" class="btn-submit">Đăng nhập</button>
+
+                            <div class="auth-footer">
+                                <a href="#" class="forgot-password">Quên mật khẩu?</a>
+                            </div>
+
+                            <div class="form-divider">
+                                <span>Hoặc</span>
+                            </div>
+
+                            <div class="social-login">
+                                <div class="social-btn facebook">
+                                    <i class="fa fa-facebook"></i> Facebook
+                                </div>
+                                <div class="social-btn google">
+                                    <i class="fa fa-google"></i> Google
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Register Form -->
+                        <form class="auth-form" id="register-form">
+                            <div class="form-group">
+                                <label for="register-name">Họ tên</label>
+                                <input type="text" id="register-name" placeholder="Nhập họ tên của bạn" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="register-email">Email</label>
+                                <input type="email" id="register-email" placeholder="Nhập email của bạn" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="register-phone">Số điện thoại</label>
+                                <input type="tel" id="register-phone" placeholder="Nhập số điện thoại của bạn" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="register-password">Mật khẩu</label>
+                                <input type="password" id="register-password" placeholder="Tạo mật khẩu" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="register-confirm-password">Xác nhận mật khẩu</label>
+                                <input type="password" id="register-confirm-password" placeholder="Xác nhận mật khẩu" required>
+                            </div>
+
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="agree-terms" required>
+                                <label for="agree-terms">Tôi đồng ý với <a href="#">Điều khoản sử dụng</a> và <a href="#">Chính sách bảo mật</a></label>
+                            </div>
+
+                            <button type="submit" class="btn-submit">Đăng ký</button>
+
+                            <div class="form-divider">
+                                <span>Hoặc</span>
+                            </div>
+
+                            <div class="social-login">
+                                <div class="social-btn facebook">
+                                    <i class="fa fa-facebook"></i> Facebook
+                                </div>
+                                <div class="social-btn google">
+                                    <i class="fa fa-google"></i> Google
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer-type01">
+            <div class="container">
+                <div class="row">
+                    <ul class="footer-widget">
+                        <li class="widget-about">
+                            <h4 class="footerheading">about <span>soccer club</span></h4>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis vitae, velit perferendis
+                                dolor atque magni, porro minus repellendus nostrum alias ea deserunt. Vel quam explicabo
+                                laudantium accusamus est, nulla minima!
+                            </p>
+                            <p>
+                                <span class="uppercaseheading">address:</span><span class="red">239</span> main street
+                                London,England.
+                            </p>
+                            <p><span class="uppercaseheading">call:</span> <span class="red">1800-2222-3333</span></p>
+                        </li>
+                        <li class="widget-about"></li>
+                        <li class="widget-about"></li>
+                        <li class="widget-product">
+                            <h4 class="footerheading">real <span>soccer products</span></h4>
+                            <ul class="widget_productdetails">
+                                <li><a href="#">shoes(4)</a></li>
+                                <li><a href="#">men(4)</a></li>
+                                <li><a href="#">t-shirt(4)</a></li>
+                                <li><a href="#">sports(4)</a></li>
+                                <li><a href="#">glass</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="~/js/vendor/vendor.js"></script>
+    <script src="~/js/main.js"></script>
+    <script>
+        function showTab(tabName) {
+            // Hide all forms
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+
+            // Deactivate all tabs
+            document.querySelectorAll('.auth-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show the selected form
+            document.getElementById(tabName + '-form').classList.add('active');
+
+            // Activate the clicked tab
+            event.currentTarget.classList.add('active');
+        }
+
+        // Form validations
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Here you would add your login logic
+            alert('Đăng nhập thành công!');
+        });
+
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Validate password match
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert('Mật khẩu xác nhận không khớp!');
+                return;
+            }
+
+            // Here you would add your registration logic
+            alert('Đăng ký thành công!');
+        });
+    </script>
+</body>
+</html>

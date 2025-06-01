@@ -1,0 +1,473 @@
+﻿@using Soccer.Font_end.ViewModels
+@model List<OrderDto>
+@{
+    ViewBag.Title = "Orders Management";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Orders Management Dashboard</h4>
+                    <small>Monitor and manage all customer orders.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row clearfix row-deck">
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Orders</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.Count</h5>
+                        <span class="font-12">All time orders </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Pending Orders</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.Count(o => o.Status == "Pending")</h5>
+                        <span class="font-12">Awaiting processing </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Completed</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.Count(o => o.Status == "Completed")</h5>
+                        <span class="font-12">Successfully delivered </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Processing</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.Count(o => o.Status == "Processing")</h5>
+                        <span class="font-12">Being processed </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Cancelled</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.Count(o => o.Status == "Cancelled")</h5>
+                        <span class="font-12">Cancelled orders </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Revenue</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32">@Model.Sum(o => o.TotalAmount).ToString("C")</h5>
+                        <span class="font-12">Total sales amount </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders and Order Status -->
+        <div class="row clearfix row-deck">
+            <div class="col-xl-8 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Orders</h3>
+                        <div class="card-options">
+                            <button class="btn btn-sm btn-primary" onclick="window.location.reload()">
+                                <i class="fa fa-refresh"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (ViewBag.ErrorMessage != null)
+                        {
+                            <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+                        }
+
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                @TempData["SuccessMessage"]
+                            </div>
+                        }
+
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                @TempData["ErrorMessage"]
+                            </div>
+                        }
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped text-nowrap table-vcenter mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
+                                        <th>Items</th>
+                                        <th>Total</th>
+                                        <th>Payment</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model.OrderByDescending(o => o.OrderDate).Take(10))
+                                    {
+                                        <tr>
+                                            <td><strong>#@order.OrderID</strong></td>
+                                            <td>@order.UserName</td>
+                                            <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                                            <td>@order.Items.Count items</td>
+                                            <td><strong>@order.TotalAmount.ToString("C")</strong></td>
+                                            <td>@order.PaymentMethod</td>
+                                            <td>
+                                                @{
+                                                    var statusClass = order.Status switch
+                                                    {
+                                                        "Pending" => "tag-orange",
+                                                        "Processing" => "tag-blue",
+                                                        "Completed" => "tag-success",
+                                                        "Cancelled" => "tag-danger",
+                                                        "Shipped" => "tag-info",
+                                                        _ => "tag-secondary"
+                                                    };
+                                                }
+                                                <span class="tag @statusClass">@order.Status</span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="@Url.Action("Details", new { id = order.OrderID })"
+                                                       class="btn btn-sm btn-outline-info" title="View Details">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                    <div class="btn-group" role="group">
+                                                        <button type="button" class="btn btn-sm btn-outline-warning dropdown-toggle"
+                                                                data-toggle="dropdown" title="Update Status">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <button class="dropdown-item" onclick="updateOrderStatus(@order.OrderID, 1, 'Pending')">
+                                                                <i class="fa fa-clock-o text-orange"></i> Pending
+                                                            </button>
+                                                            <button class="dropdown-item" onclick="updateOrderStatus(@order.OrderID, 2, 'Processing')">
+                                                                <i class="fa fa-cog text-blue"></i> Processing
+                                                            </button>
+                                                            <button class="dropdown-item" onclick="updateOrderStatus(@order.OrderID, 3, 'Shipped')">
+                                                                <i class="fa fa-truck text-info"></i> Shipped
+                                                            </button>
+                                                            <button class="dropdown-item" onclick="updateOrderStatus(@order.OrderID, 4, 'Completed')">
+                                                                <i class="fa fa-check-circle text-success"></i> Completed
+                                                            </button>
+                                                            <div class="dropdown-divider"></div>
+                                                            <button class="dropdown-item" onclick="updateOrderStatus(@order.OrderID, 5, 'Cancelled')">
+                                                                <i class="fa fa-times-circle text-danger"></i> Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteOrder(@order.OrderID)" title="Delete">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Order Status Distribution</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-4 border-right pb-4 pt-4">
+                                <label class="mb-0 font-13">Total Orders</label>
+                                <h4 class="font-30 font-weight-bold text-col-blue counter">@Model.Count</h4>
+                            </div>
+                            <div class="col-4 border-right pb-4 pt-4">
+                                <label class="mb-0 font-13">This Month</label>
+                                <h4 class="font-30 font-weight-bold text-col-blue counter">@Model.Count(o => o.OrderDate.Month == DateTime.Now.Month)</h4>
+                            </div>
+                            <div class="col-4 pb-4 pt-4">
+                                <label class="mb-0 font-13">Today</label>
+                                <h4 class="font-30 font-weight-bold text-col-blue counter">@Model.Count(o => o.OrderDate.Date == DateTime.Today)</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-vcenter mb-0">
+                            <tbody>
+                                @{
+                                    var statusGroups = Model.GroupBy(o => o.Status).Select(g => new { Status = g.Key, Count = g.Count(), Percentage = (g.Count() * 100) / Model.Count }).ToList();
+                                }
+                                @foreach (var status in statusGroups)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="clearfix">
+                                                <div class="float-left"><strong>@status.Percentage%</strong></div>
+                                                <div class="float-right"><small class="text-muted">@status.Status</small></div>
+                                            </div>
+                                            <div class="progress progress-xs">
+                                                @{
+                                                    var progressClass = status.Status switch
+                                                    {
+                                                        "Pending" => "bg-orange",
+                                                        "Processing" => "bg-blue",
+                                                        "Completed" => "bg-success",
+                                                        "Cancelled" => "bg-danger",
+                                                        "Shipped" => "bg-info",
+                                                        _ => "bg-secondary"
+                                                    };
+                                                }
+                                                <div class="progress-bar @progressClass" role="progressbar"
+                                                     style="width: @status.Percentage%"
+                                                     aria-valuenow="@status.Percentage" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Orders Table -->
+        <div class="row clearfix">
+            <div class="col-12 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All Orders</h3>
+                        <div class="card-options">
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm" placeholder="Search orders..." id="searchInput">
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped text-nowrap table-vcenter mb-0" id="ordersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
+                                        <th>Shipping</th>
+                                        <th>Address</th>
+                                        <th>Payment</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model)
+                                    {
+                                        <tr>
+                                            <td><strong>#@order.OrderID</strong></td>
+                                            <td>@order.UserName</td>
+                                            <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@order.ShippingMethod</td>
+                                            <td title="@order.Address">@(order.Address.Length > 30 ? order.Address.Substring(0, 30) + "..." : order.Address)</td>
+                                            <td>@order.PaymentMethod</td>
+                                            <td><strong>@order.TotalAmount.ToString("C")</strong></td>
+                                            <td>
+                                                @{
+                                                    var statusClass = order.Status switch
+                                                    {
+                                                        "Pending" => "tag-orange",
+                                                        "Processing" => "tag-blue",
+                                                        "Completed" => "tag-success",
+                                                        "Cancelled" => "tag-danger",
+                                                        "Shipped" => "tag-info",
+                                                        _ => "tag-secondary"
+                                                    };
+                                                }
+                                                <span class="tag @statusClass">@order.Status</span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="@Url.Action("Details", new { id = order.OrderID })"
+                                                       class="btn btn-sm btn-outline-info" title="View Details">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                    <div class="btn-group" role="group">
+                                                        <button type="button" class="btn btn-sm btn-outline-warning dropdown-toggle"
+                                                                data-toggle="dropdown" title="Update Status">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <button class="dropdown-item" onclick="updateOrderStatus(@order.OrderID, 1, 'Pending')">
+                                                                <i class="fa fa-clock-o text-orange"></i> Pending
+                                                            </button>
+                                                            <button class="dropdown-item" onclick="updateOrderStatus(@order.OrderID, 2, 'Processing')">
+                                                                <i class="fa fa-cog text-blue"></i> Processing
+                                                            </button>
+                                                            <button class="dropdown-item" onclick="updateOrderStatus(@order.OrderID, 3, 'Shipped')">
+                                                                <i class="fa fa-truck text-info"></i> Shipped
+                                                            </button>
+                                                            <button class="dropdown-item" onclick="updateOrderStatus(@order.OrderID, 4, 'Completed')">
+                                                                <i class="fa fa-check-circle text-success"></i> Completed
+                                                            </button>
+                                                            <div class="dropdown-divider"></div>
+                                                            <button class="dropdown-item" onclick="updateOrderStatus(@order.OrderID, 5, 'Cancelled')">
+                                                                <i class="fa fa-times-circle text-danger"></i> Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteOrder(@order.OrderID)" title="Delete">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden forms for actions -->
+<form id="statusUpdateForm" method="post" style="display: none;">
+    <input type="hidden" name="orderId" id="orderIdInput" />
+    <input type="hidden" name="statusId" id="statusIdInput" />
+</form>
+
+<form id="deleteForm" method="post" style="display: none;">
+    <input type="hidden" name="id" id="deleteOrderIdInput" />
+</form>
+
+@section Scripts {
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const table = document.getElementById('ordersTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const text = row.textContent.toLowerCase();
+                if (text.indexOf(searchTerm) > -1) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+
+        // Update order status
+        function updateOrderStatus(orderId, statusId, statusName) {
+            if (confirm(`Are you sure you want to change order #${orderId} status to "${statusName}"?`)) {
+                const form = document.getElementById('statusUpdateForm');
+                form.action = '@Url.Action("UpdateStatus")';
+                document.getElementById('orderIdInput').value = orderId;
+                document.getElementById('statusIdInput').value = statusId;
+                form.submit();
+            }
+        }
+
+        // Delete order
+        function deleteOrder(orderId) {
+            if (confirm(`Are you sure you want to delete order #${orderId}? This action cannot be undone.`)) {
+                const form = document.getElementById('deleteForm');
+                form.action = '@Url.Action("Delete")';
+                document.getElementById('deleteOrderIdInput').value = orderId;
+                form.submit();
+            }
+        }
+
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    </script>
+}
+
+<style>
+    .tag {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
+        color: #fff;
+    }
+
+    .tag-orange {
+        background-color: #fd9644;
+    }
+
+    .tag-blue {
+        background-color: #467fcf;
+    }
+
+    .tag-success {
+        background-color: #5eba00;
+    }
+
+    .tag-danger {
+        background-color: #cd201f;
+    }
+
+    .tag-info {
+        background-color: #39afd1;
+    }
+
+    .tag-secondary {
+        background-color: #868e96;
+    }
+
+    .btn-group .dropdown-menu {
+        min-width: 150px;
+    }
+
+    .dropdown-item i {
+        margin-right: 8px;
+        width: 16px;
+    }
+</style>

@@ -1,0 +1,315 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model CreateFieldRequest
+@{
+    ViewData["Title"] = "Thêm sân bóng mới";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Thêm sân bóng mới</h4>
+                    <small>Tạo thông tin sân bóng mới cho hệ thống</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-futbol text-primary"></i>
+                            Thông tin sân bóng
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Create" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="FieldName" class="form-label">
+                                            <i class="fas fa-tag"></i> Tên sân bóng *
+                                        </label>
+                                        <input asp-for="FieldName" class="form-control"
+                                               placeholder="Ví dụ: Sân bóng Thống Nhất..." />
+                                        <span asp-validation-for="FieldName" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="PricePerHour" class="form-label">
+                                            <i class="fas fa-money-bill"></i> Giá thuê/giờ (VNĐ) *
+                                        </label>
+                                        <input asp-for="PricePerHour" type="number" class="form-control"
+                                               placeholder="200000" min="0" step="1000" />
+                                        <span asp-validation-for="PricePerHour" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="Location" class="form-label">
+                                            <i class="fas fa-map-marker-alt"></i> Địa điểm *
+                                        </label>
+                                        <textarea asp-for="Location" class="form-control" rows="3"
+                                                  placeholder="Nhập địa chỉ chi tiết của sân bóng..."></textarea>
+                                        <span asp-validation-for="Location" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">
+                                            <i class="fas fa-images"></i> Hình ảnh sân bóng
+                                        </label>
+                                        <div id="imageUrlsContainer">
+                                            <div class="input-group mb-2">
+                                                <input type="url" name="ImageUrls" class="form-control"
+                                                       placeholder="https://example.com/image1.jpg" />
+                                                <button type="button" class="btn btn-outline-danger" onclick="removeImageUrl(this)">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addImageUrl()">
+                                            <i class="fas fa-plus"></i> Thêm hình ảnh
+                                        </button>
+                                        <div class="form-text">
+                                            Nhập URL của hình ảnh sân bóng. Có thể thêm nhiều hình ảnh.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Preview Section -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Xem trước</label>
+                                        <div class="preview-container">
+                                            <div class="field-preview-card">
+                                                <div class="preview-image">
+                                                    <i class="fas fa-image fa-2x text-muted"></i>
+                                                    <p class="text-muted mt-2">Hình ảnh sẽ hiển thị ở đây</p>
+                                                </div>
+                                                <div class="preview-content">
+                                                    <h5 id="previewName">Tên sân bóng</h5>
+                                                    <p id="previewLocation">
+                                                        <i class="fas fa-map-marker-alt text-danger"></i>
+                                                        Địa điểm
+                                                    </p>
+                                                    <div class="preview-price">
+                                                        <span id="previewPrice">0</span> VNĐ/giờ
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Lưu sân bóng
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Quay lại
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle text-info"></i>
+                            Hướng dẫn
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-lightbulb"></i> Lưu ý:</h6>
+                            <ul class="mb-0">
+                                <li>Tên sân bóng phải từ 3-100 ký tự</li>
+                                <li>Địa điểm phải chi tiết và rõ ràng</li>
+                                <li>Giá thuê tính theo giờ (VNĐ)</li>
+                                <li>Hình ảnh không bắt buộc nhưng nên có</li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-3">
+                            <h6>Gợi ý giá thuê:</h6>
+                            <div class="price-suggestions">
+                                <div class="price-item" onclick="setPrice(150000)">
+                                    <strong>150,000 VNĐ</strong>
+                                    <small>Sân 5 người</small>
+                                </div>
+                                <div class="price-item" onclick="setPrice(200000)">
+                                    <strong>200,000 VNĐ</strong>
+                                    <small>Sân 7 người</small>
+                                </div>
+                                <div class="price-item" onclick="setPrice(300000)">
+                                    <strong>300,000 VNĐ</strong>
+                                    <small>Sân 11 người</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <h6>Tiện ích khác:</h6>
+                            <div class="facilities">
+                                <span class="badge bg-light text-dark">🚿 Phòng tắm</span>
+                                <span class="badge bg-light text-dark">🚗 Bãi đỗ xe</span>
+                                <span class="badge bg-light text-dark">💡 Đèn chiếu sáng</span>
+                                <span class="badge bg-light text-dark">🥤 Căng tin</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <style>
+        .preview-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .field-preview-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .preview-image {
+            height: 150px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-content {
+            padding: 15px;
+        }
+
+        .preview-price {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .price-suggestions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .price-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .price-item:hover {
+                background: #e9ecef;
+            }
+
+            .price-item strong {
+                display: block;
+                color: #28a745;
+            }
+
+            .price-item small {
+                color: #6c757d;
+            }
+
+        .facilities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+            .facilities .badge {
+                margin-bottom: 5px;
+            }
+    </style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        let imageUrlCount = 1;
+
+        function addImageUrl() {
+            const container = document.getElementById('imageUrlsContainer');
+            const newInput = document.createElement('div');
+            newInput.className = 'input-group mb-2';
+            newInput.innerHTML = `
+                <input type="url" name="ImageUrls" class="form-control"
+                       placeholder="https://example.com/image${imageUrlCount + 1}.jpg" />
+                <button type="button" class="btn btn-outline-danger" onclick="removeImageUrl(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            container.appendChild(newInput);
+            imageUrlCount++;
+        }
+
+        function removeImageUrl(button) {
+            const container = document.getElementById('imageUrlsContainer');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+        function setPrice(price) {
+            document.getElementById('PricePerHour').value = price;
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const name = document.getElementById('FieldName').value || 'Tên sân bóng';
+            const location = document.getElementById('Location').value || 'Địa điểm';
+            const price = document.getElementById('PricePerHour').value || '0';
+
+            document.getElementById('previewName').textContent = name;
+            document.getElementById('previewLocation').innerHTML =
+                '<i class="fas fa-map-marker-alt text-danger"></i> ' + location;
+            document.getElementById('previewPrice').textContent =
+                parseInt(price).toLocaleString('vi-VN');
+        }
+
+        // Update preview on input change
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('FieldName').addEventListener('input', updatePreview);
+            document.getElementById('Location').addEventListener('input', updatePreview);
+            document.getElementById('PricePerHour').addEventListener('input', updatePreview);
+
+            updatePreview();
+        });
+    </script>
+}

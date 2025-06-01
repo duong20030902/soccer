@@ -1,0 +1,310 @@
+﻿@using Soccer.Font_end.ViewModels
+@model List<SupplierDto>
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Quản lý nhà cung cấp</h4>
+                    <small>Quản lý thông tin các nhà cung cấp sản phẩm. <a asp-action="Create">Thêm nhà cung cấp mới</a></small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row clearfix row-deck">
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tổng nhà cung cấp</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.Count</h5>
+                        <span class="font-12">Nhà cung cấp hiện có</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Có thông tin liên hệ</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-success">@Model.Count(s => !string.IsNullOrEmpty(s.ContactInfo))</h5>
+                        <span class="font-12">Đầy đủ thông tin</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thiếu thông tin</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-warning">@Model.Count(s => string.IsNullOrEmpty(s.ContactInfo))</h5>
+                        <span class="font-12">Cần cập nhật</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Hoạt động</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-primary">@Model.Count</h5>
+                        <span class="font-12">Đang hợp tác</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supplier Management -->
+        <div class="row clearfix">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách nhà cung cấp</h3>
+                        <div class="card-options">
+                            <a asp-action="Create" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> Thêm nhà cung cấp
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Alert Messages -->
+                        @if (TempData["Success"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                @TempData["Success"]
+                            </div>
+                        }
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                @TempData["Error"]
+                            </div>
+                        }
+
+                        <!-- Search -->
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <form asp-action="Index" method="get">
+                                    <div class="input-group">
+                                        <input type="text" name="searchTerm" class="form-control"
+                                               placeholder="Tìm kiếm nhà cung cấp..."
+                                               value="@ViewBag.SearchTerm">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="submit">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-4 text-right">
+                                @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+                                {
+                                    <a asp-action="Index" class="btn btn-outline-secondary">
+                                        <i class="fa fa-times"></i> Xóa bộ lọc
+                                    </a>
+                                }
+                            </div>
+                        </div>
+
+                        @if (Model.Any())
+                        {
+                            <!-- Supplier Grid -->
+                            <div class="row" id="supplierGrid">
+                                @foreach (var supplier in Model)
+                                {
+                                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 supplier-item">
+                                        <div class="card supplier-card">
+                                            <div class="card-body">
+                                                <div class="supplier-header mb-3">
+                                                    <div class="supplier-icon">
+                                                        <i class="fa fa-building fa-2x text-primary"></i>
+                                                    </div>
+                                                    <div class="supplier-status">
+                                                        @if (!string.IsNullOrEmpty(supplier.ContactInfo))
+                                                        {
+                                                            <span class="badge badge-success">Đầy đủ</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-warning">Thiếu TT</span>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <h5 class="supplier-name mb-2">@supplier.SupplierName</h5>
+                                                <p class="text-muted small mb-3">ID: #@supplier.SupplierID</p>
+
+                                                @if (!string.IsNullOrEmpty(supplier.ContactInfo))
+                                                {
+                                                    <div class="contact-info mb-3">
+                                                        <small class="text-muted">
+                                                            <i class="fa fa-info-circle"></i>
+                                                            @(supplier.ContactInfo.Length > 50 ? supplier.ContactInfo.Substring(0, 50) + "..." : supplier.ContactInfo)
+                                                        </small>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="contact-info mb-3">
+                                                        <small class="text-muted">
+                                                            <i class="fa fa-exclamation-triangle text-warning"></i>
+                                                            Chưa có thông tin liên hệ
+                                                        </small>
+                                                    </div>
+                                                }
+
+                                                <div class="btn-group w-100" role="group">
+                                                    <a asp-action="Details" asp-route-id="@supplier.SupplierID"
+                                                       class="btn btn-sm btn-outline-info" title="Chi tiết">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                    <a asp-action="Edit" asp-route-id="@supplier.SupplierID"
+                                                       class="btn btn-sm btn-outline-warning" title="Chỉnh sửa">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                                            onclick="deleteSupplier(@supplier.SupplierID, '@supplier.SupplierName')" title="Xóa">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+                                {
+                                    <i class="fa fa-search fa-5x text-muted mb-3"></i>
+                                    <h5 class="text-muted">Không tìm thấy nhà cung cấp nào</h5>
+                                    <p class="text-muted">Không có nhà cung cấp nào phù hợp với từ khóa "<strong>@ViewBag.SearchTerm</strong>"</p>
+                                    <a asp-action="Index" class="btn btn-secondary">
+                                        <i class="fa fa-arrow-left"></i> Quay lại danh sách
+                                    </a>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-building fa-5x text-muted mb-3"></i>
+                                    <h5 class="text-muted">Chưa có nhà cung cấp nào</h5>
+                                    <p class="text-muted">Hãy thêm nhà cung cấp đầu tiên cho hệ thống</p>
+                                    <a asp-action="Create" class="btn btn-primary">
+                                        <i class="fa fa-plus"></i> Thêm nhà cung cấp đầu tiên
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa nhà cung cấp</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fa fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                    <p>Bạn có chắc chắn muốn xóa nhà cung cấp <strong id="supplierNameToDelete"></strong>?</p>
+                    <p class="text-danger">Hành động này không thể hoàn tác và có thể ảnh hưởng đến các sản phẩm đang liên kết!</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa fa-trash"></i> Xóa nhà cung cấp
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteSupplier(id, name) {
+        document.getElementById('supplierNameToDelete').textContent = name;
+        document.getElementById('deleteForm').action = '@Url.Action("Delete")/' + id;
+        $('#deleteModal').modal('show');
+    }
+</script>
+
+<style>
+    .supplier-card {
+        transition: all 0.3s ease;
+        border: 1px solid #e3e6f0;
+        height: 100%;
+        position: relative;
+    }
+
+        .supplier-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+
+    .supplier-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .supplier-icon {
+        padding: 10px;
+        background: #f8f9fc;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .supplier-name {
+        font-weight: bold;
+        color: #5a5c69;
+    }
+
+    .supplier-item {
+        margin-bottom: 20px;
+    }
+
+    .contact-info {
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+    }
+
+    @@media (max-width: 768px) {
+        .supplier-card {
+            margin-bottom: 1rem;
+        }
+
+        .btn-group {
+            flex-direction: column;
+        }
+
+            .btn-group .btn {
+                border-radius: 0.375rem !important;
+                margin-bottom: 0.25rem;
+            }
+    }
+</style>

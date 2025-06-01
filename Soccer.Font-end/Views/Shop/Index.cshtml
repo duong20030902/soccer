@@ -1,0 +1,903 @@
+﻿@using Soccer.Font_end.ViewModels
+@model ShopIndexViewModel
+@{
+    int maxBrandsToShow = 10;
+    int brandCounter = 0;
+    int totalPages = Model.TotalItems > 0 ? (int)Math.Ceiling((double)Model.TotalItems / Model.PageSize) : 1;
+}
+
+<style>
+    /* Custom CSS for Modern Shop Design */
+    .shop-hero {
+        background: linear-gradient(135deg, #FF6B35 0%, #C1272D 100%);
+        position: relative;
+        padding: 80px 0;
+        text-align: center;
+        color: #FFFFFF;
+        margin-bottom: 40px;
+        overflow: hidden;
+    }
+
+        .shop-hero::before {
+            content: '⚽';
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .shop-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .shop-hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+    .shop-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .shop-layout {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    /* Sidebar Filters */
+    .filters-sidebar {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(255, 107, 53, 0.15);
+        padding: 24px;
+        height: fit-content;
+        position: sticky;
+        top: 20px;
+        border: 2px solid #FF8C42;
+    }
+
+    .filter-section {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #E0E0E0;
+    }
+
+        .filter-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+    .filter-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+        .filter-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #FF6B35, #C1272D);
+            border-radius: 2px;
+        }
+
+    .form-control, select {
+        border: 2px solid #E0E0E0;
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-bottom: 10px;
+        background: #FFFFFF;
+    }
+
+        .form-control:focus, select:focus {
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+            outline: none;
+        }
+
+    .filter-btn {
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: #FFFFFF;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+            background: linear-gradient(135deg, #C1272D, #8B0000);
+        }
+
+    /* Brand List */
+    .brand-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .brand-list li {
+            margin-bottom: 8px;
+        }
+
+        .brand-list a {
+            display: block;
+            padding: 10px 14px;
+            text-decoration: none;
+            color: #2D3748;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+
+            .brand-list a:hover {
+                background: linear-gradient(135deg, #FF6B35, #FF8C42);
+                color: #FFFFFF;
+                transform: translateX(4px);
+                border-color: #C1272D;
+            }
+
+    .show-more-btn {
+        background: transparent;
+        border: 2px solid #FF6B35;
+        color: #FF6B35;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+    }
+
+        .show-more-btn:hover {
+            background: #FF6B35;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+    /* Color Swatches */
+    .color-swatches {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .color-swatch {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 3px solid #E0E0E0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+        .color-swatch:hover {
+            transform: scale(1.15);
+            border-color: #FF6B35;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+    /* Size Options */
+    .size-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    size-option {
+        padding: 10px 16px;
+        border: 2px solid #E0E0E0;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #2D3748;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-align: center;
+        min-width: 45px;
+        background: #FFFFFF;
+    }
+
+    .size-option:hover {
+        border-color: #FF6B35;
+        background: linear-gradient(135deg, #FF6B35, #FF8C42);
+        color: #FFFFFF;
+        transform: translateY(-2px);
+    }
+
+    /* Products Grid */
+    .products-section {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(255, 107, 53, 0.1);
+        padding: 30px;
+        border: 2px solid #FF8C42;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 3px solid #FFD23F;
+    }
+
+    .products-count {
+        color: #718096;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .sort-dropdown {
+        border: 2px solid #E0E0E0;
+        border-radius: 8px;
+        padding: 10px 16px;
+        background: #FFFFFF;
+        font-weight: 500;
+    }
+
+        .sort-dropdown:focus {
+            border-color: #FF6B35;
+        }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    /* Product Cards */
+    .product-card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        transition: all 0.4s ease;
+        border: 2px solid #E0E0E0;
+        position: relative;
+    }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.25);
+            border-color: #FF6B35;
+        }
+
+    .product-image {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 200px;
+        overflow: hidden;
+        background: #F5F5F5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.4s ease;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            transition: all 0.4s ease;
+        }
+
+    .product-card:hover .product-image img {
+        transform: scale(1.05);
+    }
+
+    /* Fallback when no image */
+    .product-image.no-image {
+        background: linear-gradient(135deg, #F5F5F5, #E0E0E0);
+        color: #718096;
+        font-size: 3rem;
+    }
+
+        .product-image.no-image::before {
+            content: '⚽';
+            opacity: 0.3;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+    .product-image img[src=""],
+    .product-image img[src="/images/default-product.jpg"] {
+        display: none;
+    }
+
+    .product-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: linear-gradient(135deg, #FFD23F, #FF6B35);
+        color: #1A1A1A;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        z-index: 3;
+    }
+
+    .product-info {
+        padding: 20px;
+    }
+
+    .product-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2D3748;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+        .product-title a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease;
+        }
+
+            .product-title a:hover {
+                color: #FF6B35;
+            }
+
+    .product-rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 12px;
+    }
+
+    .star {
+        color: #FFD23F;
+        font-size: 16px;
+    }
+
+    .rating-text {
+        font-size: 12px;
+        color: #718096;
+        margin-left: 8px;
+        font-weight: 500;
+    }
+
+    .product-description {
+        color: #718096;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 16px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .product-price {
+        font-size: 1.4rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #C1272D, #FF6B35);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 16px;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-add-cart {
+        flex: 1;
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: #FFFFFF;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+        .btn-add-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+            color: #FFFFFF;
+            text-decoration: none;
+            background: linear-gradient(135deg, #C1272D, #8B0000);
+        }
+
+    .btn-favorite {
+        width: 48px;
+        height: 48px;
+        border: 2px solid #E0E0E0;
+        background: #FFFFFF;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #718096;
+        font-size: 16px;
+    }
+
+        .btn-favorite:hover, .btn-favorite.active {
+            border-color: #C1272D;
+            color: #C1272D;
+            background: linear-gradient(135deg, #FFE8E3, #FFF0ED);
+            transform: scale(1.05);
+        }
+
+    /* Pagination */
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+    }
+
+    .pagination {
+        display: flex;
+        gap: 8px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .page-item {
+        display: flex;
+    }
+
+    .page-link {
+        padding: 12px 16px;
+        border: 2px solid #E0E0E0;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #2D3748;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        background: #FFFFFF;
+    }
+
+        .page-link:hover, .page-item.active .page-link {
+            background: linear-gradient(135deg, #FF6B35, #C1272D);
+            color: #FFFFFF;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+    .page-item.disabled .page-link {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    /* Mobile Responsive */
+    @@media (max-width: 768px) {
+        .shop-layout {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .filters-sidebar {
+            position: static;
+        }
+
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .shop-hero {
+            padding: 60px 0;
+        }
+
+            .shop-hero h1 {
+                font-size: 2rem;
+            }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .products-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .product-actions {
+            flex-direction: column;
+        }
+
+        .btn-favorite {
+            width: 100%;
+            height: 44px;
+        }
+    }
+
+    /* Loading Animation */
+    .product-image.loading {
+        background: linear-gradient(90deg, #F5F5F5 25%, #E0E0E0 50%, #F5F5F5 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+    }
+
+    @@keyframes loading {
+        0% {
+            background-position: 200% 0;
+        }
+
+        100% {
+            background-position: -200% 0;
+        }
+    }
+</style>
+
+<div class=innerbannerwrap>
+    <div class=content></div>
+    <div class=innerbanner><h2 class=bannerHeadline>cửa hàng của<span> chúng tôi</span></h2></div>
+</div>
+
+<!-- Hero Section -->
+<div class="shop-hero">
+    <div class="shop-container">
+        <h1>Cửa hàng phụ kiện bóng đá <span style="color: #ffd700;">tốt nhất</span></h1>
+        <p>Chúng tôi mang đến không chỉ là những sản phẩm, mà còn là sự đồng hành trên hành trình chinh phục đỉnh cao của bạn. Từ trang phục thi đấu chuyên nghiệp đến phụ kiện hỗ trợ đắc lực, mọi thứ bạn cần đều có tại đây.</p>
+    </div>
+</div>
+
+<div class="shop-container">
+    <div class="shop-layout">
+        <!-- Filters Sidebar -->
+        <aside class="filters-sidebar">
+            <!-- Brand Filter -->
+            <div class="filter-section" id="brandsWidget">
+                <div class="filter-title">🏷️ Thương hiệu đồng hành</div>
+                <ul class="brand-list">
+                    @foreach (var brand in Model.Brands)
+                    {
+                        if (brand.BrandID == 17)
+                        {
+                            continue;
+                        }
+
+                        brandCounter++;
+                        if (brandCounter <= maxBrandsToShow)
+                        {
+                            <li><a href="#">@brand.BrandName</a></li>
+                        }
+                        else
+                        {
+                            <li class="extra-brand" style="display: none;"><a href="#">@brand.BrandName</a></li>
+                        }
+                    }
+                </ul>
+                @if (Model.Brands.Count > maxBrandsToShow)
+                {
+                    <button id="showMoreBrands" class="show-more-btn">Xem thêm</button>
+                }
+            </div>
+
+            <!-- Color Filter -->
+            <div class="filter-section">
+                <div class="filter-title">🎨 Sắc màu đam mê</div>
+                <div class="color-swatches">
+                    @foreach (var color in Model.Colors)
+                    {
+                        <a href="#" class="color-swatch" style="background-color:@color.ColorCode" title="@color.ColorName"></a>
+                    }
+                </div>
+            </div>
+
+            <!-- Size Filter -->
+            <div class="filter-section">
+                <div class="filter-title">📏 Kích cỡ hoàn hảo</div>
+                <div class="size-options">
+                    @foreach (var size in Model.Sizes)
+                    {
+                        <a href="#" class="size-option">@size.SizeName</a>
+                    }
+                </div>
+            </div>
+
+            <!-- Category & Price Filter -->
+            <div class="filter-section">
+                <div class="filter-title">🔍 Bộ lọc tìm kiếm</div>
+                <form method="get" asp-action="Index">
+                    <select class="sort-dropdown" name="categoryId">
+                        <option value="">Tất cả danh mục</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.CategoryID" selected="@(Context.Request.Query["categoryId"] == category.CategoryID.ToString())">@category.CategoryName</option>
+                        }
+                    </select>
+
+                    <input type="number" name="minPrice" value="@Context.Request.Query["minPrice"]" class="form-control" placeholder="Giá thấp nhất" />
+                    <input type="number" name="maxPrice" value="@Context.Request.Query["maxPrice"]" class="form-control" placeholder="Giá cao nhất" />
+
+                    <button type="submit" class="filter-btn">🔍 Lọc sản phẩm</button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Products Section -->
+        <main class="products-section">
+            <div class="section-header">
+                <div>
+                    <h2 style="margin: 0; color: #2d3748; font-size: 1.5rem;">Sản phẩm nổi bật</h2>
+                    <div class="products-count">Hiển thị @Model.Products.Count() sản phẩm</div>
+                </div>
+                <select class="sort-dropdown">
+                    <option value="">Sắp xếp theo</option>
+                    <option value="price_asc">Giá thấp đến cao</option>
+                    <option value="price_desc">Giá cao đến thấp</option>
+                    <option value="name_asc">Tên A-Z</option>
+                    <option value="name_desc">Tên Z-A</option>
+                </select>
+            </div>
+
+            @{
+                string GetImageUrl(string imageUrl)
+                {
+                    if (string.IsNullOrEmpty(imageUrl))
+                        return "/images/default-product.jpg";
+
+                    // Kiểm tra nếu là URL đầy đủ
+                    if (imageUrl.StartsWith("http://") || imageUrl.StartsWith("https://"))
+                        return imageUrl;
+
+                    // Nếu là đường dẫn local
+                    return $"/images/{imageUrl}.jpg";
+                }
+            }
+
+            <!-- Products Grid -->
+            <div class="products-grid">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="@GetImageUrl(product.ImageURL)" alt="@product.ProductName" />
+                            <div class="product-badge">Mới</div>
+                        </div>
+
+                        <div class="product-info">
+                            <h4 class="product-title">
+                                <a asp-action="Detail" asp-controller="Shop" asp-route-id="@product.ProductID">
+                                    @product.ProductName
+                                </a>
+                            </h4>
+
+                            <div class="product-rating">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= Math.Floor(product.AverageRating))
+                                    {
+                                        <i class="fa fa-star star"></i>
+                                    }
+                                    else if (i == Math.Ceiling(product.AverageRating) && product.AverageRating % 1 != 0)
+                                    {
+                                        <i class="fa fa-star-half-o star"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-star-o star"></i>
+                                    }
+                                }
+                                <span class="rating-text">(@product.AverageRating.ToString("F1"))</span>
+                            </div>
+
+                            <p class="product-description">@product.Description</p>
+
+                            <div class="product-price">@string.Format("{0:N0}đ", product.SalePrice)</div>
+
+                            <div class="product-actions">
+                                <a href="#" class="btn-add-cart addToCart"
+                                   data-productid="@product.ProductID" data-productname="@product.ProductName"
+                                   data-productprice="@product.SalePrice" data-productimage="@product.ImageURL">
+                                    🛒 Thêm vào giỏ
+                                </a>
+                                <a href="#" class="btn-favorite">❤️</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-wrapper">
+                @if (totalPages > 1)
+                {
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            @if (Model.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Index", "Shop", new { page = Model.CurrentPage - 1, sort = Context.Request.Query["sort"], brandId = Context.Request.Query["brandId"], colorId = Context.Request.Query["colorId"], sizeId = Context.Request.Query["sizeId"], categoryId = Context.Request.Query["categoryId"], minPrice = Context.Request.Query["minPrice"], maxPrice = Context.Request.Query["maxPrice"] })" aria-label="Previous">
+                                        <span aria-hidden="true">«</span>
+                                        <span class="sr-only">Trước</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                        <span aria-hidden="true">«</span>
+                                        <span class="sr-only">Trước</span>
+                                    </a>
+                                </li>
+                            }
+                            @for (int i = 1; i <= totalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", "Shop", new { page = i, sort = Context.Request.Query["sort"], brandId = Context.Request.Query["brandId"], colorId = Context.Request.Query["colorId"], sizeId = Context.Request.Query["sizeId"], categoryId = Context.Request.Query["categoryId"], minPrice = Context.Request.Query["minPrice"], maxPrice = Context.Request.Query["maxPrice"] })">@i</a>
+                                </li>
+                            }
+                            @if (Model.CurrentPage < totalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Index", "Shop", new { page = Model.CurrentPage + 1, sort = Context.Request.Query["sort"], brandId = Context.Request.Query["brandId"], colorId = Context.Request.Query["colorId"], sizeId = Context.Request.Query["sizeId"], categoryId = Context.Request.Query["categoryId"], minPrice = Context.Request.Query["minPrice"], maxPrice = Context.Request.Query["maxPrice"] })" aria-label="Next">
+                                        <span aria-hidden="true">»</span>
+                                        <span class="sr-only">Sau</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                        <span aria-hidden="true">»</span>
+                                        <span class="sr-only">Sau</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            </div>
+        </main>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Xử lý loading ảnh
+            $('.product-image img').each(function() {
+                const $img = $(this);
+                const $container = $img.parent();
+
+                $img.on('load', function() {
+                    $container.addClass('loaded');
+                }).on('error', function() {
+                    $container.addClass('no-image');
+                    $img.hide();
+                });
+
+                // Kiểm tra nếu ảnh đã load
+                if (this.complete) {
+                    $container.addClass('loaded');
+                }
+            });
+
+            // Show/Hide more brands
+            $('#showMoreBrands').on('click', function (e) {
+                e.preventDefault();
+
+                let $extraBrands = $('#brandsWidget .extra-brand');
+                let isVisible = $extraBrands.is(':visible');
+
+                if (isVisible) {
+                    $extraBrands.slideUp(300);
+                    $(this).text('Xem thêm');
+                } else {
+                    $extraBrands.slideDown(300);
+                    $(this).text('Ẩn bớt');
+                }
+            });
+
+            // Favorite button toggle
+            $('.btn-favorite').on('click', function(e) {
+                e.preventDefault();
+                $(this).toggleClass('active');
+            });
+
+            // Add smooth scrolling for mobile
+            if (window.innerWidth <= 768) {
+                $('.product-card').on('click', function() {
+                    $(this).find('.product-title a')[0].click();
+                });
+            }
+
+            // Add loading effect for images
+            $('.product-image').each(function() {
+                const $this = $(this);
+                const bgImage = $this.css('background-image');
+
+                if (bgImage && bgImage !== 'none') {
+                    const imageUrl = bgImage.slice(4, -1).replace(/"/g, "");
+                    const img = new Image();
+
+                    img.onload = function() {
+                        $this.addClass('loaded');
+                    };
+
+                    img.src = imageUrl;
+                }
+            });
+        });
+    </script>
+
+    <style>
+        .product-image {
+            background-color: #f7fafc;
+            transition: all 0.4s ease;
+        }
+
+            .product-image.loaded {
+                background-color: transparent;
+            }
+
+            .product-image:not(.loaded)::after {
+                content: '📷';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 2rem;
+                opacity: 0.3;
+            }
+    </style>
+}

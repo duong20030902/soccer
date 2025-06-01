@@ -1,0 +1,241 @@
+﻿@using Soccer.Font_end.ViewModels
+@model CreateTimeslotRequest
+@{
+    ViewData["Title"] = "Thêm Timeslot mới";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-action="Index">Timeslot</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Thêm mới</li>
+                        </ol>
+                    </nav>
+                    <h4>Thêm Timeslot mới</h4>
+                    <small>Tạo khung thời gian mới cho hệ thống</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thông báo lỗi -->
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fa fa-exclamation-triangle"></i> @TempData["Error"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin Timeslot</h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="StartTime" class="form-label">
+                                            <i class="fa fa-clock-o"></i> Thời gian bắt đầu
+                                        </label>
+                                        <input asp-for="StartTime" type="time" class="form-control" required />
+                                        <span asp-validation-for="StartTime" class="text-danger"></span>
+                                        <small class="form-text text-muted">Chọn giờ bắt đầu khung thời gian</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="EndTime" class="form-label">
+                                            <i class="fa fa-clock-o"></i> Thời gian kết thúc
+                                        </label>
+                                        <input asp-for="EndTime" type="time" class="form-control" required />
+                                        <span asp-validation-for="EndTime" class="text-danger"></span>
+                                        <small class="form-text text-muted">Chọn giờ kết thúc khung thời gian</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Preview thông tin -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <i class="fa fa-info-circle"></i> Xem trước thông tin
+                                            </h6>
+                                            <div class="row" id="preview-info">
+                                                <div class="col-md-4">
+                                                    <strong>Thời gian:</strong>
+                                                    <div id="time-range">--:-- - --:--</div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <strong>Thời lượng:</strong>
+                                                    <div id="duration">-- phút</div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <strong>Buổi:</strong>
+                                                    <div id="session">--</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Lưu Timeslot
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fa fa-arrow-left"></i> Quay lại
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar với hướng dẫn -->
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-lightbulb-o"></i> Hướng dẫn
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h6><i class="fa fa-info-circle"></i> Lưu ý:</h6>
+                            <ul class="mb-0">
+                                <li>Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc</li>
+                                <li>Không được trùng với timeslot đã có</li>
+                                <li>Khuyến nghị mỗi timeslot từ 60-120 phút</li>
+                            </ul>
+                        </div>
+
+                        <h6>Gợi ý khung thời gian phổ biến:</h6>
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action time-suggestion"
+                               data-start="06:00" data-end="08:00">
+                                <strong>06:00 - 08:00</strong>
+                                <small class="text-muted d-block">Sáng sớm (120 phút)</small>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action time-suggestion"
+                               data-start="08:00" data-end="10:00">
+                                <strong>08:00 - 10:00</strong>
+                                <small class="text-muted d-block">Sáng (120 phút)</small>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action time-suggestion"
+                               data-start="14:00" data-end="16:00">
+                                <strong>14:00 - 16:00</strong>
+                                <small class="text-muted d-block">Chiều (120 phút)</small>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action time-suggestion"
+                               data-start="18:00" data-end="20:00">
+                                <strong>18:00 - 20:00</strong>
+                                <small class="text-muted d-block">Tối (120 phút)</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .time-suggestion:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .card.bg-light {
+        background-color: #f8f9fa !important;
+    }
+
+    #preview-info div {
+        padding: 0.25rem 0;
+        font-size: 0.9rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .alert ul {
+        padding-left: 1.2rem;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const startTimeInput = document.querySelector('input[name="StartTime"]');
+        const endTimeInput = document.querySelector('input[name="EndTime"]');
+
+        function updatePreview() {
+            const startTime = startTimeInput.value;
+            const endTime = endTimeInput.value;
+
+            if (startTime && endTime) {
+                // Hiển thị khoảng thời gian
+                document.getElementById('time-range').textContent = `${startTime} - ${endTime}`;
+
+                // Tính thời lượng
+                const start = new Date(`2000-01-01T${startTime}:00`);
+                const end = new Date(`2000-01-01T${endTime}:00`);
+                const duration = (end - start) / (1000 * 60); // phút
+
+                if (duration > 0) {
+                    document.getElementById('duration').textContent = `${duration} phút`;
+
+                    // Xác định buổi
+                    const hour = start.getHours();
+                    let session = '';
+                    if (hour < 12) session = 'Sáng';
+                    else if (hour < 18) session = 'Chiều';
+                    else session = 'Tối';
+
+                    document.getElementById('session').textContent = session;
+                } else {
+                    document.getElementById('duration').textContent = 'Thời gian không hợp lệ';
+                    document.getElementById('session').textContent = '--';
+                }
+            } else {
+                document.getElementById('time-range').textContent = '--:-- - --:--';
+                document.getElementById('duration').textContent = '-- phút';
+                document.getElementById('session').textContent = '--';
+            }
+        }
+
+        startTimeInput.addEventListener('change', updatePreview);
+        endTimeInput.addEventListener('change', updatePreview);
+
+        // Gợi ý thời gian
+        document.querySelectorAll('.time-suggestion').forEach(suggestion => {
+            suggestion.addEventListener('click', function(e) {
+                e.preventDefault();
+                const startTime = this.dataset.start;
+                const endTime = this.dataset.end;
+
+                startTimeInput.value = startTime;
+                endTimeInput.value = endTime;
+                updatePreview();
+            });
+        });
+
+        // Initial preview update
+        updatePreview();
+    });
+</script>

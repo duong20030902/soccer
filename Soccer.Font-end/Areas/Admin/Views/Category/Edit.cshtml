@@ -1,0 +1,101 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model UpdateCategoryRequest
+@{
+    ViewData["Title"] = "Chỉnh sửa danh mục";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Chỉnh sửa danh mục</h4>
+                    <small>Cập nhật thông tin danh mục</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-edit text-warning"></i>
+                            Thông tin danh mục
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" method="post">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="CategoryName" class="form-label">
+                                            <i class="fa fa-tag"></i> Tên danh mục *
+                                        </label>
+                                        <input asp-for="CategoryName" class="form-control" />
+                                        <span asp-validation-for="CategoryName" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="ParentID" class="form-label">
+                                            <i class="fa fa-sitemap"></i> Danh mục cha
+                                        </label>
+                                        <select asp-for="ParentID" class="form-control">
+                                            <option value="">-- Chọn danh mục cha (tùy chọn) --</option>
+                                            @if (ViewBag.ParentCategories != null)
+                                            {
+                                                @foreach (var parent in (List<CategoryDto>)ViewBag.ParentCategories)
+                                                {
+                                                    <option value="@parent.CategoryID">@parent.CategoryName</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fa fa-save"></i> Cập nhật
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fa fa-arrow-left"></i> Quay lại
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-history text-success"></i>
+                            Lịch sử thay đổi
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-primary"></div>
+                                <div class="timeline-content">
+                                    <h6>Đang chỉnh sửa</h6>
+                                    <p class="text-muted">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,133 @@
+﻿@using Soccer.Font_end.ViewModels
+@model CreateSizeViewModel
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Tạo kích thước mới</h4>
+                    <small>Thêm kích thước mới cho sản phẩm</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin kích thước</h3>
+                        <div class="card-options">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["Error"]</div>
+                        }
+
+                        <form asp-action="Create" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="SizeName" class="form-label">Tên kích thước <span class="text-danger">*</span></label>
+                                        <input asp-for="SizeName" class="form-control" placeholder="VD: S, M, L, XL, 38, 39, 40...">
+                                        <span asp-validation-for="SizeName" class="text-danger"></span>
+                                        <small class="form-text text-muted">Tên kích thước phải là duy nhất</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="SizeOrder" class="form-label">Thứ tự hiển thị <span class="text-danger">*</span></label>
+                                        <input asp-for="SizeOrder" type="number" class="form-control" min="1" max="999">
+                                        <span asp-validation-for="SizeOrder" class="text-danger"></span>
+                                        <small class="form-text text-muted">Thứ tự sắp xếp khi hiển thị (1 = đầu tiên)</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description" class="form-label">Mô tả</label>
+                                <textarea asp-for="Description" class="form-control" rows="3" placeholder="Mô tả về kích thước này (tùy chọn)"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Tạo kích thước
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary ml-2">Hủy</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Size Guidelines -->
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Hướng dẫn tạo kích thước</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6><i class="fa fa-lightbulb text-warning"></i> Gợi ý kích thước quần áo:</h6>
+                            <div class="size-examples">
+                                <span class="badge badge-info mr-1">XS</span>
+                                <span class="badge badge-primary mr-1">S</span>
+                                <span class="badge badge-success mr-1">M</span>
+                                <span class="badge badge-warning mr-1">L</span>
+                                <span class="badge badge-danger mr-1">XL</span>
+                                <span class="badge badge-dark mr-1">XXL</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6><i class="fa fa-lightbulb text-info"></i> Gợi ý kích thước giày:</h6>
+                            <div class="size-examples">
+                                <span class="badge badge-outline-secondary mr-1">35</span>
+                                <span class="badge badge-outline-secondary mr-1">36</span>
+                                <span class="badge badge-outline-secondary mr-1">37</span>
+                                <span class="badge badge-outline-secondary mr-1">38</span>
+                                <span class="badge badge-outline-secondary mr-1">39</span>
+                                <span class="badge badge-outline-secondary mr-1">40</span>
+                                <span class="badge badge-outline-secondary mr-1">41</span>
+                                <span class="badge badge-outline-secondary mr-1">42</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6><i class="fa fa-exclamation-circle text-info"></i> Lưu ý:</h6>
+                            <ul class="small text-muted">
+                                <li>Tên kích thước phải duy nhất</li>
+                                <li>Sử dụng tên ngắn gọn, dễ hiểu</li>
+                                <li>Thứ tự hiển thị từ nhỏ đến lớn</li>
+                                <li>Có thể sắp xếp lại sau khi tạo</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle"></i>
+                            <strong>Mẹo:</strong> Nên tạo kích thước theo thứ tự từ nhỏ đến lớn để dễ quản lý.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .size-examples {
+        line-height: 2;
+    }
+
+    .badge-outline-secondary {
+        color: #6c757d;
+        border: 1px solid #6c757d;
+        background: transparent;
+    }
+</style>

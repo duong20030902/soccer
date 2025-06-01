@@ -1,0 +1,427 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model UpdateFieldRequest
+@{
+    ViewData["Title"] = "Chỉnh sửa sân bóng";
+    var fieldId = ViewContext.RouteData.Values["id"];
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Chỉnh sửa sân bóng</h4>
+                    <small>Cập nhật thông tin sân bóng</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-edit text-warning"></i>
+                            Thông tin sân bóng
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="FieldName" class="form-label">
+                                            <i class="fa fa-tag"></i> Tên sân bóng *
+                                        </label>
+                                        <input asp-for="FieldName" class="form-control" />
+                                        <span asp-validation-for="FieldName" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="PricePerHour" class="form-label">
+                                            <i class="fa fa-money"></i> Giá thuê/giờ (VNĐ) *
+                                        </label>
+                                        <input asp-for="PricePerHour" type="number" class="form-control"
+                                               min="0" step="1000" />
+                                        <span asp-validation-for="PricePerHour" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="Location" class="form-label">
+                                            <i class="fa fa-map-marker"></i> Địa điểm *
+                                        </label>
+                                        <textarea asp-for="Location" class="form-control" rows="3"></textarea>
+                                        <span asp-validation-for="Location" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Preview Section -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Xem trước thay đổi</label>
+                                        <div class="preview-container">
+                                            <div class="field-preview-card">
+                                                <div class="preview-image">
+                                                    <i class="fa fa-futbol-o fa-2x text-muted"></i>
+                                                    <p class="text-muted mt-2">Hình ảnh sân bóng</p>
+                                                </div>
+                                                <div class="preview-content">
+                                                    <h5 id="previewName">@Model.FieldName</h5>
+                                                    <p id="previewLocation">
+                                                        <i class="fa fa-map-marker fa-2x text-danger"></i>
+                                                        @Model.Location
+                                                    </p>
+                                                    <div class="preview-price">
+                                                        <span id="previewPrice">@Model.PricePerHour.ToString("N0")</span> VNĐ/giờ
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fa fa-save"></i> Cập nhật sân bóng
+                                </button>
+                                <a asp-action="Details" asp-route-id="@fieldId" class="btn btn-info">
+                                    <i class="fa fa-eye"></i> Xem chi tiết
+                                </a>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fa fa-arrow-left"></i> Quay lại danh sách
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Current Information -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-info-circle text-info"></i>
+                            Thông tin hiện tại
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="current-info">
+                            <div class="info-item">
+                                <label>Tên sân:</label>
+                                <strong>@Model.FieldName</strong>
+                            </div>
+                            <div class="info-item">
+                                <label>Giá hiện tại:</label>
+                                <span class="current-price">@Model.PricePerHour.ToString("N0") VNĐ/giờ</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Địa điểm:</label>
+                                <p class="current-location">@Model.Location</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Suggestions -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-lightbulb-o text-warning"></i>
+                            Gợi ý giá thuê
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="price-suggestions">
+                            <div class="price-item" onclick="setPrice(150000)">
+                                <strong>150,000 VNĐ</strong>
+                                <small>Sân 5 người</small>
+                                <span class="badge bg-light text-dark">Phổ biến</span>
+                            </div>
+                            <div class="price-item" onclick="setPrice(200000)">
+                                <strong>200,000 VNĐ</strong>
+                                <small>Sân 7 người</small>
+                                <span class="badge bg-success">Khuyến nghị</span>
+                            </div>
+                            <div class="price-item" onclick="setPrice(300000)">
+                                <strong>300,000 VNĐ</strong>
+                                <small>Sân 11 người</small>
+                                <span class="badge bg-warning text-dark">Cao cấp</span>
+                            </div>
+                            <div class="price-item" onclick="setPrice(400000)">
+                                <strong>400,000 VNĐ</strong>
+                                <small>Sân VIP</small>
+                                <span class="badge bg-danger">Premium</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Change History -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-history text-success"></i>
+                            Lịch sử thay đổi
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-warning"></div>
+                                <div class="timeline-content">
+                                    <h6>Đang chỉnh sửa</h6>
+                                    <p class="text-muted">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-success"></div>
+                                <div class="timeline-content">
+                                    <h6>Tạo sân bóng</h6>
+                                    <p class="text-muted">Thông tin ban đầu</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <style>
+        .preview-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .field-preview-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .preview-image {
+            height: 120px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-content {
+            padding: 15px;
+        }
+
+        .preview-price {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .current-info .info-item {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+            .current-info .info-item:last-child {
+                border-bottom: none;
+            }
+
+        .current-info label {
+            font-weight: 600;
+            color: #6c757d;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .current-price {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .current-location {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .price-suggestions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .price-item {
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+            .price-item:hover {
+                background: #e9ecef;
+                transform: translateY(-2px);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+            .price-item strong {
+                display: block;
+                color: #28a745;
+                font-size: 16px;
+            }
+
+            .price-item small {
+                color: #6c757d;
+                display: block;
+                margin-top: 2px;
+            }
+
+            .price-item .badge {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                font-size: 10px;
+            }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .timeline-content h6 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .timeline-content p {
+            margin: 0;
+            font-size: 12px;
+        }
+
+        /* Form enhancements */
+        .form-control:focus {
+            border-color: #ffc107;
+            box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+        }
+    </style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function setPrice(price) {
+            document.getElementById('PricePerHour').value = price;
+            updatePreview();
+
+            // Visual feedback
+            event.target.style.background = '#28a745';
+            event.target.style.color = 'white';
+            setTimeout(() => {
+                event.target.style.background = '#f8f9fa';
+                event.target.style.color = '';
+            }, 1000);
+        }
+
+        function updatePreview() {
+            const name = document.getElementById('FieldName').value || 'Tên sân bóng';
+            const location = document.getElementById('Location').value || 'Địa điểm';
+            const price = document.getElementById('PricePerHour').value || '0';
+
+            document.getElementById('previewName').textContent = name;
+            document.getElementById('previewLocation').innerHTML =
+                '<i class="fa fa fa-map-marker text-danger"></i> ' + location;
+            document.getElementById('previewPrice').textContent =
+                parseInt(price).toLocaleString('vi-VN');
+        }
+
+        // Update preview on input change
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('FieldName').addEventListener('input', updatePreview);
+            document.getElementById('Location').addEventListener('input', updatePreview);
+            document.getElementById('PricePerHour').addEventListener('input', updatePreview);
+
+            // Initial update
+            updatePreview();
+
+            // Add change detection
+            let originalValues = {
+                name: document.getElementById('FieldName').value,
+                location: document.getElementById('Location').value,
+                price: document.getElementById('PricePerHour').value
+            };
+
+            function checkChanges() {
+                const hasChanges =
+                    document.getElementById('FieldName').value !== originalValues.name ||
+                    document.getElementById('Location').value !== originalValues.location ||
+                    document.getElementById('PricePerHour').value !== originalValues.price;
+
+                const submitBtn = document.querySelector('button[type="submit"]');
+                if (hasChanges) {
+                    submitBtn.classList.add('btn-warning');
+                    submitBtn.classList.remove('btn-secondary');
+                    submitBtn.innerHTML = '<i class="fa fa-save"></i> Cập nhật sân bóng';
+                } else {
+                    submitBtn.classList.add('btn-secondary');
+                    submitBtn.classList.remove('btn-warning');
+                    submitBtn.innerHTML = '<i class="fa fa-check"></i> Không có thay đổi';
+                }
+            }
+
+            document.getElementById('FieldName').addEventListener('input', checkChanges);
+            document.getElementById('Location').addEventListener('input', checkChanges);
+            document.getElementById('PricePerHour').addEventListener('input', checkChanges);
+        });
+
+        // Form submission with loading state
+        document.querySelector('form').addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang cập nhật...';
+        });
+    </script>
+}

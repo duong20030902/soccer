@@ -1,0 +1,263 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model CreateColorRequest
+@{
+    ViewData["Title"] = "Thêm màu sắc mới";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Thêm màu sắc mới</h4>
+                    <small>Tạo màu sắc mới cho sản phẩm</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-palette text-primary"></i>
+                            Thông tin màu sắc
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Create" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="ColorName" class="form-label">
+                                            <i class="fa fa-tag"></i> Tên màu *
+                                        </label>
+                                        <input asp-for="ColorName" class="form-control"
+                                               placeholder="Ví dụ: Đỏ, Xanh dương..." />
+                                        <span asp-validation-for="ColorName" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="ColorCode" class="form-label">
+                                            <i class="fa fa-code"></i> Mã màu (HEX)
+                                        </label>
+                                        <div class="input-group">
+                                            <input asp-for="ColorCode" class="form-control"
+                                                   placeholder="#FF0000" id="colorCodeInput" />
+                                            <input type="color" class="form-control form-control-color"
+                                                   id="colorPicker" title="Chọn màu">
+                                        </div>
+                                        <div class="form-text">
+                                            Để trống nếu không có mã màu cụ thể
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Color Preview -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Xem trước màu</label>
+                                        <div class="color-preview-container">
+                                            <div id="colorPreview" class="color-preview-large"></div>
+                                            <div class="color-preview-info">
+                                                <strong id="previewName">Tên màu sẽ hiển thị ở đây</strong>
+                                                <code id="previewCode">#000000</code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Lưu màu sắc
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fa fa-arrow-left"></i> Quay lại
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-info-circle text-info"></i>
+                            Hướng dẫn
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h6><i class="fa fa-lightbulb"></i> Lưu ý:</h6>
+                            <ul class="mb-0">
+                                <li>Tên màu phải từ 2-50 ký tự</li>
+                                <li>Mã màu theo định dạng HEX (#RRGGBB)</li>
+                                <li>Có thể sử dụng color picker để chọn màu</li>
+                                <li>Mã màu không bắt buộc</li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-3">
+                            <h6>Màu phổ biến:</h6>
+                            <div class="popular-colors">
+                                <div class="popular-color" data-color="#FF0000" data-name="Đỏ">
+                                    <div class="color-dot" style="background: #FF0000;"></div>
+                                    <span>Đỏ</span>
+                                </div>
+                                <div class="popular-color" data-color="#00FF00" data-name="Xanh lá">
+                                    <div class="color-dot" style="background: #00FF00;"></div>
+                                    <span>Xanh lá</span>
+                                </div>
+                                <div class="popular-color" data-color="#0000FF" data-name="Xanh dương">
+                                    <div class="color-dot" style="background: #0000FF;"></div>
+                                    <span>Xanh dương</span>
+                                </div>
+                                <div class="popular-color" data-color="#FFFF00" data-name="Vàng">
+                                    <div class="color-dot" style="background: #FFFF00;"></div>
+                                    <span>Vàng</span>
+                                </div>
+                                <div class="popular-color" data-color="#000000" data-name="Đen">
+                                    <div class="color-dot" style="background: #000000;"></div>
+                                    <span>Đen</span>
+                                </div>
+                                <div class="popular-color" data-color="#FFFFFF" data-name="Trắng">
+                                    <div class="color-dot" style="background: #FFFFFF; border: 1px solid #ddd;"></div>
+                                    <span>Trắng</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <style>
+        .color-preview-container {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .color-preview-large {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-right: 15px;
+            background: #f8f9fa;
+        }
+
+        .color-preview-info strong {
+            display: block;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .color-preview-info code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .popular-colors {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .popular-color {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .popular-color:hover {
+                background: #f8f9fa;
+            }
+
+        .color-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .popular-color span {
+            font-size: 12px;
+            color: #6c757d;
+        }
+    </style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function() {
+            const colorCodeInput = $('#colorCodeInput');
+            const colorPicker = $('#colorPicker');
+            const colorPreview = $('#colorPreview');
+            const previewName = $('#previewName');
+            const previewCode = $('#previewCode');
+            const colorNameInput = $('#ColorName');
+
+            // Cập nhật preview khi thay đổi
+            function updatePreview() {
+                const colorCode = colorCodeInput.val() || '#f8f9fa';
+                const colorName = colorNameInput.val() || 'Tên màu sẽ hiển thị ở đây';
+
+                colorPreview.css('background-color', colorCode);
+                previewName.text(colorName);
+                previewCode.text(colorCode);
+            }
+
+            // Sync color picker với input
+            colorPicker.on('input', function() {
+                colorCodeInput.val(this.value.toUpperCase());
+                updatePreview();
+            });
+
+            colorCodeInput.on('input', function() {
+                const value = this.value;
+                if (value.match(/^#[0-9A-Fa-f]{6}$/)) {
+                    colorPicker.val(value);
+                }
+                updatePreview();
+            });
+
+            colorNameInput.on('input', updatePreview);
+
+            // Popular colors click
+            $('.popular-color').on('click', function() {
+                const color = $(this).data('color');
+                const name = $(this).data('name');
+
+                colorCodeInput.val(color);
+                colorPicker.val(color);
+                colorNameInput.val(name);
+                updatePreview();
+            });
+
+            // Initial update
+            updatePreview();
+        });
+    </script>
+}

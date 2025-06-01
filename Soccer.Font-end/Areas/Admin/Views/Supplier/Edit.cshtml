@@ -1,0 +1,94 @@
+﻿@using Soccer.Font_end.ViewModels
+@model EditSupplierViewModel
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Chỉnh sửa nhà cung cấp</h4>
+                    <small>Cập nhật thông tin nhà cung cấp: <strong>@Model.SupplierName</strong></small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin nhà cung cấp</h3>
+                        <div class="card-options">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" method="post">
+                            <input asp-for="SupplierID" type="hidden">
+
+                            <div class="form-group">
+                                <label asp-for="SupplierName" class="form-label">Tên nhà cung cấp <span class="text-danger">*</span></label>
+                                <input asp-for="SupplierName" class="form-control">
+                                <span asp-validation-for="SupplierName" class="text-danger"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Email" class="form-label">Email</label>
+                                        <input asp-for="Email" type="email" class="form-control">
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Phone" class="form-label">Số điện thoại</label>
+                                        <input asp-for="Phone" type="tel" class="form-control">
+                                        <span asp-validation-for="Phone" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Address" class="form-label">Địa chỉ</label>
+                                <input asp-for="Address" class="form-control">
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="ContactInfo" class="form-label">Thông tin liên hệ khác</label>
+                                <textarea asp-for="ContactInfo" class="form-control" rows="4"></textarea>
+                                <span asp-validation-for="ContactInfo" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Cập nhật
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary ml-2">Hủy</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin nhà cung cấp</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>ID:</strong> @Model.SupplierID</p>
+                        <p><strong>Tên hiện tại:</strong> @Model.SupplierName</p>
+
+                        <div class="alert alert-warning">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            <strong>Cảnh báo:</strong> Việc thay đổi thông tin nhà cung cấp có thể ảnh hưởng đến các sản phẩm đang liên kết.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

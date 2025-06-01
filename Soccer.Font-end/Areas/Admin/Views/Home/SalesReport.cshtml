@@ -1,0 +1,270 @@
+﻿@model Soccer.Font_end.ViewModels.SalesReportDto
+
+@{
+    ViewData["Title"] = "Sales Report";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Sales Report</h4>
+                    <small>Analyze your soccer business sales performance</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Date Filter -->
+        <div class="row clearfix mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="get" action="/Admin/Home/SalesReport" class="row">
+                            <div class="col-md-4">
+                                <label for="startDate">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate"
+                                       value="@(Context.Request.Query["startDate"].FirstOrDefault() ?? Model.StartDate.ToString("yyyy-MM-dd"))">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="endDate">End Date</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate"
+                                       value="@(Context.Request.Query["endDate"].FirstOrDefault() ?? Model.StartDate.ToString("yyyy-MM-dd"))" />
+                            </div>
+                            <div class="col-md-4">
+                                <label>&nbsp;</label>
+                                <div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search mr-1"></i>Generate Report
+                                    </button>
+                                    <button type="button" class="btn btn-secondary ml-2" onclick="exportReport()">
+                                        <i class="fa fa-download mr-1"></i>Export
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales Summary Cards -->
+        <div class="row clearfix row-deck">
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Orders</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-primary">@Model.TotalOrders</h5>
+                        <span class="font-12 text-muted">Product orders in period</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Product Revenue</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-success">@Model.TotalRevenue.ToString("C")</h5>
+                        <span class="font-12 text-muted">From product sales</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Bookings</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-info">@Model.TotalBookings</h5>
+                        <span class="font-12 text-muted">Field bookings in period</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Booking Revenue</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter text-warning">@Model.BookingRevenue.ToString("C")</h5>
+                        <span class="font-12 text-muted">From field bookings</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Analysis -->
+        <div class="row clearfix">
+            <div class="col-xl-8 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Revenue Breakdown</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="text-center p-3 border rounded">
+                                    <h4 class="text-success">@Model.TotalRevenue.ToString("C")</h4>
+                                    <p class="mb-0">Product Sales</p>
+                                    <small class="text-muted">@Model.TotalOrders orders</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-center p-3 border rounded">
+                                    <h4 class="text-info">@Model.BookingRevenue.ToString("C")</h4>
+                                    <p class="mb-0">Booking Revenue</p>
+                                    <small class="text-muted">@Model.TotalBookings bookings</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        @{
+                            var totalRevenue = Model.TotalRevenue + Model.BookingRevenue;
+                            var productPercentage = totalRevenue > 0 ? (Model.TotalRevenue / totalRevenue * 100) : 0;
+                            var bookingPercentage = totalRevenue > 0 ? (Model.BookingRevenue / totalRevenue * 100) : 0;
+                        }
+
+                        <div class="progress mb-3" style="height: 20px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: @productPercentage%"
+                                 aria-valuenow="@productPercentage" aria-valuemin="0" aria-valuemax="100">
+                                @productPercentage.ToString("F1")%
+                            </div>
+                            <div class="progress-bar bg-info" role="progressbar" style="width: @bookingPercentage%"
+                                 aria-valuenow="@bookingPercentage" aria-valuemin="0" aria-valuemax="100">
+                                @bookingPercentage.ToString("F1")%
+                            </div>
+                        </div>
+
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <small class="text-success">● Product Sales (@productPercentage.ToString("F1")%)</small>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-info">● Field Bookings (@bookingPercentage.ToString("F1")%)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Commission Summary</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <h3 class="text-warning mb-3">@Model.Commission.ToString("C")</h3>
+                        <p class="mb-0">Total Commission Earned</p>
+                        <small class="text-muted">From field bookings</small>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <strong>Period:</strong><br>
+                                <small>@Model.StartDate.ToString("MMM dd, yyyy") - @Model.EndDate.ToString("MMM dd, yyyy")</small>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            @{
+                                var avgOrderValue = Model.TotalOrders > 0 ? Model.TotalRevenue / Model.TotalOrders : 0;
+                                var avgBookingValue = Model.TotalBookings > 0 ? Model.BookingRevenue / Model.TotalBookings : 0;
+                            }
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <small class="text-muted">Avg Order Value:</small><br>
+                                    <strong>@avgOrderValue.ToString("C")</strong>
+                                </div>
+                                <div class="col-12">
+                                    <small class="text-muted">Avg Booking Value:</small><br>
+                                    <strong>@avgBookingValue.ToString("C")</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Indicators -->
+        <div class="row clearfix">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Performance Indicators</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 text-center border-right">
+                                <h5 class="text-primary">@totalRevenue.ToString("C")</h5>
+                                <small class="text-muted">Total Revenue</small>
+                            </div>
+                            <div class="col-md-3 text-center border-right">
+                                <h5 class="text-success">@((Model.TotalOrders + Model.TotalBookings))</h5>
+                                <small class="text-muted">Total Transactions</small>
+                            </div>
+                            <div class="col-md-3 text-center border-right">
+                                <h5 class="text-info">@((totalRevenue > 0 && (Model.TotalOrders + Model.TotalBookings) > 0) ? (totalRevenue / (Model.TotalOrders + Model.TotalBookings)).ToString("C") : "$0.00")</h5>
+                                <small class="text-muted">Avg Transaction Value</small>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <h5 class="text-warning">@(Model.BookingRevenue > 0 ? (Model.Commission / Model.BookingRevenue * 100).ToString("F1") + "%" : "0%")</h5>
+                                <small class="text-muted">Commission Rate</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function exportReport() {
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            var url = '/Admin/Reports/ExportSales?startDate=' + startDate + '&endDate=' + endDate;
+            window.open(url, '_blank');
+        }
+
+        // Counter animation
+        $(document).ready(function() {
+            $('.counter').each(function() {
+                var $this = $(this);
+                var countTo = parseInt($this.text().replace(/[^0-9]/g, '')) || 0;
+                if(countTo > 0) {
+                    $({ countNum: 0 }).animate({ countNum: countTo }, {
+                        duration: 1500,
+                        easing: 'linear',
+                        step: function() {
+                            if($this.hasClass('text-success') || $this.hasClass('text-warning')) {
+                                $this.text('$' + Math.floor(this.countNum).toLocaleString());
+                            } else {
+                                $this.text(Math.floor(this.countNum).toLocaleString());
+                            }
+                        },
+                        complete: function() {
+                            if($this.hasClass('text-success') || $this.hasClass('text-warning')) {
+                                $this.text('$' + this.countNum.toLocaleString());
+                            } else {
+                                $this.text(this.countNum.toLocaleString());
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <text>
+                toastr.error('@ViewBag.ErrorMessage');
+            </text>
+        }
+    </script>
+}

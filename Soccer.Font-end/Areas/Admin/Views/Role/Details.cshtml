@@ -1,0 +1,454 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model RoleDto
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Chi tiết vai trò</h4>
+                    <small>Thông tin đầy đủ về vai trò: <strong>@Model.RoleName</strong></small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <!-- Role Information -->
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin vai trò</h3>
+                        <div class="card-options">
+                            <a asp-action="Edit" asp-route-id="@Model.RoleID" class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Chỉnh sửa
+                            </a>
+                            <a asp-action="Index" class="btn btn-secondary btn-sm ml-2">
+                                <i class="fa fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="role-info-section">
+                                    <div class="role-icon-large text-center mb-4">
+                                        @if (Model.RoleName.Contains("Admin") || Model.RoleName.Contains("Manager"))
+                                        {
+                                            <i class="fa fa-user fa-5x text-danger"></i>
+                                            <h5 class="mt-2 text-danger">Quản trị viên</h5>
+                                        }
+                                        else if (Model.RoleName.Contains("User") || Model.RoleName.Contains("Customer"))
+                                        {
+                                            <i class="fa fa-user fa-5x text-primary"></i>
+                                            <h5 class="mt-2 text-primary">Người dùng</h5>
+                                        }
+                                        else if (Model.RoleName.Contains("Staff") || Model.RoleName.Contains("Employee"))
+                                        {
+                                            <i class="fa fa-user-tie fa-5x text-success"></i>
+                                            <h5 class="mt-2 text-success">Nhân viên</h5>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-users-cog fa-5x text-warning"></i>
+                                            <h5 class="mt-2 text-warning">Vai trò tùy chỉnh</h5>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="role-details">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>ID vai trò:</strong></td>
+                                            <td>
+                                                <span class="badge badge-secondary">#@Model.RoleID</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Tên vai trò:</strong></td>
+                                            <td>
+                                                <span class="h5 text-primary">@Model.RoleName</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Loại vai trò:</strong></td>
+                                            <td>
+                                                @if (Model.RoleName.Contains("Admin"))
+                                                {
+                                                    <span class="badge badge-danger">Quản trị viên</span>
+                                                }
+                                                else if (Model.RoleName.Contains("Manager"))
+                                                {
+                                                    <span class="badge badge-warning">Quản lý</span>
+                                                }
+                                                else if (Model.RoleName.Contains("User"))
+                                                {
+                                                    <span class="badge badge-primary">Người dùng</span>
+                                                }
+                                                else if (Model.RoleName.Contains("Customer"))
+                                                {
+                                                    <span class="badge badge-info">Khách hàng</span>
+                                                }
+                                                else if (Model.RoleName.Contains("Staff"))
+                                                {
+                                                    <span class="badge badge-success">Nhân viên</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-secondary">Tùy chỉnh</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Trạng thái:</strong></td>
+                                            <td>
+                                                <span class="badge badge-success">
+                                                    <i class="fa fa-check-circle"></i> Hoạt động
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Ngày tạo:</strong></td>
+                                            <td>
+                                                <span class="text-muted">
+                                                    <i class="fa fa-calendar"></i>
+                                                    @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role Permissions (Placeholder) -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Quyền hạn của vai trò</h3>
+                        <div class="card-options">
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fa fa-cog"></i> Cấu hình quyền
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @{
+                                var permissions = GetRolePermissions(Model.RoleName);
+                            }
+                            @foreach (var permission in permissions)
+                            {
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="permission-item">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fa @permission.Icon fa-lg @permission.ColorClass mr-3"></i>
+                                            <div>
+                                                <h6 class="mb-0">@permission.Name</h6>
+                                                <small class="text-muted">@permission.Description</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        @if (!permissions.Any())
+                        {
+                            <div class="text-center py-4">
+                                <i class="fa fa-lock fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Chưa có quyền nào được cấp</h5>
+                                <p class="text-muted">Hãy cấu hình quyền hạn cho vai trò này</p>
+                                <button class="btn btn-primary">
+                                    <i class="fa fa-plus"></i> Thêm quyền
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Users with this Role (Placeholder) -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Người dùng có vai trò này</h3>
+                        <div class="card-options">
+                            <span class="badge badge-primary">0 người dùng</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center py-4">
+                            <i class="fa fa-users fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Chưa có người dùng nào</h5>
+                            <p class="text-muted">Chưa có người dùng nào được gán vai trò này</p>
+                            <button class="btn btn-outline-primary">
+                                <i class="fa fa-user-plus"></i> Gán vai trò cho người dùng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role Actions & Statistics -->
+            <div class="col-lg-4 col-md-12">
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thao tác nhanh</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <a asp-action="Edit" asp-route-id="@Model.RoleID" class="list-group-item list-group-item-action">
+                                <i class="fa fa-edit text-warning"></i>
+                                <span class="ml-2">Chỉnh sửa vai trò</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <i class="fa fa-key text-primary"></i>
+                                <span class="ml-2">Quản lý quyền hạn</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <i class="fa fa-users text-success"></i>
+                                <span class="ml-2">Gán cho người dùng</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <i class="fa fa-copy text-info"></i>
+                                <span class="ml-2">Sao chép vai trò</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action text-danger"
+                               onclick="deleteRole(@Model.RoleID, '@Model.RoleName')">
+                                <i class="fa fa-trash text-danger"></i>
+                                <span class="ml-2">Xóa vai trò</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role Statistics -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Thống kê</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h4 class="text-primary">0</h4>
+                                    <small class="text-muted">Người dùng</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h4 class="text-success">@GetRolePermissions(Model.RoleName).Count()</h4>
+                                    <small class="text-muted">Quyền hạn</small>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h4 class="text-info">@DateTime.Now.ToString("dd/MM")</h4>
+                                    <small class="text-muted">Ngày tạo</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h4 class="text-warning">@DateTime.Now.ToString("dd/MM")</h4>
+                                    <small class="text-muted">Cập nhật</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Level -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Mức độ bảo mật</h3>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            var securityLevel = GetSecurityLevel(Model.RoleName);
+                        }
+                        <div class="text-center">
+                            <div class="security-level mb-3">
+                                @if (securityLevel == "High")
+                                {
+                                    <i class="fa fa-shield-alt fa-3x text-danger"></i>
+                                    <h5 class="mt-2 text-danger">Cao</h5>
+                                    <p class="text-muted">Quyền quản trị hệ thống</p>
+                                }
+                                else if (securityLevel == "Medium")
+                                {
+                                    <i class="fa fa-shield fa-3x text-warning"></i>
+                                    <h5 class="mt-2 text-warning">Trung bình</h5>
+                                    <p class="text-muted">Quyền quản lý một phần</p>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-user-shield fa-3x text-success"></i>
+                                    <h5 class="mt-2 text-success">Cơ bản</h5>
+                                    <p class="text-muted">Quyền người dùng thông thường</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa vai trò</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fa fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                    <p>Bạn có chắc chắn muốn xóa vai trò <strong id="roleNameToDelete"></strong>?</p>
+                    <p class="text-danger">Hành động này không thể hoàn tác!</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa fa-trash"></i> Xóa vai trò
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public class Permission
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Icon { get; set; }
+        public string ColorClass { get; set; }
+    }
+
+    public List<Permission> GetRolePermissions(string roleName)
+    {
+        var permissions = new List<Permission>();
+
+        if (roleName.Contains("Admin"))
+        {
+            permissions.AddRange(new[]
+            {
+                new Permission { Name = "Quản lý hệ thống", Description = "Toàn quyền hệ thống", Icon = "fa-cogs", ColorClass = "text-danger" },
+                new Permission { Name = "Quản lý người dùng", Description = "Thêm, sửa, xóa người dùng", Icon = "fa-users", ColorClass = "text-primary" },
+                new Permission { Name = "Quản lý vai trò", Description = "Tạo và phân quyền", Icon = "fa-user-tag", ColorClass = "text-warning" },
+                new Permission { Name = "Xem báo cáo", Description = "Truy cập tất cả báo cáo", Icon = "fa-chart-bar", ColorClass = "text-info" },
+                new Permission { Name = "Cấu hình hệ thống", Description = "Thay đổi cài đặt", Icon = "fa-wrench", ColorClass = "text-secondary" },
+                new Permission { Name = "Sao lưu dữ liệu", Description = "Backup và restore", Icon = "fa-database", ColorClass = "text-success" }
+            });
+        }
+        else if (roleName.Contains("Manager"))
+        {
+            permissions.AddRange(new[]
+            {
+                new Permission { Name = "Quản lý sản phẩm", Description = "Thêm, sửa sản phẩm", Icon = "fa-box", ColorClass = "text-primary" },
+                new Permission { Name = "Quản lý đơn hàng", Description = "Xử lý đơn hàng", Icon = "fa-shopping-cart", ColorClass = "text-success" },
+                new Permission { Name = "Xem báo cáo", Description = "Báo cáo bán hàng", Icon = "fa-chart-line", ColorClass = "text-info" },
+                new Permission { Name = "Quản lý khách hàng", Description = "Thông tin khách hàng", Icon = "fa-user-friends", ColorClass = "text-warning" }
+            });
+        }
+        else if (roleName.Contains("User") || roleName.Contains("Customer"))
+        {
+            permissions.AddRange(new[]
+            {
+                new Permission { Name = "Xem sản phẩm", Description = "Duyệt danh mục", Icon = "fa-eye", ColorClass = "text-primary" },
+                new Permission { Name = "Đặt hàng", Description = "Tạo đơn hàng mới", Icon = "fa-shopping-bag", ColorClass = "text-success" },
+                new Permission { Name = "Xem lịch sử", Description = "Lịch sử mua hàng", Icon = "fa-history", ColorClass = "text-info" },
+                new Permission { Name = "Cập nhật hồ sơ", Description = "Chỉnh sửa thông tin", Icon = "fa-user-edit", ColorClass = "text-warning" }
+            });
+        }
+
+        return permissions;
+    }
+
+    public string GetSecurityLevel(string roleName)
+    {
+        if (roleName.Contains("Admin") || roleName.Contains("System"))
+            return "High";
+        else if (roleName.Contains("Manager") || roleName.Contains("Staff"))
+            return "Medium";
+        else
+            return "Low";
+    }
+}
+
+<script>
+    function deleteRole(id, name) {
+        document.getElementById('roleNameToDelete').textContent = name;
+        document.getElementById('deleteForm').action = '@Url.Action("Delete", "Role")/' + id;
+        $('#deleteModal').modal('show');
+    }
+</script>
+
+<style>
+    .role-icon-large {
+        padding: 30px;
+        background: linear-gradient(135deg, #f8f9fc 0%, #e3e6f0 100%);
+        border-radius: 15px;
+        border: 2px solid #dee2e6;
+    }
+
+    .permission-item {
+        padding: 10px;
+        border-radius: 8px;
+        background: #f8f9fc;
+        border: 1px solid #e3e6f0;
+        transition: all 0.2s ease;
+    }
+
+        .permission-item:hover {
+            background: #e3e6f0;
+            transform: translateY(-2px);
+        }
+
+    .stat-item {
+        padding: 15px 0;
+    }
+
+    .security-level {
+        padding: 20px;
+        background: linear-gradient(135deg, #f8f9fc 0%, #e3e6f0 100%);
+        border-radius: 10px;
+    }
+
+    .list-group-item {
+        border: none;
+        border-radius: 8px !important;
+        margin-bottom: 5px;
+    }
+
+        .list-group-item:hover {
+            background-color: #f8f9fc;
+            transform: translateX(5px);
+        }
+
+    .card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        border: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+    @@media (max-width: 768px) {
+        .role-icon-large {
+            padding: 20px;
+        }
+
+        .permission-item {
+            margin-bottom: 10px;
+        }
+    }
+</style>

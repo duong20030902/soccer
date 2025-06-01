@@ -1,0 +1,225 @@
+﻿@using Soccer.Font_end.ViewModels
+@model List<TimeslotDto>
+@{
+    ViewData["Title"] = "Quản lý Timeslot";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Quản lý Timeslot</h4>
+                    <small>Quản lý các khung thời gian cho sân bóng đá</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thông báo -->
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fa fa-check-circle"></i> @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fa fa-exclamation-triangle"></i> @TempData["Error"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        <!-- Statistics Cards -->
+        <div class="row clearfix row-deck">
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tổng Timeslot</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.Count</h5>
+                        <span class="font-12">Tổng số khung thời gian</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Timeslot Sáng</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.Count(t => t.StartTime.Hours < 12)</h5>
+                        <span class="font-12">Khung thời gian buổi sáng</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Timeslot Chiều</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.Count(t => t.StartTime.Hours >= 12 && t.StartTime.Hours < 18)</h5>
+                        <span class="font-12">Khung thời gian buổi chiều</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Timeslot Tối</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.Count(t => t.StartTime.Hours >= 18)</h5>
+                        <span class="font-12">Khung thời gian buổi tối</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="row clearfix">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách Timeslot</h3>
+                        <div class="card-options">
+                            <a asp-action="Create" class="btn btn-primary btn-sm">
+                                <i class="fa fa-plus"></i> Thêm mới
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped text-nowrap table-vcenter mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Thời gian bắt đầu</th>
+                                        <th>Thời gian kết thúc</th>
+                                        <th>Thời lượng</th>
+                                        <th>Buổi</th>
+                                        <th>Trạng thái</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        @foreach (var timeslot in Model.OrderBy(t => t.StartTime))
+                                        {
+                                            <tr>
+                                                <td><strong>#@timeslot.TimeslotID</strong></td>
+                                                <td>
+                                                    <span class="font-weight-bold">@timeslot.StartTime.ToString(@"hh\:mm")</span>
+                                                </td>
+                                                <td>
+                                                    <span class="font-weight-bold">@timeslot.EndTime.ToString(@"hh\:mm")</span>
+                                                </td>
+                                                <td>
+                                                    @{
+                                                        var duration = timeslot.EndTime - timeslot.StartTime;
+                                                    }
+                                                    <span class="badge badge-info">@duration.TotalMinutes phút</span>
+                                                </td>
+                                                <td>
+                                                    @{
+                                                        string session = "";
+                                                        string badgeClass = "";
+                                                        if (timeslot.StartTime.Hours < 12)
+                                                        {
+                                                            session = "Sáng";
+                                                            badgeClass = "badge-success";
+                                                        }
+                                                        else if (timeslot.StartTime.Hours < 18)
+                                                        {
+                                                            session = "Chiều";
+                                                            badgeClass = "badge-warning";
+                                                        }
+                                                        else
+                                                        {
+                                                            session = "Tối";
+                                                            badgeClass = "badge-dark";
+                                                        }
+                                                    }
+                                                    <span class="badge @badgeClass">@session</span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-primary">Hoạt động</span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a asp-area="Admin" asp-controller="Timeslot" asp-action="Details" asp-route-id="@timeslot.TimeslotID"
+                                                           class="btn btn-sm btn-outline-info" title="Xem chi tiết">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                        <a asp-area="Admin" asp-controller="Timeslot" asp-action="Edit" asp-route-id="@timeslot.TimeslotID"
+                                                           class="btn btn-sm btn-outline-warning" title="Chỉnh sửa">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                        <a asp-area="Admin" asp-controller="Timeslot" asp-action="Delete" asp-route-id="@timeslot.TimeslotID"
+                                                           class="btn btn-sm btn-outline-danger" title="Xóa">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="7" class="text-center">
+                                                <div class="empty-state">
+                                                    <i class="fa fa-clock-o fa-3x text-muted mb-3"></i>
+                                                    <h5>Chưa có timeslot nào</h5>
+                                                    <p class="text-muted">Hãy thêm timeslot đầu tiên cho hệ thống</p>
+                                                    <a asp-action="Create" class="btn btn-primary">
+                                                        <i class="fa fa-plus"></i> Thêm Timeslot
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .empty-state {
+        padding: 3rem 0;
+    }
+
+    .counter {
+        color: #007bff;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+    }
+
+    .btn-group .btn {
+        margin-right: 2px;
+    }
+
+    .alert {
+        border-radius: 0.375rem;
+    }
+
+    .card-options .btn {
+        border-radius: 0.25rem;
+    }
+</style>

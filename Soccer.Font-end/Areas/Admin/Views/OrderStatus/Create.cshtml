@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = "Thêm trạng thái mới";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Thêm trạng thái đơn hàng mới</h4>
+                    <small>Tạo trạng thái mới cho hệ thống quản lý đơn hàng</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breadcrumb -->
+        <div class="row clearfix">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home", new { area = "Admin" })">Trang chủ</a></li>
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index")">Trạng thái đơn hàng</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Thêm mới</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin trạng thái</h3>
+                        <div class="card-options">
+                            <a href="@Url.Action("Index")" class="btn btn-sm btn-outline-secondary">
+                                <i class="fa fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                    <form asp-action="Create" method="post">
+                        <div class="card-body">
+                            @Html.AntiForgeryToken()
+
+                            <!-- Validation Summary -->
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                        {
+                                            <li>@error.ErrorMessage</li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="statusName" class="form-label">
+                                            Tên trạng thái <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text"
+                                               id="statusName"
+                                               name="statusName"
+                                               class="form-control"
+                                               placeholder="Nhập tên trạng thái (VD: Chờ xử lý, Đang giao hàng, Hoàn thành...)"
+                                               required>
+                                        <small class="form-text text-muted">
+                                            Tên trạng thái nên ngắn gọn và dễ hiểu
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Mô tả (tùy chọn)</label>
+                                        <textarea class="form-control"
+                                                  rows="3"
+                                                  placeholder="Mô tả chi tiết về trạng thái này..."></textarea>
+                                        <small class="form-text text-muted">
+                                            Mô tả giúp người dùng hiểu rõ hơn về trạng thái này
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button type="button" class="btn btn-secondary mr-2" onclick="window.location.href='@Url.Action("Index")'">
+                                <i class="fa fa-times"></i> Hủy
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> Lưu trạng thái
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Quick Info Panel -->
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Hướng dẫn</h3>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="mb-3">Gợi ý tên trạng thái:</h6>
+                        <div class="mb-3">
+                            <span class="tag tag-warning mb-1">Chờ xử lý</span>
+                            <span class="tag tag-info mb-1">Đã xác nhận</span>
+                            <span class="tag tag-primary mb-1">Đang chuẩn bị</span>
+                            <span class="tag tag-orange mb-1">Đang giao hàng</span>
+                            <span class="tag tag-success mb-1">Hoàn thành</span>
+                            <span class="tag tag-danger mb-1">Đã hủy</span>
+                        </div>
+
+                        <hr>
+
+                        <h6 class="mb-2">Lưu ý:</h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fa fa-check text-success"></i>
+                                Tên trạng thái nên rõ ràng và dễ hiểu
+                            </li>
+                            <li class="mb-2">
+                                <i class="fa fa-check text-success"></i>
+                                Không nên trùng với trạng thái đã có
+                            </li>
+                            <li class="mb-2">
+                                <i class="fa fa-check text-success"></i>
+                                Nên sử dụng thuật ngữ thống nhất
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Current Status Count -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thống kê hiện tại</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <h2 class="mb-2">@ViewBag.TotalStatuses</h2>
+                        <p class="text-muted mb-0">Trạng thái hiện có</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto focus on status name input
+        document.getElementById('statusName').focus();
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const statusName = document.getElementById('statusName').value.trim();
+
+            if (!statusName) {
+                e.preventDefault();
+                alert('Vui lòng nhập tên trạng thái!');
+                document.getElementById('statusName').focus();
+                return false;
+            }
+
+            if (statusName.length < 2) {
+                e.preventDefault();
+                alert('Tên trạng thái phải có ít nhất 2 ký tự!');
+                document.getElementById('statusName').focus();
+                return false;
+            }
+        });
+
+        // Preview as you type
+        document.getElementById('statusName').addEventListener('input', function(e) {
+            const value = e.target.value.trim();
+            if (value) {
+                // Could add real-time preview here
+            }
+        });
+    </script>
+}

@@ -1,0 +1,71 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model EditRoleViewModel
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Chỉnh sửa vai trò</h4>
+                    <small>Cập nhật thông tin vai trò: @Model.RoleName</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin vai trò</h3>
+                        <div class="card-options">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" method="post">
+                            <input asp-for="RoleID" type="hidden">
+
+                            <div class="form-group">
+                                <label asp-for="RoleName" class="form-label">Tên vai trò <span class="text-danger">*</span></label>
+                                <input asp-for="RoleName" class="form-control">
+                                <span asp-validation-for="RoleName" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description" class="form-label">Mô tả</label>
+                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Cập nhật
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary ml-2">Hủy</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin vai trò</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>ID:</strong> @Model.RoleID</p>
+                        <p><strong>Tên hiện tại:</strong> @Model.RoleName</p>
+
+                        <div class="alert alert-warning">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            <strong>Cảnh báo:</strong> Việc thay đổi tên vai trò có thể ảnh hưởng đến các người dùng đang sử dụng vai trò này.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

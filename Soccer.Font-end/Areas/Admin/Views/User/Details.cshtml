@@ -1,0 +1,266 @@
+﻿@using Soccer.Font_end.ViewModels
+@model UserDto
+@{
+    ViewData["Title"] = "Chi tiết người dùng";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Chi tiết người dùng</h4>
+                    <small>Thông tin chi tiết tài khoản người dùng</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Info Cards -->
+        <div class="row clearfix">
+            <!-- Profile Card -->
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin cá nhân</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="avatar-lg mb-3">
+                            <img src="~/assets/images/user-avatar.png" alt="Avatar" class="rounded-circle" width="100" height="100">
+                        </div>
+                        <h5 class="mb-1">@Model.FullName</h5>
+                        <p class="text-muted mb-3">@Model.RoleName</p>
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge badge-success badge-lg">Đang hoạt động</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger badge-lg">Tạm khóa</span>
+                        }
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thao tác nhanh</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="@Url.Action("Edit", new { id = Model.UserID })" class="btn btn-warning btn-block">
+                                <i class="fa fa-edit"></i> Chỉnh sửa
+                            </a>
+                            <button type="button" class="btn btn-success btn-block" onclick="updateBalance(@Model.UserID)">
+                                <i class="fa fa-money"></i> Cập nhật số dư
+                            </button>
+                            <button type="button" class="btn btn-info btn-block" onclick="resetPassword(@Model.UserID)">
+                                <i class="fa fa-key"></i> Đặt lại mật khẩu
+                            </button>
+                            @if (Model.IsActive)
+                            {
+                                <button type="button" class="btn btn-secondary btn-block" onclick="toggleStatus(@Model.UserID, false)">
+                                    <i class="fa fa-ban"></i> Tạm khóa
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary btn-block" onclick="toggleStatus(@Model.UserID, true)">
+                                    <i class="fa fa-check"></i> Kích hoạt
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Card -->
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin chi tiết</h3>
+                        <div class="card-options">
+                            <a href="@Url.Action("Index")" class="btn btn-sm btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Quay lại danh sách
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td class="font-weight-bold">ID người dùng:</td>
+                                        <td>@Model.UserID</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Họ và tên:</td>
+                                        <td>@Model.FullName</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Email:</td>
+                                        <td>
+                                            <a href="mailto:@Model.Email">@Model.Email</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Số điện thoại:</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(Model.Phone))
+                                            {
+                                                <a href="tel:@Model.Phone">@Model.Phone</a>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Chưa cập nhật</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td class="font-weight-bold">Vai trò:</td>
+                                        <td>
+                                            <span class="badge badge-info">@Model.RoleName</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Số dư tài khoản:</td>
+                                        <td>
+                                            <span class="font-weight-bold text-success">
+                                                @Model.Balance.ToString("N0") VNĐ
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Trạng thái:</td>
+                                        <td>
+                                            @if (Model.IsActive)
+                                            {
+                                                <span class="badge badge-success">Đang hoạt động</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger">Tạm khóa</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thống kê hoạt động</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <div class="border-right pb-4 pt-4">
+                                    <label class="mb-0 font-13">Tổng giao dịch</label>
+                                    <h4 class="font-30 font-weight-bold text-col-blue counter">0</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border-right pb-4 pt-4">
+                                    <label class="mb-0 font-13">Lần đăng nhập cuối</label>
+                                    <h6 class="font-weight-bold text-muted">Chưa có dữ liệu</h6>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border-right pb-4 pt-4">
+                                    <label class="mb-0 font-13">Ngày tạo</label>
+                                    <h6 class="font-weight-bold text-muted">Chưa có dữ liệu</h6>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="pb-4 pt-4">
+                                    <label class="mb-0 font-13">Cập nhật cuối</label>
+                                    <h6 class="font-weight-bold text-muted">Chưa có dữ liệu</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal cập nhật số dư -->
+<div class="modal fade" id="balanceModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật số dư</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="balanceForm">
+                    <input type="hidden" id="userId" value="@Model.UserID" />
+                    <div class="form-group">
+                        <label>Số dư hiện tại:</label>
+                        <p class="font-weight-bold">@Model.Balance.ToString("N0") VNĐ</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Số dư mới (VNĐ):</label>
+                        <input type="number" class="form-control" id="newBalance" step="1000" min="0" value="@Model.Balance" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="saveBalance()">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateBalance(userId) {
+            $('#balanceModal').modal('show');
+        }
+
+        function saveBalance() {
+            const userId = $('#userId').val();
+            const amount = $('#newBalance').val();
+
+            $.ajax({
+                url: '@Url.Action("UpdateBalance")',
+                type: 'POST',
+                data: { id: userId, amount: amount },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert('Có lỗi xảy ra!');
+                    }
+                }
+            });
+        }
+
+        function resetPassword(userId) {
+            if (confirm('Bạn có chắc chắn muốn đặt lại mật khẩu cho người dùng này?')) {
+                // Implement reset password logic
+                alert('Chức năng đặt lại mật khẩu sẽ được triển khai');
+            }
+        }
+
+        function toggleStatus(userId, status) {
+            const action = status ? 'kích hoạt' : 'tạm khóa';
+            if (confirm(`Bạn có chắc chắn muốn ${action} tài khoản này?`)) {
+                // Implement toggle status logic
+                alert(`Chức năng ${action} tài khoản sẽ được triển khai`);
+            }
+        }
+    </script>
+}

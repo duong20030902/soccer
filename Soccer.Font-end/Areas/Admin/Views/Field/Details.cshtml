@@ -1,0 +1,317 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model FieldDto
+@{
+    ViewData["Title"] = $"Chi tiết - {Model.FieldName}";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Chi tiết sân bóng</h4>
+                    <small>Thông tin chi tiết về sân bóng @Model.FieldName</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8">
+                <!-- Image Gallery -->
+                @if (Model.ImageUrls.Any())
+                {
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fa fa-image text-primary"></i>
+                                Hình ảnh sân bóng
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="fieldCarousel" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    @for (int i = 0; i < Model.ImageUrls.Count; i++)
+                                    {
+                                        <li data-target="#fieldCarousel" data-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></li>
+                                    }
+                                </ol>
+                                <div class="carousel-inner">
+                                    @for (int i = 0; i < Model.ImageUrls.Count; i++)
+                                    {
+                                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                                            <img src="@Model.ImageUrls[i]" class="d-block w-100 field-detail-image"
+                                                 alt="@Model.FieldName - Hình @(i + 1)">
+                                        </div>
+                                    }
+                                </div>
+                                <a class="carousel-control-prev" href="#fieldCarousel" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#fieldCarousel" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                        @* <div class="card-body">
+                            <div id="fieldCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    @for (int i = 0; i < Model.ImageUrls.Count; i++)
+                                    {
+                                        <button type="button" data-bs-target="#fieldCarousel"
+                                                data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")"
+                                                aria-current="@(i == 0 ? "true" : "false")"
+                                                aria-label="Slide @(i + 1)"></button>
+                                    }
+                                </div>
+                                <div class="carousel-inner">
+                                    @for (int i = 0; i < Model.ImageUrls.Count; i++)
+                                    {
+                                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                                            <img src="@Model.ImageUrls[i]" class="d-block w-100 field-detail-image"
+                                                 alt="@Model.FieldName - Hình @(i + 1)">
+                                        </div>
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#fieldCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#fieldCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div> *@
+                    </div>
+                }
+
+                <!-- Field Information -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-info-circle text-info"></i>
+                            Thông tin chi tiết
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label><i class="fa fa-tag text-primary"></i> Tên sân:</label>
+                                    <h5>@Model.FieldName</h5>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label><i class="fa fa-money text-success"></i> Giá thuê:</label>
+                                    <h5 class="text-success">@Model.PricePerHour.ToString("N0") VNĐ/giờ</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="info-item">
+                                    <label><i class="fa fa-map-marker text-danger"></i> Địa điểm:</label>
+                                    <p class="location-text">@Model.Location</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label><i class="fa fa-image text-info"></i> Số lượng hình ảnh:</label>
+                                    <span class="badge bg-info">@Model.ImageUrls.Count hình</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label><i class="fa fa-calendar text-warning"></i> Trạng thái:</label>
+                                    <span class="badge bg-success">Đang hoạt động</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Quick Actions -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-cogs text-secondary"></i>
+                            Thao tác
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a asp-action="Edit" asp-route-id="@Model.FieldID" class="btn btn-warning">
+                                <i class="fa fa-edit"></i> Chỉnh sửa thông tin
+                            </a>
+                            <button type="button" class="btn btn-danger"
+                                    onclick="confirmDelete(@Model.FieldID, '@Model.FieldName')">
+                                <i class="fa fa-trash"></i> Xóa sân bóng
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Quay lại danh sách
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Comparison -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-bar-chart text-success"></i>
+                            So sánh giá
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="price-comparison">
+                            <div class="price-item current">
+                                <span class="label">Sân này</span>
+                                <span class="price">@Model.PricePerHour.ToString("N0") VNĐ</span>
+                            </div>
+                            <div class="price-item">
+                                <span class="label">Giá trung bình</span>
+                                <span class="price">200,000 VNĐ</span>
+                            </div>
+                            <div class="price-item">
+                                <span class="label">Giá thị trường</span>
+                                <span class="price">150,000 - 350,000 VNĐ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Map Placeholder -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-map-marker text-danger"></i>
+                            Vị trí
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="map-placeholder">
+                            <i class="fa fa-map-marker fa-3x text-muted"></i>
+                            <p class="text-muted mt-2">Bản đồ vị trí</p>
+                            <small class="text-muted">@Model.Location</small>
+                        </div>
+                        <button class="btn btn-outline-primary btn-sm mt-2 w-100">
+                            <i class="fa fa-external-link"></i> Xem trên Google Maps
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa sân bóng <strong id="fieldName"></strong>?</p>
+                <p class="text-danger"><small>Hành động này không thể hoàn tác!</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <style>
+        .field-detail-image {
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .info-item {
+            margin-bottom: 20px;
+        }
+
+            .info-item label {
+                font-weight: 600;
+                color: #6c757d;
+                margin-bottom: 5px;
+                display: block;
+            }
+
+            .info-item h5 {
+                margin: 0;
+                color: #2c3e50;
+            }
+
+        .location-text {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #dc3545;
+            margin: 0;
+        }
+
+        .price-comparison {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+            .price-item.current {
+                background: linear-gradient(45deg, #28a745, #20c997);
+                color: white;
+            }
+
+            .price-item .label {
+                font-weight: 500;
+            }
+
+            .price-item .price {
+                font-weight: bold;
+            }
+
+        .map-placeholder {
+            height: 150px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            border: 2px dashed #dee2e6;
+        }
+    </style>
+
+@section Scripts {
+    <script>
+        function confirmDelete(id, name) {
+            document.getElementById('fieldName').textContent = name;
+            document.getElementById('deleteForm').action = '/Admin/Field/Delete/' + id;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+    </script>
+}

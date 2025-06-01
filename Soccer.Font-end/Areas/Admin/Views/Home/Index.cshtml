@@ -1,0 +1,314 @@
+﻿@model Soccer.Font_end.ViewModels.DashboardDto
+
+@{
+    ViewData["Title"] = "Soccer Admin Dashboard";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Welcome to Soccer Admin Dashboard!</h4>
+                    <small>Monitor your soccer business performance and analytics. <a href="/Admin/Home/SalesReport">View Reports</a></small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row clearfix row-deck">
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Users</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.TotalUsers</h5>
+                        <span class="font-12">Registered customers <a href="#">More</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Products</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.TotalProducts</h5>
+                        <span class="font-12">Soccer equipment <a href="#">More</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Orders</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.TotalOrders</h5>
+                        <span class="font-12">All time orders <a href="#">More</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Bookings</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.TotalBookings</h5>
+                        <span class="font-12">Field bookings <a href="#">More</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Today Orders</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.TodayOrders</h5>
+                        <span class="font-12">Orders today <a href="#">More</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Today Bookings</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="number mb-0 font-32 counter">@Model.TodayBookings</h5>
+                        <span class="font-12">Bookings today <a href="#">More</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue Overview -->
+        <div class="row clearfix row-deck">
+            <div class="col-xl-8 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Revenue Overview</h3>
+                        <div class="card-options">
+                            <button class="btn btn-sm btn-outline-secondary mr-1" onclick="refreshRevenue()">Refresh</button>
+                            <a href="/Admin/Home/SalesReport" class="btn btn-sm btn-outline-primary" style="color:dodgerblue">View Details</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h4 class="text-success">@Model.MonthlyRevenue.ToString("C")</h4>
+                                    <small class="text-muted">Monthly Product Revenue</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h4 class="text-info">@Model.MonthlyBookingRevenue.ToString("C")</h4>
+                                    <small class="text-muted">Monthly Booking Revenue</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <small class="text-success">● Product Sales</small>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-info">● Field Bookings</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Top Selling Products</h3>
+                        <div class="card-options">
+                            <a href="/Admin/Home/InventoryReport" class="card-options-collapse"><i class="fa fa-external-link"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.TopSellingProducts != null && Model.TopSellingProducts.Any())
+                        {
+                            @foreach (var product in Model.TopSellingProducts)
+                            {
+                                <div class="mb-3">
+                                    <div class="clearfix">
+                                        <div class="float-left"><strong>@product.ProductName</strong></div>
+                                        <div class="float-right"><span class="badge badge-success">@product.TotalSold sold</span></div>
+                                    </div>
+                                    <div class="progress progress-xs mt-1">
+                                        <div class="progress-bar bg-azure" role="progressbar" style="width: @((product.TotalSold * 100 / (Model.TopSellingProducts.FirstOrDefault()?.TotalSold ?? 1)))%" aria-valuenow="@product.TotalSold" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">No sales data available</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="row clearfix row-deck">
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Orders</h3>
+                        <div class="card-options">
+                            <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fa fa-chevron-up"></i></a>
+                            <a href="#" class="card-options-fullscreen" data-toggle="card-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.RecentOrders != null && Model.RecentOrders.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped text-nowrap table-vcenter mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Order Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var order in Model.RecentOrders)
+                                        {
+                                            <tr>
+                                                <td><strong>#@order.OrderID</strong></td>
+                                                <td>@order.UserName</td>
+                                                <td><strong>@order.TotalAmount.ToString("C")</strong></td>
+                                                <td>
+                                                    @switch (order.Status?.ToLower())
+                                                    {
+                                                        case "delivered":
+                                                            <span class="badge badge-success">@order.Status</span>
+                                                            break;
+                                                        case "pending":
+                                                            <span class="badge badge-warning">@order.Status</span>
+                                                            break;
+                                                        case "cancelled":
+                                                            <span class="badge badge-danger">@order.Status</span>
+                                                            break;
+                                                        default:
+                                                            <span class="badge badge-info">@order.Status</span>
+                                                            break;
+                                                    }
+                                                </td>
+                                                <td>@order.OrderDate.ToString("MMM dd, yyyy")</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary" onclick="viewOrder(@order.OrderID)">View</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted text-center py-4">No recent orders found</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row clearfix">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Quick Actions</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <a href="/Admin/Home/SalesReport" class="btn btn-block btn-outline-primary">
+                                    <i class="fa fa-chart-line mr-2"></i>Sales Report
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="/Admin/Home/InventoryReport" class="btn btn-block btn-outline-info">
+                                    <i class="fa fa-boxes mr-2"></i>Inventory Report
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="/Admin/Products" class="btn btn-block btn-outline-success">
+                                    <i class="fa fa-plus mr-2"></i>Add Product
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="/Admin/Orders" class="btn btn-block btn-outline-warning">
+                                    <i class="fa fa-list mr-2"></i>Manage Orders
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto refresh dashboard every 5 minutes
+        setInterval(function() {
+            location.reload();
+        }, 300000);
+
+        function refreshRevenue() {
+            $.get('/Admin/Home/GetDashboardData', function(data) {
+                if(data.success) {
+                    location.reload();
+                }
+            });
+        }
+
+        function viewOrder(orderId) {
+            // Redirect to order details or open modal
+            window.location.href = '/Admin/Orders/Details/' + orderId;
+        }
+
+        // Counter animation
+        $(document).ready(function() {
+            $('.counter').each(function() {
+                var $this = $(this);
+                var countTo = parseInt($this.text());
+                $({ countNum: 0 }).animate({ countNum: countTo }, {
+                    duration: 2000,
+                    easing: 'linear',
+                    step: function() {
+                        $this.text(Math.floor(this.countNum));
+                    },
+                    complete: function() {
+                        $this.text(this.countNum);
+                    }
+                });
+            });
+        });
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <text>
+                toastr.error('@ViewBag.ErrorMessage');
+            </text>
+        }
+    </script>
+}

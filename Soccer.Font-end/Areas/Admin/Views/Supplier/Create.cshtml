@@ -1,0 +1,122 @@
+﻿@using Soccer.Font_end.ViewModels
+@model CreateSupplierViewModel
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Thêm nhà cung cấp mới</h4>
+                    <small>Thêm thông tin nhà cung cấp mới vào hệ thống</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin nhà cung cấp</h3>
+                        <div class="card-options">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["Error"]</div>
+                        }
+
+                        <form asp-action="Create" method="post">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label asp-for="SupplierName" class="form-label">Tên nhà cung cấp <span class="text-danger">*</span></label>
+                                        <input asp-for="SupplierName" class="form-control" placeholder="Nhập tên nhà cung cấp">
+                                        <span asp-validation-for="SupplierName" class="text-danger"></span>
+                                        <small class="form-text text-muted">Tên nhà cung cấp phải là duy nhất</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Email" class="form-label">Email</label>
+                                        <input asp-for="Email" type="email" class="form-control" placeholder="email@example.com">
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Phone" class="form-label">Số điện thoại</label>
+                                        <input asp-for="Phone" type="tel" class="form-control" placeholder="0123456789">
+                                        <span asp-validation-for="Phone" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Address" class="form-label">Địa chỉ</label>
+                                <input asp-for="Address" class="form-control" placeholder="Nhập địa chỉ nhà cung cấp">
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="ContactInfo" class="form-label">Thông tin liên hệ khác</label>
+                                <textarea asp-for="ContactInfo" class="form-control" rows="4"
+                                          placeholder="Thông tin liên hệ bổ sung, ghi chú đặc biệt..."></textarea>
+                                <span asp-validation-for="ContactInfo" class="text-danger"></span>
+                                <small class="form-text text-muted">Website, Fax, người liên hệ, v.v.</small>
+                            </div>
+
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Thêm nhà cung cấp
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary ml-2">Hủy</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supplier Guidelines -->
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Hướng dẫn thêm nhà cung cấp</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6><i class="fa fa-lightbulb text-warning"></i> Thông tin cần thiết:</h6>
+                            <ul class="small text-muted">
+                                <li><strong>Tên nhà cung cấp:</strong> Bắt buộc, phải duy nhất</li>
+                                <li><strong>Email:</strong> Để liên hệ và gửi đơn hàng</li>
+                                <li><strong>Số điện thoại:</strong> Liên hệ nhanh khi cần</li>
+                                <li><strong>Địa chỉ:</strong> Địa chỉ kho hàng hoặc văn phòng</li>
+                            </ul>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6><i class="fa fa-exclamation-circle text-info"></i> Lưu ý:</h6>
+                            <ul class="small text-muted">
+                                <li>Kiểm tra kỹ thông tin trước khi lưu</li>
+                                <li>Email và số điện thoại phải hợp lệ</li>
+                                <li>Tên nhà cung cấp không được trùng</li>
+                                <li>Có thể cập nhật thông tin sau</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle"></i>
+                            <strong>Mẹo:</strong> Nhập đầy đủ thông tin để dễ dàng quản lý và liên hệ với nhà cung cấp.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

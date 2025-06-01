@@ -1,0 +1,442 @@
+﻿@model Soccer.Font_end.ViewModels.ForgotPasswordViewModel
+@{
+    ViewData["Title"] = "Quên Mật Khẩu";
+}
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 40px auto;
+        padding: 30px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 5px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        color: white;
+        position: relative;
+    }
+
+    .auth-container h2 {
+        text-align: center;
+        color: #e81e25;
+        margin-bottom: 30px;
+        font-family: 'Oswald', sans-serif;
+        text-transform: uppercase;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #ddd;
+        font-family: 'Oswald', sans-serif;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border-radius: 3px;
+        font-size: 16px;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #e81e25;
+    }
+
+    .btn-submit {
+        background: #e81e25;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-family: 'Oswald', sans-serif;
+        width: 100%;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background: #c61017;
+    }
+
+    .btn-back {
+        background: transparent;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 10px 20px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: normal;
+        text-transform: uppercase;
+        font-family: 'Oswald', sans-serif;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        display: inline-block;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .btn-back:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #aaa;
+    }
+
+    .auth-footer a {
+        color: #e81e25;
+        text-decoration: none;
+    }
+
+    .banner-auth {
+        background: url('images/banner/background01.jpg') center/cover no-repeat;
+        position: relative;
+        padding: 80px 0;
+    }
+
+    .banner-auth::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    .banner-auth-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+    }
+
+    .banner-auth-content h1 {
+        font-size: 48px;
+        font-weight: bold;
+        color: white;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        font-family: 'Oswald', sans-serif;
+    }
+
+    .banner-auth-content h1 span {
+        color: #e81e25;
+    }
+
+    .soccer-ball {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background: url('images/banner/ball.png') no-repeat;
+        background-size: contain;
+        animation: bounce 6s infinite;
+        opacity: 0.8;
+        z-index: 0;
+    }
+
+    @@keyframes bounce {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-80px) rotate(180deg);
+        }
+    }
+
+    .soccer-ball:nth-child(1) {
+        top: 20px;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .soccer-ball:nth-child(2) {
+        top: 40px;
+        right: 15%;
+        animation-delay: 1s;
+    }
+
+    .status-message {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        text-align: center;
+        display: none;
+    }
+
+    .status-error {
+        background: rgba(232, 30, 37, 0.2);
+        border: 1px solid #e81e25;
+        color: #ff9999;
+    }
+
+    .status-success {
+        background: rgba(39, 174, 96, 0.2);
+        border: 1px solid #27ae60;
+        color: #a3e9c3;
+    }
+
+    .status-info {
+        background: rgba(52, 152, 219, 0.2);
+        border: 1px solid #3498db;
+        color: #a3d1ff;
+    }
+
+    .loader {
+        border: 5px solid rgba(255, 255, 255, 0.1);
+        border-top: 5px solid #e81e25;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+        display: none;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .form-stages > div {
+        display: none;
+    }
+
+    .form-stages > div.active {
+        display: block;
+    }
+</style>
+
+<!-- Banner Section -->
+<div class="banner-auth" style="margin-top: 100px;">
+    <div class="container">
+        <div class="banner-auth-content">
+            <h1>Quên <span>Mật Khẩu</span></h1>
+            <p>Đừng lo lắng! Chúng tôi sẽ giúp bạn khôi phục lại mật khẩu của mình.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Forgot Password Section -->
+<section class="auth-section bg-white">
+    <div class="container">
+        <div class="row">
+            <div class="auth-container">
+                <div class="soccer-ball"></div>
+                <div class="soccer-ball"></div>
+
+                <h2>Khôi phục mật khẩu</h2>
+
+                <div id="status-message" class="status-message"></div>
+                <div id="loader" class="loader"></div>
+
+                <div class="form-stages">
+                    <!-- Giai đoạn 1: Nhập email -->
+                    <div id="stage-email" class="active">
+                        <form asp-action="SendResetLink" asp-controller="ForgotPW" method="post" id="forgot-password-form">
+                            @Html.AntiForgeryToken()
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label for="forgot-email">Email đăng ký của bạn</label>
+                                <input asp-for="Email" type="email" id="forgot-email" placeholder="Nhập email của bạn" required>
+                                <span asp-validation-for="Email" class="validation-message"></span>
+                            </div>
+
+                            <button type="submit" class="btn-submit">Gửi yêu cầu khôi phục</button>
+
+                            <div class="auth-footer">
+                                <a href="/Auth" class="back-to-login">Quay lại trang đăng nhập</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Giai đoạn 2: Chờ xác nhận email -->
+                    <div id="stage-waiting">
+                        <h3 style="text-align: center; margin-bottom: 20px;">Chúng tôi đã gửi email xác nhận</h3>
+                        <p style="text-align: center; margin-bottom: 30px;">
+                            Vui lòng kiểm tra hộp thư email của bạn và nhấp vào liên kết xác nhận để đặt lại mật khẩu.
+                        </p>
+
+                        <p style="text-align: center; font-size: 14px; color: #aaa;">
+                            Không nhận được email?
+                            <a href="#" id="resend-email" style="color: #e81e25; text-decoration: none;">Gửi lại</a>
+                        </p>
+
+                        <div style="text-align: center; margin-top: 30px;">
+                            <a href="/Auth" class="btn-back">Quay lại trang đăng nhập</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const forgotForm = document.getElementById('forgot-password-form');
+            const statusMessage = document.getElementById('status-message');
+            const loader = document.getElementById('loader');
+            const stageEmail = document.getElementById('stage-email');
+            const stageWaiting = document.getElementById('stage-waiting');
+            const resendEmailBtn = document.getElementById('resend-email');
+
+            let userEmail = '';
+
+            // Hàm hiển thị thông báo
+            function showMessage(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = 'status-message status-' + type;
+                statusMessage.style.display = 'block';
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 5000);
+            }
+
+            // Hàm chuyển đổi giai đoạn
+            function switchStage(stageId) {
+                document.querySelectorAll('.form-stages > div').forEach(stage => {
+                    stage.classList.remove('active');
+                });
+                document.getElementById(stageId).classList.add('active');
+            }
+
+            // Hiển thị thông báo từ TempData nếu có
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                    showMessage('@TempData["SuccessMessage"]', 'success');
+                    // Tự động chuyển hướng nếu có ResetToken
+                    const resetToken = '@TempData["ResetToken"]';
+                    if (resetToken) {
+                        setTimeout(() => {
+                            window.location.href = '/ForgotPW/ResetPassword?token=' + encodeURIComponent(resetToken);
+                        }, 2000); // Chuyển hướng sau 2 giây
+                    }
+                </text>
+            }
+            @if (ViewData["ErrorMessage"] != null)
+            {
+                <text>
+                    showMessage('@ViewData["ErrorMessage"]', 'error');
+                </text>
+            }
+
+            // Xử lý gửi form
+            forgotForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const emailInput = document.getElementById('forgot-email');
+                userEmail = emailInput.value.trim();
+
+                // Hiển thị loader
+                loader.style.display = 'block';
+                forgotForm.style.opacity = '0.5';
+                forgotForm.style.pointerEvents = 'none';
+
+                try {
+                    const response = await fetch('https://localhost:7237/api/Auth/forgot-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email: userEmail })
+                    });
+
+                    const content = await response.text();
+                    console.log('Forgot Password Response:', content);
+
+                    let result;
+                    try {
+                        result = JSON.parse(content);
+                    } catch (e) {
+                        console.error('Invalid JSON response:', content);
+                        throw new Error('Phản hồi không hợp lệ từ server');
+                    }
+
+                    // Ẩn loader
+                    loader.style.display = 'none';
+                    forgotForm.style.opacity = '1';
+                    forgotForm.style.pointerEvents = 'auto';
+
+                    if (response.ok) {
+                        showMessage('Yêu cầu khôi phục mật khẩu đã được gửi đến email của bạn.', 'success');
+                        switchStage('stage-waiting');
+                    } else {
+                        showMessage(result.message || 'Email không tồn tại trong hệ thống.', 'error');
+                    }
+                } catch (error) {
+                    loader.style.display = 'none';
+                    forgotForm.style.opacity = '1';
+                    forgotForm.style.pointerEvents = 'auto';
+                    showMessage('Đã xảy ra lỗi. Vui lòng thử lại sau.', 'error');
+                    console.error('Lỗi khi gửi yêu cầu khôi phục:', error);
+                }
+            });
+
+            // Xử lý gửi lại email
+            resendEmailBtn.addEventListener('click', async function (e) {
+                e.preventDefault();
+
+                loader.style.display = 'block';
+
+                try {
+                    const response = await fetch('https://localhost:7237/api/Auth/forgot-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email: userEmail })
+                    });
+
+                    const content = await response.text();
+                    console.log('Resend Email Response:', content);
+
+                    let result;
+                    try {
+                        result = JSON.parse(content);
+                    } catch (e) {
+                        console.error('Invalid JSON response:', content);
+                        throw new Error('Phản hồi không hợp lệ từ server');
+                    }
+
+                    loader.style.display = 'none';
+
+                    if (response.ok) {
+                        showMessage('Email xác nhận đã được gửi lại. Vui lòng kiểm tra hộp thư của bạn.', 'info');
+                    } else {
+                        showMessage(result.message || 'Đã xảy ra lỗi khi gửi lại email. Vui lòng thử lại.', 'error');
+                    }
+                } catch (error) {
+                    loader.style.display = 'none';
+                    showMessage('Đã xảy ra lỗi. Vui lòng thử lại sau.', 'error');
+                    console.error('Lỗi khi gửi lại email:', error);
+                }
+            });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

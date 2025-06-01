@@ -1,0 +1,198 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model BookingStatistics
+@{
+    ViewData["Title"] = "Thống kê Booking";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4>Thống Kê Booking</h4>
+                        <small>Báo cáo chi tiết về doanh thu và trạng thái booking</small>
+                    </div>
+                    <div>
+                        <a href="@Url.Action("Index")" class="btn btn-secondary">
+                            <i class="fa fa-arrow-left"></i> Quay lại danh sách
+                        </a>
+                        <button class="btn btn-primary" onclick="exportStatistics()">
+                            <i class="fa fa-download"></i> Xuất báo cáo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue Summary Cards -->
+        <div class="row clearfix row-deck">
+            <div class="col-xl-4 col-lg-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tổng Doanh Thu</h3>
+                        <div class="card-options">
+                            <span class="badge badge-success">
+                                <i class="fa fa-line-chart"></i>Hoàn thành
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body text-center">
+                        <h2 class="text-success mb-3">@Model.TotalRevenue.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</h2>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" style="width: 100%"></div>
+                        </div>
+                        <small class="text-muted">Từ các booking đã hoàn thành</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tổng Hoa Hồng</h3>
+                        <div class="card-options">
+                            <span class="badge badge-info">
+                                <i class="fa fa-percent"></i> Commission
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body text-center">
+                        <h2 class="text-info mb-3">
+                            @Model.TotalCommission.ToString("C", new System.Globalization.CultureInfo("vi-VN"))
+                        </h2>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-info" style="width: @((Model.TotalRevenue > 0 ? (Model.TotalCommission / Model.TotalRevenue * 100) : 0).ToString("F0"))%"></div>
+                        </div>
+                        <small class="text-muted">
+                            @((Model.TotalRevenue > 0 ? (Model.TotalCommission / Model.TotalRevenue * 100) : 0).ToString("F1"))% của tổng doanh thu
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Lợi Nhuận Thực</h3>
+                        <div class="card-options">
+                            <span class="badge badge-primary">
+                                <i class="fa fa-dollar"></i> Profit
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body text-center">
+                        <h2 class="text-primary mb-3">@((Model.TotalRevenue - Model.TotalCommission).ToString("C", new System.Globalization.CultureInfo("vi-VN")))</h2>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-primary" style="width: @((Model.TotalRevenue > 0 ? ((Model.TotalRevenue - Model.TotalCommission) / Model.TotalRevenue * 100) : 0).ToString("F0"))%"></div>
+                        </div>
+                        <small class="text-muted">Sau khi trừ hoa hồng</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Statistics -->
+        <div class="row clearfix">
+            <div class="col-xl-8 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thống Kê Theo Trạng Thái</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Trạng Thái</th>
+                                        <th class="text-center">Số Lượng</th>
+                                        <th class="text-center">Tỷ Lệ</th>
+                                        <th class="text-center">Biểu Đồ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        var totalBookings = Model.StatusStats.Sum(s => s.Count);
+                                    }
+                                    @foreach (var stat in Model.StatusStats)
+                                    {
+                                        var percentage = totalBookings > 0 ? (stat.Count * 100.0 / totalBookings) : 0;
+                                        var statusClass = stat.Status switch
+                                        {
+                                            "Confirmed" => "success",
+                                            "Pending" => "warning",
+                                            "Cancelled" => "danger",
+                                            "Completed" => "info",
+                                            _ => "secondary"
+                                        };
+                                        var statusText = stat.Status switch
+                                        {
+                                            "Confirmed" => "Đã xác nhận",
+                                            "Pending" => "Chờ xử lý",
+                                            "Cancelled" => "Đã hủy",
+                                            "Completed" => "Hoàn thành",
+                                            _ => stat.Status
+                                        };
+                                        <tr>
+                                            <td>
+                                                <span class="badge badge-@statusClass">@statusText</span>
+                                            </td>
+                                            <td class="text-center font-weight-bold">@stat.Count</td>
+                                            <td class="text-center">@percentage.ToString("F1")%</td>
+                                            <td>
+                                                <div class="progress" style="height: 8px;">
+                                                    <div class="progress-bar bg-@statusClass" style="width: @percentage.ToString("F1")%"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tóm Tắt Nhanh</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 border-right">
+                                <h4 class="text-primary">@totalBookings</h4>
+                                <small class="text-muted">Tổng Booking</small>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="text-success">@(Model.StatusStats.FirstOrDefault(s => s.Status == "Completed")?.Count ?? 0)</h4>
+                                <small class="text-muted">Hoàn Thành</small>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row text-center">
+                            <div class="col-6 border-right">
+                                <h4 class="text-warning">@(Model.StatusStats.FirstOrDefault(s => s.Status == "Pending")?.Count ?? 0)</h4>
+                                <small class="text-muted">Chờ Xử Lý</small>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="text-danger">@(Model.StatusStats.FirstOrDefault(s => s.Status == "Cancelled")?.Count ?? 0)</h4>
+                                <small class="text-muted">Đã Hủy</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function exportStatistics() {
+            // Implement export functionality
+            window.location.href = '';
+        }
+    </script>
+}

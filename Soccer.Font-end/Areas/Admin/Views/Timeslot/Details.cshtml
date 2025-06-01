@@ -1,0 +1,326 @@
+﻿@using Soccer.Font_end.ViewModels
+@model TimeslotDto
+@{
+    ViewData["Title"] = "Chi tiết Timeslot";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-action="Index">Timeslot</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Chi tiết</li>
+                        </ol>
+                    </nav>
+                    <h4>Chi tiết Timeslot #@Model.TimeslotID</h4>
+                    <small>Xem thông tin chi tiết khung thời gian</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thông báo -->
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fa fa-exclamation-triangle"></i> @TempData["Error"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        <div class="row clearfix">
+            <!-- Thông tin chính -->
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-clock-o"></i> Thông tin Timeslot
+                        </h3>
+                        <div class="card-options">
+                            <span class="badge badge-primary badge-lg">ID: @Model.TimeslotID</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-group">
+                                    <label class="info-label">
+                                        <i class="fa fa-play-circle text-success"></i> Thời gian bắt đầu
+                                    </label>
+                                    <div class="info-value">@Model.StartTime.ToString(@"hh\:mm")</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-group">
+                                    <label class="info-label">
+                                        <i class="fa fa-stop-circle text-danger"></i> Thời gian kết thúc
+                                    </label>
+                                    <div class="info-value">@Model.EndTime.ToString(@"hh\:mm")</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="info-group">
+                                    <label class="info-label">
+                                        <i class="fa fa-hourglass-half text-info"></i> Thời lượng
+                                    </label>
+                                    @{
+                                        var duration = Model.EndTime - Model.StartTime;
+                                    }
+                                    <div class="info-value">
+                                        <span class="badge badge-info badge-lg">@duration.TotalMinutes phút</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-group">
+                                    <label class="info-label">
+                                        <i class="fa fa-sun-o text-warning"></i> Buổi trong ngày
+                                    </label>
+                                    @{
+                                        string session = "";
+                                        string badgeClass = "";
+                                        string icon = "";
+                                        if (Model.StartTime.Hours < 12)
+                                        {
+                                            session = "Buổi sáng";
+                                            badgeClass = "badge-success";
+                                            icon = "fa-sun-o";
+                                        }
+                                        else if (Model.StartTime.Hours < 18)
+                                        {
+                                            session = "Buổi chiều";
+                                            badgeClass = "badge-warning";
+                                            icon = "fa-sun-o";
+                                        }
+                                        else
+                                        {
+                                            session = "Buổi tối";
+                                            badgeClass = "badge-dark";
+                                            icon = "fa-moon-o";
+                                        }
+                                    }
+                                    <div class="info-value">
+                                        <span class="badge @badgeClass badge-lg">
+                                            <i class="fa @icon"></i> @session
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-group">
+                                    <label class="info-label">
+                                        <i class="fa fa-check-circle text-success"></i> Trạng thái
+                                    </label>
+                                    <div class="info-value">
+                                        <span class="badge badge-primary badge-lg">
+                                            <i class="fa fa-check"></i> Hoạt động
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Biểu đồ timeline -->
+                        <div class="timeline-section">
+                            <h6><i class="fa fa-clock-o"></i> Timeline trong ngày</h6>
+                            <div class="timeline-container">
+                                <div class="timeline-bar">
+                                    @{
+                                        var startPercent = (Model.StartTime.Hours * 60 + Model.StartTime.Minutes) / (24.0 * 60) * 100;
+                                        var endPercent = (Model.EndTime.Hours * 60 + Model.EndTime.Minutes) / (24.0 * 60) * 100;
+                                        var widthPercent = endPercent - startPercent;
+                                    }
+                                    <div class="timeline-slot" style="left: @(startPercent)%; width: @(widthPercent)%;">
+                                        <span class="timeline-label">@Model.StartTime.ToString(@"hh\:mm") - @Model.EndTime.ToString(@"hh\:mm")</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-markers">
+                                    <span class="marker">00:00</span>
+                                    <span class="marker">06:00</span>
+                                    <span class="marker">12:00</span>
+                                    <span class="marker">18:00</span>
+                                    <span class="marker">24:00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar với thông tin thêm -->
+            <div class="col-lg-4 col-md-12">
+                <!-- Actions Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-cogs"></i> Hành động
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a asp-action="Edit" asp-route-id="@Model.TimeslotID" class="btn btn-warning btn-block">
+                                <i class="fa fa-edit"></i> Chỉnh sửa Timeslot
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@Model.TimeslotID" class="btn btn-danger btn-block">
+                                <i class="fa fa-trash"></i> Xóa Timeslot
+                            </a>
+                            <hr>
+                            <a asp-action="Index" class="btn btn-secondary btn-block">
+                                <i class="fa fa-arrow-left"></i> Quay lại danh sách
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-bar-chart"></i> Thống kê
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="stat-item">
+                            <div class="stat-label">Thời lượng (phút)</div>
+                            <div class="stat-value text-primary">@duration.TotalMinutes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Thời lượng (giờ)</div>
+                            <div class="stat-value text-info">@Math.Round(duration.TotalHours, 1)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Phần trăm trong ngày</div>
+                            <div class="stat-value text-success">@Math.Round(duration.TotalMinutes / (24 * 60) * 100, 1)%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-info-circle"></i> Thông tin thêm
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h6><i class="fa fa-lightbulb-o"></i> Ghi chú:</h6>
+                            <ul class="mb-0">
+                                <li>Timeslot này có thể được sử dụng để đặt sân</li>
+                                <li>Thời gian được hiển thị theo định dạng 24 giờ</li>
+                                <li>Mọi thay đổi cần được xem xét kỹ trước khi thực hiện</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .info-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .badge-lg {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .timeline-section {
+        margin-top: 1.5rem;
+    }
+
+    .timeline-container {
+        margin-top: 1rem;
+    }
+
+    .timeline-bar {
+        height: 40px;
+        background: linear-gradient(90deg, #e9ecef 0%, #dee2e6 100%);
+        border-radius: 20px;
+        position: relative;
+        margin-bottom: 0.5rem;
+    }
+
+    .timeline-slot {
+        position: absolute;
+        height: 100%;
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .timeline-markers {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .stat-value {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .btn-block {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .d-grid {
+        display: grid;
+    }
+
+    .gap-2 {
+        gap: 0.5rem;
+    }
+</style>

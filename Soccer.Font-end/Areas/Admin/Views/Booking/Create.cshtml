@@ -1,0 +1,102 @@
+﻿@using Soccer.Font_end.Areas.ViewModels
+@model CreateBookingRequest
+@{
+    ViewData["Title"] = "Tạo Booking Mới";
+}
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4>Tạo Booking Mới</h4>
+                        <small>Thêm đặt sân mới vào hệ thống</small>
+                    </div>
+                    <div>
+                        <a href="@Url.Action("Index")" class="btn btn-secondary">
+                            <i class="fe fe-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-xl-8 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông Tin Booking</h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Create" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="ScheduleId" class="form-label">Lịch Trình Sân <span class="text-danger">*</span></label>
+                                        <select asp-for="ScheduleId" class="form-control" required>
+                                            <option value="">-- Chọn lịch trình --</option>
+                                            <!-- Populate from ViewBag.Schedules -->
+                                        </select>
+                                        <span asp-validation-for="ScheduleId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Trạng Thái</label>
+                                        <select name="Status" class="form-control">
+                                            <option value="Pending">Chờ xử lý</option>
+                                            <option value="Confirmed">Đã xác nhận</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Notes" class="form-label">Ghi Chú</label>
+                                <textarea asp-for="Notes" class="form-control" rows="4" placeholder="Nhập ghi chú cho booking..."></textarea>
+                                <span asp-validation-for="Notes" class="text-danger"></span>
+                                <small class="form-text text-muted">Tối đa 500 ký tự</small>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fe fe-plus"></i> Tạo Booking
+                                </button>
+                                <button type="reset" class="btn btn-secondary">
+                                    <i class="fe fe-refresh-cw"></i> Làm mới
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Hướng Dẫn</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h6><i class="fe fe-info"></i> Lưu ý quan trọng:</h6>
+                            <ul class="mb-0">
+                                <li>Chọn lịch trình sân có sẵn</li>
+                                <li>Kiểm tra thời gian trước khi tạo</li>
+                                <li>Ghi chú giúp quản lý tốt hơn</li>
+                                <li>Có thể cập nhật sau khi tạo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

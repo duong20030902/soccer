@@ -1,0 +1,83 @@
+﻿@using Soccer.Font_end.ViewModels
+@model EditSizeViewModel
+
+<div class="section-body mt-3">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    <h4>Chỉnh sửa kích thước</h4>
+                    <small>Cập nhật thông tin kích thước: <strong>@Model.SizeName</strong></small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin kích thước</h3>
+                        <div class="card-options">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" method="post">
+                            <input asp-for="SizeID" type="hidden">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="SizeName" class="form-label">Tên kích thước <span class="text-danger">*</span></label>
+                                        <input asp-for="SizeName" class="form-control">
+                                        <span asp-validation-for="SizeName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="SizeOrder" class="form-label">Thứ tự hiển thị <span class="text-danger">*</span></label>
+                                        <input asp-for="SizeOrder" type="number" class="form-control" min="1" max="999">
+                                        <span asp-validation-for="SizeOrder" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description" class="form-label">Mô tả</label>
+                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Cập nhật
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary ml-2">Hủy</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin kích thước</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>ID:</strong> @Model.SizeID</p>
+                        <p><strong>Tên hiện tại:</strong> @Model.SizeName</p>
+                        <p><strong>Thứ tự hiện tại:</strong> @Model.SizeOrder</p>
+
+                        <div class="alert alert-warning">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            <strong>Cảnh báo:</strong> Việc thay đổi thông tin kích thước có thể ảnh hưởng đến các sản phẩm đang sử dụng kích thước này.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
