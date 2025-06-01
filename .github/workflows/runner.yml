@@ -1,0 +1,25 @@
+name: soccer-runner
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Deploy-Soccer-Container:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Stop and remove old containers
+        run: docker compose down
+
+      - name: Remove unused images, containers, and volumes
+        run: |
+          docker system prune -af --volumes
+
+      - name: Run Docker compose command
+        run: |
+          set -e
+          docker compose up --build -d
