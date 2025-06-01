@@ -14,7 +14,7 @@ services:
       ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
       TZ: "Asia/Ho_Chi_Minh"
     volumes:
-      - C:/Users/doduy/.aspnet/https:/https:ro
+      - ${USERPROFILE}/.aspnet/https:/https:ro
 
     networks:
       - demo
@@ -36,7 +36,7 @@ services:
       ASPNETCORE_Kestrel__Certificates__Default__Password: "Duong@123"
       ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
     volumes:
-      - C:/Users/doduy/.aspnet/https:/https:ro
+      - ${USERPROFILE}/.aspnet/https:/https:ro
     networks:
       - demo
 
