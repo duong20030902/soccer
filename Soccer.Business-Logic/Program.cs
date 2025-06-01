@@ -37,19 +37,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost5000",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5000")
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
-        });
+    options.AddPolicy("CORSPolicy", policy =>
+    {
+        policy
+            .WithOrigins("https://soccer.soccertips.org", "http://localhost:7170")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
 
 
 var app = builder.Build();
-app.UseCors("AllowLocalhost5000");
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
