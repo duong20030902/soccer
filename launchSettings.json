@@ -4,7 +4,8 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "soccer.business-logic": "StartDebugging"
+        "soccer.business-logic": "StartDebugging",
+        "soccer.font-end": "StartDebugging"
       }
     }
   }

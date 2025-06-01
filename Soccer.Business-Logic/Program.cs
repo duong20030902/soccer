@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 // Add services to the container.
 builder.Services.AddDbContext<SoccerContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ServerConnection")));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -34,8 +34,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
-var app = builder.Build();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost5000",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5000")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
+
+
+var app = builder.Build();
+app.UseCors("AllowLocalhost5000");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
