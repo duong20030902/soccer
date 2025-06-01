@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Soccer.Business_Logic.Controllers
 {
-    //abcd
+    //a
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
