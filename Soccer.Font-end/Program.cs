@@ -29,7 +29,8 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<Soccer.Font_end.Services.FieldService>();
 builder.Services.AddScoped<Soccer.Font_end.Services.BookingService>();
 builder.Services.AddSession();
-builder.WebHost.UseUrls("http://+:8080");
+builder.WebHost.UseUrls("http://+:8080", "https://+:8081");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,7 +40,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();
 
