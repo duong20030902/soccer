@@ -1,20 +1,20 @@
 ﻿services:
   soccer.font-end:
-    image: ${DOCKER_REGISTRY-}soccerfrontend
+    container_name: soccer-font-end
     build:
       context: .
       dockerfile: Soccer.Font-end/Dockerfile
     ports:
-      - "7170:8080"
+      - "7170:8080"  # HTTP API
     environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
-      # Nếu muốn chạy HTTPS cho front-end, giữ nguyên 2 biến dưới đây
-      ASPNETCORE_Kestrel__Certificates__Default__Password: "Duong@123"
-      ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
-    volumes:
-      - ${USERPROFILE}/.aspnet/https:/https:ro
+      - ASPNETCORE_URLS=http://+:8080/
     networks:
       - demo
+  soccer.business-logic:
+    image: ${DOCKER_REGISTRY-}soccerbusinesslogic
+    build:
+      context: .
+      dockerfile: Soccer.Business-Logic/Dockerfile
 
 networks:
   demo:
