@@ -28,8 +28,7 @@ services:
       context: .
       dockerfile: Soccer.Font-end/Dockerfile
     ports:
-      - "5000:8080"   # ánh xạ host:5000 → container:8080 (Front-end HTTP)
-      - "5001:8081"   # ánh xạ host:5001 → container:8081 (Front-end HTTPS)
+      - "7170:7170"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       # Nếu muốn chạy HTTPS cho front-end, giữ nguyên 2 biến dưới đây
