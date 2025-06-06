@@ -13,7 +13,7 @@ namespace Soccer.Font_end.Services
         public AuthService(IConfiguration configuration)
         {
             _httpClient = new HttpClient();
-            _apiBaseUrl = "https://localhost:7237/api";
+            _apiBaseUrl = configuration["ApiBaseUrl"] ?? "https://localhost:7237/api";
         }
 
         public async Task<ApiResponse> RegisterAsync(RegisterViewModel model)
