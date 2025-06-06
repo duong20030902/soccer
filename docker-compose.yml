@@ -13,7 +13,7 @@
   soccer.business-logic:
     image: ${DOCKER_REGISTRY-}soccerbusinesslogic
     ports:
-      - "7237:8085"
+      - "7237:8080"
     build:
       context: .
       dockerfile: Soccer.Business-Logic/Dockerfile
