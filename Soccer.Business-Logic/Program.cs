@@ -115,18 +115,18 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 
-/*builder.Services.AddCors(options =>
+builder.Services.AddCors(options =>
 {
     options.AddPolicy("CORSPolicy", policy =>
     {
         policy
-            .WithOrigins("https://localhost:7170", "https://www.soccer.soccertips.org")
+            .WithOrigins("https://www.soccer.soccertips.org/Auth/Login")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
     });
-});*/
-builder.Services.AddCors(opts =>
+});
+/*builder.Services.AddCors(opts =>
 {
     opts.AddPolicy("CORSPolicy", builder =>
     {
@@ -135,7 +135,7 @@ builder.Services.AddCors(opts =>
                .AllowAnyMethod()
                .AllowCredentials();
     });
-});
+});*/
 
 
 builder.Services.AddScoped<EmailService>();
