@@ -63,7 +63,7 @@ namespace Soccer.Font_end.Controllers
         public async Task<IActionResult> Checkout()
         {
             var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri("https://api.soccer.soccertips.org");
+            client.BaseAddress = new Uri("https://api.soccer.soccertips.org/api");
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             // Send cookie to maintain session
