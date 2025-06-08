@@ -25,6 +25,7 @@ namespace Soccer.Business_Logic.Controllers
                 .Include(p => p.ProductReviews)
                 .Include(p => p.ProductColors)
                 .Include(p => p.ProductSizes)
+                .AsSplitQuery() //mới thêm để tránh quá nhiều include gây duplicate
                 .AsQueryable();
 
             // Lọc theo danh mục
