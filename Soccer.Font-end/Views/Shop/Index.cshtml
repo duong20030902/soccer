@@ -1846,7 +1846,7 @@
                     this.textContent = 'Đang thêm...';
                     this.disabled = true;
 
-                    fetch(`https://localhost:7237/api/cart/add?productId=${productId}&quantity=${quantity}&sizeId=${sizeId}`, {
+                    fetch(`https://api.soccer.soccertips.org/api/cart/add?productId=${productId}&quantity=${quantity}&sizeId=${sizeId}`, {
                         method: 'POST',
                         credentials: 'include',
                         headers: {
@@ -1882,7 +1882,7 @@
 
         // Hàm cập nhật số lượng giỏ hàng
         function updateCartCount() {
-            fetch('https://localhost:7237/api/cart/checkout', {
+            fetch('https://api.soccer.soccertips.org/api/cart/checkout', {
                 credentials: 'include'
             })
             .then(response => response.json())

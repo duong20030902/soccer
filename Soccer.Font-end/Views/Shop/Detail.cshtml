@@ -934,7 +934,7 @@
         this.textContent = '🔄 Đang thêm...';
         this.style.pointerEvents = 'none';
 
-        fetch(`https://localhost:7237/api/cart/add?productId=${productId}&quantity=${quantity}&sizeId=${sizeId}`, {
+        fetch(`https://api.soccer.soccertips.org/api/cart/add?productId=${productId}&quantity=${quantity}&sizeId=${sizeId}`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -993,7 +993,7 @@
 
     // Hàm cập nhật badge giỏ hàng
     function updateCartBadge() {
-        fetch('https://localhost:7237/api/cart/checkout', {
+        fetch('https://api.soccer.soccertips.org/api/cart/checkout', {
             credentials: 'include'
         })
         .then(response => response.json())
