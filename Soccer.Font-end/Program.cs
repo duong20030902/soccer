@@ -35,6 +35,17 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
     options.Cookie.SameSite = SameSiteMode.Lax; // Hoặc None nếu cần hỗ trợ cross-site
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CORSPolicy", policy =>
+    {
+        policy
+            .WithOrigins("https://api.soccer.soccertips.org/api")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
@@ -51,7 +62,7 @@ app.UseStaticFiles();
 app.UseSession();
 
 app.UseRouting();
-
+app.UseCors("CORSPolicy");
 app.UseAuthorization();
 
 app.MapControllerRoute(
