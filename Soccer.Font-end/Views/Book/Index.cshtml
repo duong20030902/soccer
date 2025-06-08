@@ -1,8 +1,7 @@
-﻿@using Soccer.Font_end.Services
-@model PagedResult<BookingResponseDto>
+﻿@using Soccer.Font_end.ViewModels
+@model FieldBookingViewModel
 @{
     ViewData["Title"] = "Đặt sân bóng";
-    int totalPages = Model.TotalCount > 0 ? (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize) : 1;
 }
 
 <style>
@@ -443,8 +442,84 @@
     .hidden {
         display: none;
     }
-</style>
 
+    .view-details-link {
+        display: inline-block;
+        margin-top: 4px;
+        color: #007bff;
+        text-decoration: underline;
+    }
+</style>
+<style>
+    .time-group {
+        margin-bottom: 30px;
+        border: 1px solid #E0E0E0;
+        border-radius: 12px;
+        padding: 20px;
+        background: #FAFAFA;
+    }
+
+    .time-header {
+        color: #FF6B35;
+        font-weight: 700;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #FFD23F;
+    }
+
+</style>
+<style>
+    .search-loading {
+        display: none;
+        color: #FF6B35;
+        font-size: 14px;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .search-results-info {
+        background: #F7FAFC;
+        border: 1px solid #E2E8F0;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        color: #4A5568;
+        font-size: 14px;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 60px 20px;
+        color: #718096;
+    }
+
+        .no-results h3 {
+            color: #2D3748;
+            margin-bottom: 16px;
+        }
+
+    .search-suggestions {
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+        .search-suggestions ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .search-suggestions li {
+            margin-bottom: 8px;
+            color: #718096;
+        }
+
+            .search-suggestions li::before {
+                content: "💡 ";
+                margin-right: 8px;
+            }
+
+</style>
 <!-- Hero Section -->
 <div class="booking-hero" style="margin-top:6.5%">
     <div class="booking-container">
@@ -461,29 +536,45 @@
             <div class="search-section">
                 <div class="search-title">⚽ Loại sân</div>
                 <select id="loaiSan" name="loaiSan" class="sort-dropdown">
-                    <option value="">Chọn loại sân</option>
-                    <option value="5">Sân 5 người</option>
-                    <option value="7">Sân 7 người</option>
-                    <option value="11">Sân 11 người</option>
+                    <option value="">Sân 7 người</option>
                 </select>
             </div>
 
             <!-- Date & Time Filter -->
-            <div class="search-section">
-                <div class="search-title">📅 Thời gian</div>
-                <input type="date" id="ngayDat" name="ngayDat" class="form-control">
-                <input type="time" id="gioBatDau" name="gioBatDau" class="form-control">
-                <input type="number" id="thoiLuong" name="thoiLuong" class="form-control" min="1" max="4" value="" placeholder="Thời lượng (giờ)">
-            </div>
+            <form id="searchForm" method="get" action="@Url.Action("Index", "Book")">
+                <div class="search-section">
+                    <div class="search-title">📅 Thời gian</div>
+                    <input type="date" id="date" name="date" class="form-control"
+                           value="@Model.SelectedDate.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")">
 
-            <!-- Location Filter -->
-            <div class="search-section">
-                <div class="search-title">📍 Vị trí</div>
-                <input type="text" id="viTri" name="viTri" class="form-control" placeholder="Nhập khu vực/sân cụ thể">
-            </div>
+                    <select id="timeslotId" name="timeslotId" class="sort-dropdown">
+                        <option value="">Chọn khung giờ</option>
+                        @foreach (var timeslot in Model.Timeslots)
+                        {
+                            @if (Model.SelectedTimeslotId == timeslot.TimeslotID)
+                            {
+                                <option value="@timeslot.TimeslotID" selected>
+                                    @timeslot.TimeDisplay
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="@timeslot.TimeslotID">
+                                    @timeslot.TimeDisplay
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
 
-            <!-- Search Button -->
-            <button type="submit" class="search-btn">🔍 Tìm sân</button>
+                <div class="search-section">
+                    <div class="search-title">📍 Tên sân</div>
+                    <input type="text" id="fieldName" name="fieldName" class="form-control"
+                           placeholder="Nhập tên sân cần tìm" value="@Model.SearchFieldName">
+                </div>
+
+                <button type="submit" class="search-btn">🔍 Tìm sân</button>
+            </form>
 
             <!-- Why Choose Us -->
             <div class="search-section">
@@ -504,269 +595,558 @@
             <div class="section-header">
                 <div>
                     <h2>Sân khả dụng</h2>
-                    <div class="fields-count">Hiển thị 6 sân khả dụng</div>
+                    <div class="fields-count">Hiển thị @Model.TotalCount sân khả dụng</div>
                 </div>
             </div>
 
-            <!-- Fields Grid -->
-            <div class="fields-grid">
-                <!-- Field 1 - Available -->
-                <div class="field-card">
-                    <div class="status-badge status-available">Còn trống</div>
-                    <div class="field-info">
-                        <div class="field-number">1</div>
-                        <div class="field-details">
-                            <h3>
-                                Sân Hòa Lạc 5A
-                                <span class="field-type">Sân 5 người</span>
-                            </h3>
-                            <div class="field-meta">
-                                <span>📅 20/05/2025</span>
-                                <span>⏰ 18:00 - 19:00</span>
-                                <span>📍 Khu CNC Hòa Lạc</span>
-                            </div>
-                            <div class="field-actions">
-                                @Html.ActionLink("Đặt sân ngay", "Create", new { scheduleId = 1 }, new { @class = "btn-book" })
-                            </div>
-                        </div>
-                        <div class="field-price">
-                            <span class="price">300.000đ</span>
-                            <span class="duration">/ 1 giờ</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Field 2 - Unavailable -->
-                <div class="field-card">
-                    <div class="status-badge status-unavailable">Hết sân</div>
-                    <div class="field-info">
-                        <div class="field-number">2</div>
-                        <div class="field-details">
-                            <h3>
-                                Sân Thạch Thất 7B
-                                <span class="field-type">Sân 7 người</span>
-                            </h3>
-                            <div class="field-meta">
-                                <span>📅 20/05/2025</span>
-                                <span>⏰ 19:00 - 20:30</span>
-                                <span>📍 Thạch Thất</span>
-                            </div>
-                            <div class="field-actions">
-                                <button class="btn-unavailable">Hết sân</button>
-                            </div>
-                        </div>
-                        <div class="field-price">
-                            <span class="price">450.000đ</span>
-                            <span class="duration">/ 1.5 giờ</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Field 3 - Available -->
-                <div class="field-card">
-                    <div class="status-badge status-available">Còn trống</div>
-                    <div class="field-info">
-                        <div class="field-number">3</div>
-                        <div class="field-details">
-                            <h3>
-                                Sân Hòa Lạc 11A
-                                <span class="field-type">Sân 11 người</span>
-                            </h3>
-                            <div class="field-meta">
-                                <span>📅 20/05/2025</span>
-                                <span>⏰ 20:00 - 22:00</span>
-                                <span>📍 Khu CNC Hòa Lạc</span>
-                            </div>
-                            <div class="field-actions">
-                                @Html.ActionLink("Đặt sân ngay", "Create", new { scheduleId = 1 }, new { @class = "btn-book" })
-                            </div>
-                        </div>
-                        <div class="field-price">
-                            <span class="price">800.000đ</span>
-                            <span class="duration">/ 2 giờ</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Field 4 - Available -->
-                <div class="field-card">
-                    <div class="status-badge status-available">Còn trống</div>
-                    <div class="field-info">
-                        <div class="field-number">4</div>
-                        <div class="field-details">
-                            <h3>
-                                Sân Xuân Phương 5B
-                                <span class="field-type">Sân 5 người</span>
-                            </h3>
-                            <div class="field-meta">
-                                <span>📅 20/05/2025</span>
-                                <span>⏰ 21:00 - 22:00</span>
-                                <span>📍 Xuân Phương</span>
-                            </div>
-                            <div class="field-actions">
-                                @Html.ActionLink("Đặt sân ngay", "Create", new { scheduleId = 1 }, new { @class = "btn-book" })
-                            </div>
-                        </div>
-                        <div class="field-price">
-                            <span class="price">350.000đ</span>
-                            <span class="duration">/ 1 giờ</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hidden Fields for Show More -->
-                <div class="field-card hidden">
-                    <div class="status-badge status-available">Còn trống</div>
-                    <div class="field-info">
-                        <div class="field-number">5</div>
-                        <div class="field-details">
-                            <h3>
-                                Sân Mỹ Đình 7A
-                                <span class="field-type">Sân 7 người</span>
-                            </h3>
-                            <div class="field-meta">
-                                <span>📅 21/05/2025</span>
-                                <span>⏰ 18:00 - 19:30</span>
-                                <span>📍 Mỹ Đình</span>
-                            </div>
-                            <div class="field-actions">
-                                <a href="@Html.ActionLink("", "Create", new { scheduleId = 5 })" class="btn-book">Đặt sân ngay</a>
-                            </div>
-                        </div>
-                        <div class="field-price">
-                            <span class="price">500.000đ</span>
-                            <span class="duration">/ 1.5 giờ</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field-card hidden">
-                    <div class="status-badge status-unavailable">Hết sân</div>
-                    <div class="field-info">
-                        <div class="field-number">6</div>
-                        <div class="field-details">
-                            <h3>
-                                Sân Cầu Giấy 11B
-                                <span class="field-type">Sân 11 người</span>
-                            </h3>
-                            <div class="field-meta">
-                                <span>📅 21/05/2025</span>
-                                <span>⏰ 19:00 - 21:00</span>
-                                <span>📍 Cầu Giấy</span>
-                            </div>
-                            <div class="field-actions">
-                                <button class="btn-unavailable">Hết sân</button>
-                            </div>
-                        </div>
-                        <div class="field-price">
-                            <span class="price">900.000đ</span>
-                            <span class="duration">/ 2 giờ</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Show More Button -->
-            <div class="show-more-wrapper">
-                <button id="showMoreFields" class="btn-show-more">Xem thêm sân</button>
-            </div>
-
-            <!-- Pagination (if needed) -->
-            @if (totalPages > 1)
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
             {
-                <div class="pagination-wrapper">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            @if (Model.Page > 1)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link" href="@Html.ActionLink("", "Index", new { page = Model.Page - 1 })" aria-label="Previous">
-                                        <span aria-hidden="true">«</span>
-                                    </a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                        <span aria-hidden="true">«</span>
-                                    </a>
-                                </li>
-                            }
-
-                            @for (int i = 1; i <= totalPages; i++)
-                            {
-                                <li class="page-item @(i == Model.Page ? "active" : "")">
-                                    <a class="page-link" href="@Html.ActionLink("", "Index", new { page = i })">@i</a>
-                                </li>
-                            }
-
-                            @if (Model.Page < totalPages)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link" href="@Html.ActionLink("", "Index", new { page = Model.Page + 1 })" aria-label="Next">
-                                        <span aria-hidden="true">»</span>
-                                    </a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                        <span aria-hidden="true">»</span>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </nav>
+                <div class="alert alert-danger">
+                    @Model.ErrorMessage
                 </div>
             }
+
+            <!-- Fields Grid -->
+            <div class="fields-grid" id="fieldsGrid">
+                @if (Model.Fields.Any())
+                {
+                    @foreach (var timeGroup in Model.Fields.GroupBy(f => f.TimeDisplay))
+                    {
+                        <div class="time-group">
+                            <h4 class="time-header">⏰ @timeGroup.Key</h4>
+                            @foreach (var field in timeGroup)
+                            {
+                                <div class="field-card">
+                                    <div class="status-badge @(field.IsAvailable ? "status-available" : "status-unavailable")">
+                                        @(field.IsAvailable ? "Còn trống" : "Hết sân")
+                                    </div>
+                                    <div class="field-info">
+                                        <div class="field-number">@field.FieldId</div>
+                                        <div class="field-details">
+                                            <h3>
+                                                @field.FieldName
+                                                <span class="field-type">Sân 7 người</span>
+                                            </h3>
+                                            <div class="field-meta">
+                                                <span>📅 @field.Date.ToString("dd/MM/yyyy")</span>
+                                                <span>⏰ @field.TimeDisplay</span>
+                                                <span>📍 @field.Location</span>
+                                            </div>
+                                            <a href="@Url.Action("FieldDetails", "Book", new { id = field.FieldId })" class="view-details-link">Xem chi tiết</a>
+                                            <div class="field-actions">
+                                                @if (field.IsAvailable)
+                                                {
+                                                    <button class="btn-book" data-schedule-id="@field.ScheduleId">Đặt sân ngay</button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn-unavailable">Hết sân</button>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="field-price">
+                                            <span class="price">@field.PriceDisplay</span>
+                                            <span class="duration">/ 1 giờ</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center" style="padding: 40px;">
+                        <h3>Không có sân nào khả dụng</h3>
+                        <p>Vui lòng thử tìm kiếm với ngày hoặc khung giờ khác.</p>
+                    </div>
+                }
+            </div>
         </main>
+    </div>
+</div>
+
+<style>
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(3px);
+    }
+
+    .modal-content {
+        background: #FFFFFF;
+        border-radius: 16px;
+        max-width: 500px;
+        width: 90%;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(255, 107, 53, 0.3);
+        border: 2px solid #FF8C42;
+        position: relative;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #FFD23F;
+        padding-bottom: 10px;
+    }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2D3748;
+        }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #718096;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+        .modal-close:hover {
+            color: #FF6B35;
+        }
+
+    .modal-body {
+        margin-bottom: 20px;
+    }
+
+    .modal-field-info {
+        background: #FAFAFA;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #E0E0E0;
+    }
+
+        .modal-field-info p {
+            margin: 8px 0;
+            color: #2D3748;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .modal-field-info p strong {
+                color: #FF6B35;
+            }
+
+    .modal-form-group {
+        margin-bottom: 15px;
+    }
+
+        .modal-form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2D3748;
+            margin-bottom: 8px;
+        }
+
+        .modal-form-group input,
+        .modal-form-group select,
+        .modal-form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            max-height: 150px;
+        }
+
+            .modal-form-group input:focus,
+            .modal-form-group select:focus,
+            .modal-form-group textarea:focus {
+                border-color: #FF6B35;
+                box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+                outline: none;
+            }
+
+    .modal-footer {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .modal-btn-confirm {
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: #FFFFFF;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+        .modal-btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+            background: linear-gradient(135deg, #C1272D, #8B0000);
+        }
+
+    .modal-btn-cancel {
+        background: transparent;
+        border: 2px solid #FF6B35;
+        color: #FF6B35;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+        .modal-btn-cancel:hover {
+            background: #FF6B35;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+    .modal-error {
+        color: #E53E3E;
+        font-size: 14px;
+        margin-top: 10px;
+        display: none;
+    }
+
+    .modal-loading {
+        color: #FF6B35;
+        font-size: 14px;
+        margin-top: 10px;
+        display: none;
+    }
+</style>
+
+<!-- Modal HTML -->
+<div class="modal-overlay" id="bookingModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Đặt sân bóng</h3>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-field-info">
+                <p><strong>Sân:</strong> <span id="modalFieldName"></span></p>
+                <p><strong>Ngày:</strong> <span id="modalDate"></span></p>
+                <p><strong>Khung giờ:</strong> <span id="modalTime"></span></p>
+                <p><strong>Địa điểm:</strong> <span id="modalLocation"></span></p>
+                <p><strong>Giá:</strong> <span id="modalPrice"></span></p>
+            </div>
+            <form id="bookingForm">
+                <div class="modal-form-group">
+                    <label for="customerName">Họ và tên</label>
+                    <input type="text" id="customerName" name="customerName" placeholder="Nhập họ và tên" required>
+                </div>
+                <div class="modal-form-group">
+                    <label for="phoneNumber">Số điện thoại</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Nhập số điện thoại" required>
+                </div>
+                <div class="modal-form-group">
+                    <label for="notes">Ghi chú</label>
+                    <textarea id="notes" name="notes" placeholder="Nhập yêu cầu thêm (nếu có)" maxlength="500"></textarea>
+                </div>
+                <input type="hidden" id="scheduleId" name="scheduleId">
+            </form>
+            <div class="modal-error" id="modalError"></div>
+            <div class="modal-loading" id="modalLoading">Đang xử lý...</div>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-btn-cancel" onclick="closeModal()">Hủy</button>
+            <button class="modal-btn-confirm" onclick="submitBooking()">Xác nhận đặt sân</button>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
+        // Debounce function to limit the rate of function execution
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
         $(document).ready(function () {
-            // Show/Hide more fields functionality
-            $('#showMoreFields').on('click', function (e) {
-                e.preventDefault();
-
-                let $hiddenFields = $('.field-card.hidden');
-                let isVisible = $hiddenFields.first().is(':visible');
-
-                if (isVisible) {
-                    $hiddenFields.slideUp(300);
-                    $(this).text('Xem thêm sân');
-                } else {
-                    $hiddenFields.slideDown(300);
-                    $(this).text('Ẩn bớt');
-                }
-            });
-
-            // Smooth hover effects
+            // Smooth hover effects for field cards
             $('.field-card').hover(
-                function() {
+                function () {
                     $(this).find('.field-number').css('transform', 'scale(1.1)');
                 },
-                function() {
+                function () {
                     $(this).find('.field-number').css('transform', 'scale(1)');
                 }
             );
 
-            // Search form handling
-            $('.search-btn').on('click', function(e) {
+            $('#searchForm').on('submit', function (e) {
                 e.preventDefault();
-                // Add your search logic here
-                console.log('Searching for fields...');
+                performSearch();
             });
 
-            // Booking button click handling
-            $('.btn-book').on('click', function(e) {
-                e.preventDefault();
-                // Add your booking logic here
-                console.log('Booking field...');
+            // Handle real-time search when typing
+            $('#fieldName').on('input', debounce(function() {
+                if ($(this).val().length >= 2 || $(this).val().length === 0) {
+                    performSearch();
+                }
+            }, 500));
+
+            // Handle timeslot change
+            $('#timeslotId').on('change', function() {
+                performSearch();
             });
+
+            // Handle date change
+            $('#date').on('change', function() {
+                performSearch();
+            });
+
+            function performSearch() {
+                var formData = {
+                    date: $('#date').val(),
+                    timeslotId: $('#timeslotId').val() || null,
+                    fieldName: $('#fieldName').val() || null
+                };
+
+                // Show loading
+                $('#fieldsGrid').html('<div class="text-center"><p>Đang tìm kiếm...</p></div>');
+
+                $.get('@Url.Action("SearchFields", "Book")', formData)
+                    .done(function (response) {
+                        console.log('Search response:', response); // Debug log
+                        if (response.success) {
+                            updateFieldsGrid(response.data);
+                            updateResultCount(response.data.length);
+                        } else {
+                            $('#fieldsGrid').html('<div class="alert alert-danger">' + response.message + '</div>');
+                        }
+                    })
+                    .fail(function (xhr, status, error) {
+                        console.error('Search failed:', error, xhr.responseText);
+                        $('#fieldsGrid').html('<div class="alert alert-danger">Có lỗi xảy ra khi tìm kiếm</div>');
+                    });
+            }
+
+            function updateResultCount(count) {
+                $('.fields-count').text(`Hiển thị ${count} sân khả dụng`);
+            }
+
+            // Handle "Đặt sân ngay" button click with event delegation
+            $(document).on('click', '.btn-book', function (e) {
+                e.preventDefault();
+                try {
+                    console.log('Book button clicked');
+
+                    var $card = $(this).closest('.field-card');
+                    if (!$card.length) {
+                        console.error('Field card not found');
+                        return;
+                    }
+
+                    var scheduleId = $(this).data('schedule-id');
+                    if (!scheduleId) {
+                        console.error('Schedule ID is undefined');
+                        return;
+                    }
+
+                    var fieldId = $card.find('.field-number').text().trim();
+                    var fieldName = $card.find('.field-details h3').contents().filter(function () {
+                        return this.nodeType === 3;
+                    }).text().trim();
+                    var date = $card.find('.field-meta span').eq(0).text().replace('📅 ', '').trim();
+                    var time = $card.find('.field-meta span').eq(1).text().replace('⏰ ', '').trim();
+                    var location = $card.find('.field-meta span').eq(2).text().replace('📍 ', '').trim();
+                    var price = $card.find('.field-price .price').text().trim();
+
+                    console.log('Booking data:', { scheduleId, fieldId, fieldName, date, time, location, price });
+
+                    // Populate modal
+                    $('#modalFieldName').text(fieldName || 'N/A');
+                    $('#modalDate').text(date || 'N/A');
+                    $('#modalTime').text(time || 'N/A');
+                    $('#modalLocation').text(location || 'N/A');
+                    $('#modalPrice').text(price || 'N/A');
+                    $('#scheduleId').val(scheduleId);
+
+                    // Show modal
+                    var $modal = $('#bookingModal');
+                    if ($modal.length) {
+                        $modal.css('display', 'flex');
+                        console.log('Modal should be visible');
+                    } else {
+                        console.error('Modal element not found');
+                    }
+                } catch (error) {
+                    console.error('Error in btn-book click handler:', error);
+                }
+            });
+
+            // Close modal
+            window.closeModal = function () {
+                $('#bookingModal').css('display', 'none');
+                $('#bookingForm')[0].reset();
+                $('#modalError').hide();
+                $('#modalLoading').hide();
+            };
+
+            // Submit booking to Google Sheet
+            window.submitBooking = function () {
+                const formData = {
+                    fieldName: document.getElementById('modalFieldName').textContent,
+                    time: document.getElementById('modalTime').textContent,
+                    customerName: document.getElementById('customerName').value,
+                    phoneNumber: document.getElementById('phoneNumber').value,
+                    notes: document.getElementById('notes').value
+                };
+
+                console.log('Submitting booking:', formData);
+
+                // Basic validation
+                if (!formData.customerName || !formData.phoneNumber) {
+                    document.getElementById('modalError').textContent = 'Vui lòng điền đầy đủ thông tin.';
+                    document.getElementById('modalError').style.display = 'block';
+                    return;
+                }
+
+                // Phone number validation (Vietnamese phone numbers)
+                const phoneRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
+                if (!phoneRegex.test(formData.phoneNumber)) {
+                    document.getElementById('modalError').textContent = 'Số điện thoại không hợp lệ.';
+                    document.getElementById('modalError').style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('modalLoading').style.display = 'block';
+                document.getElementById('modalError').style.display = 'none';
+
+                // Send data to Google Apps Script
+                fetch('https://script.google.com/macros/s/AKfycbzCUJk0z8pty1wQbez-9ySGLoACqx66pSXxSu9p1rLlnZ4cVZ-gSGlZyccqY-XiSkg7/exec', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams(formData).toString()
+                })
+                .then(() => {
+                    document.getElementById('modalLoading').style.display = 'none';
+                    alert('Đặt sân thành công! Thông tin đã được gửi. Vui lòng để ý điện thoại để nhận cuộc gọi xác nhận từ chúng tôi nhé!');
+                    closeModal();
+                    $('#searchForm').submit(); // Refresh fields grid
+                })
+                .catch(error => {
+                    document.getElementById('modalLoading').style.display = 'none';
+                    console.error('Booking failed:', error);
+                    document.getElementById('modalError').textContent = 'Có lỗi xảy ra khi gửi dữ liệu. Vui lòng thử lại.';
+                    document.getElementById('modalError').style.display = 'block';
+                });
+            };
+
+            // Cải thiện updateFieldsGrid function
+            function updateFieldsGrid(fields) {
+                console.log('Fields data:', fields); // Debug log
+                var html = '';
+                if (fields && fields.length > 0) {
+                    var groupedFields = fields.reduce((acc, field) => {
+                        (acc[field.timeDisplay] = acc[field.timeDisplay] || []).push(field);
+                        return acc;
+                    }, {});
+
+                    Object.keys(groupedFields).forEach(timeDisplay => {
+                        html += `<div class="time-group"><h4 class="time-header">⏰ ${timeDisplay}</h4>`;
+                        groupedFields[timeDisplay].forEach(field => {
+                            console.log('Field:', field); // Debug each field
+                            var statusClass = field.isAvailable ? 'status-available' : 'status-unavailable';
+                            var statusText = field.isAvailable ? 'Còn trống' : 'Hết sân';
+                            var actionButton = field.isAvailable
+                                ? `<button class="btn-book" data-schedule-id="${field.scheduleId || ''}">Đặt sân ngay</button>`
+                                : '<button class="btn-unavailable">Hết sân</button>';
+
+                            html += `
+                                <div class="field-card">
+                                    <div class="status-badge ${statusClass}">${statusText}</div>
+                                    <div class="field-info">
+                                        <div class="field-number">${field.fieldId || 'N/A'}</div>
+                                        <div class="field-details">
+                                            <h3>
+                                                ${field.fieldName || 'N/A'}
+                                                <span class="field-type">Sân 7 người</span>
+                                            </h3>
+                                            <div class="field-meta">
+                                                <span>📅 ${formatDate(field.date) || 'N/A'}</span>
+                                                <span>⏰ ${field.timeDisplay || 'N/A'}</span>
+                                                <span>📍 ${field.location || 'N/A'}</span>
+                                            </div>
+                                            <a href="/Book/FieldDetails/${field.fieldId || ''}" class="view-details-link">Xem chi tiết</a>
+                                            <div class="field-actions">
+                                                ${actionButton}
+                                            </div>
+                                        </div>
+                                        <div class="field-price">
+                                            <span class="price">${field.priceDisplay || 'N/A'}</span>
+                                            <span class="duration">/ 1 giờ</span>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        });
+                        html += '</div>';
+                    });
+                } else {
+                    html = `
+                        <div class="text-center" style="padding: 40px;">
+                            <h3>Không có sân nào khả dụng</h3>
+                            <p>Vui lòng thử tìm kiếm với ngày hoặc khung giờ khác.</p>
+                        </div>`;
+                }
+                $('#fieldsGrid').html(html);
+            }
+
+            function formatDate(dateString) {
+                var date = new Date(dateString);
+                return date.toLocaleDateString('vi-VN');
+            }
         });
     </script>
 }

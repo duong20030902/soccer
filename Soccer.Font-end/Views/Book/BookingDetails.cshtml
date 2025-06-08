@@ -1,0 +1,566 @@
+﻿@using Soccer.Font_end.ViewModels
+@model BookingDetailViewModel
+
+@{
+    ViewData["Title"] = "Chi tiết đặt sân";
+}
+
+<style>
+    /* Booking Detail Page Design - Matching Index Color Scheme */
+    .booking-detail-hero {
+        background: linear-gradient(135deg, #FF6B35 0%, #C1272D 100%);
+        position: relative;
+        padding: 60px 0;
+        text-align: center;
+        color: #FFFFFF;
+        margin-bottom: 40px;
+        overflow: hidden;
+        margin-top: 6.5%;
+    }
+
+        .booking-detail-hero::before {
+            content: '📋';
+            position: absolute;
+            font-size: 12rem;
+            opacity: 0.1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .booking-detail-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+    .booking-detail-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .booking-detail-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    /* Main Booking Info */
+    .booking-main-info {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(255, 107, 53, 0.15);
+        padding: 30px;
+        border: 2px solid #FF8C42;
+    }
+
+    .booking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 3px solid #FFD23F;
+    }
+
+    .booking-id {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2D3748;
+        margin: 0 0 10px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .booking-id-badge {
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: #FFFFFF;
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .booking-status {
+        text-align: right;
+    }
+
+    .status-pending {
+        background: linear-gradient(135deg, #FFD23F, #FF8C42);
+        color: #1A1A1A;
+    }
+
+    .status-confirmed {
+        background: linear-gradient(135deg, #48BB78, #38A169);
+        color: #FFFFFF;
+    }
+
+    .status-cancelled {
+        background: linear-gradient(135deg, #E53E3E, #C53030);
+        color: #FFFFFF;
+    }
+
+    .status-completed {
+        background: linear-gradient(135deg, #9F7AEA, #805AD5);
+        color: #FFFFFF;
+    }
+
+    .booking-total {
+        font-size: 2rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #C1272D, #FF6B35);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-top: 10px;
+    }
+
+    /* Booking Information Cards */
+    .booking-card {
+        background: #F7FAFC;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 20px;
+        border-left: 4px solid #FF6B35;
+    }
+
+        .booking-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2D3748;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+    .booking-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .booking-info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #E2E8F0;
+    }
+
+        .booking-info-item:last-child {
+            border-bottom: none;
+        }
+
+    .booking-info-label {
+        color: #718096;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .booking-info-value {
+        color: #2D3748;
+        font-weight: 600;
+        text-align: right;
+    }
+
+    /* Field Info Card */
+    .field-info-card {
+        background: #FFFFFF;
+        border: 2px solid #FF8C42;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .field-info-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .field-number-small {
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: #FFFFFF;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    .field-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2D3748;
+        margin: 0;
+    }
+
+    /* Action Sidebar */
+    .action-sidebar {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(255, 107, 53, 0.15);
+        padding: 24px;
+        height: fit-content;
+        position: sticky;
+        top: 20px;
+        border: 2px solid #FF8C42;
+    }
+
+    .action-section {
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #E0E0E0;
+    }
+
+        .action-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+    .action-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2D3748;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+        .action-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #FF6B35, #C1272D);
+            border-radius: 2px;
+        }
+
+    .btn-action {
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        text-decoration: none;
+        text-align: center;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: block;
+        margin-bottom: 10px;
+        border: none;
+    }
+
+    .btn-cancel {
+        background: linear-gradient(135deg, #E53E3E, #C53030);
+        color: #FFFFFF;
+    }
+
+        .btn-cancel:hover {
+            background: linear-gradient(135deg, #C53030, #9C1D1D);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4);
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+    .btn-modify {
+        background: linear-gradient(135deg, #FFD23F, #FF8C42);
+        color: #1A1A1A;
+    }
+
+        .btn-modify:hover {
+            background: linear-gradient(135deg, #FF8C42, #FF6B35);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 140, 66, 0.4);
+            color: #1A1A1A;
+            text-decoration: none;
+        }
+
+    .btn-back-booking {
+        background: transparent;
+        border: 2px solid #FF6B35;
+        color: #FF6B35;
+    }
+
+        .btn-back-booking:hover {
+            background: #FF6B35;
+            color: #FFFFFF;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+    /* Timeline */
+    .booking-timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-bottom: 20px;
+        border-left: 2px solid #E2E8F0;
+        padding-left: 20px;
+        margin-left: 10px;
+    }
+
+        .timeline-item:last-child {
+            border-left: none;
+        }
+
+    .timeline-dot {
+        position: absolute;
+        left: -6px;
+        top: 0;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #FF6B35;
+    }
+
+        .timeline-dot.active {
+            background: linear-gradient(135deg, #48BB78, #38A169);
+        }
+
+    .timeline-content {
+        font-size: 14px;
+        color: #4A5568;
+    }
+
+    .timeline-time {
+        font-weight: 600;
+        color: #2D3748;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .booking-detail-layout {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .action-sidebar {
+            position: static;
+        }
+
+        .booking-header {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .booking-status {
+            text-align: left;
+        }
+
+        .booking-info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="booking-detail-hero">
+    <div class="booking-detail-container">
+        <h1>Chi tiết đặt sân</h1>
+    </div>
+</div>
+
+<div class="booking-detail-container">
+    <div class="booking-detail-layout">
+        <!-- Main Content -->
+        <main class="booking-main-info">
+            <!-- Booking Header -->
+            <div class="booking-header">
+                <div>
+                    <div class="booking-id">
+                        <span class="booking-id-badge">#@Model.BookingId</span>
+                        Đơn đặt sân
+                    </div>
+                    <div style="color: #718096; font-size: 14px;">
+                        Đặt lúc: @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                    </div>
+                </div>
+                <div class="booking-status">
+                    <div class="status-badge-large status-@Model.Status.ToLower()">
+                        @Model.StatusDisplay
+                    </div>
+                    <div class="booking-total">@Model.TotalAmountDisplay</div>
+                </div>
+            </div>
+
+            <!-- Field Information -->
+            <div class="field-info-card">
+                <div class="field-info-header">
+                    <span class="field-number-small">@Model.FieldId</span>
+                    <div>
+                        <h3 class="field-name">@Model.FieldName</h3>
+                        <div style="color: #718096; font-size: 14px;">📍 @Model.FieldLocation</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Details -->
+            <div class="booking-card">
+                <h3>📅 Thông tin đặt sân</h3>
+                <div class="booking-info-grid">
+                    <div class="booking-info-item">
+                        <span class="booking-info-label">📅 Ngày đặt:</span>
+                        <span class="booking-info-value">@Model.BookingDate.ToString("dd/MM/yyyy")</span>
+                    </div>
+                    <div class="booking-info-item">
+                        <span class="booking-info-label">⏰ Giờ bắt đầu:</span>
+                        <span class="booking-info-value">@Model.StartTime</span>
+                    </div>
+                    <div class="booking-info-item">
+                        <span class="booking-info-label">⏱️ Giờ kết thúc:</span>
+                        <span class="booking-info-value">@Model.EndTime</span>
+                    </div>
+                    <div class="booking-info-item">
+                        <span class="booking-info-label">⏳ Thời lượng:</span>
+                        <span class="booking-info-value">@Model.Duration giờ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Information -->
+            <div class="booking-card">
+                <h3>👤 Thông tin khách hàng</h3>
+                <div class="booking-info-grid">
+                    <div class="booking-info-item">
+                        <span class="booking-info-label">👤 Họ tên:</span>
+                        <span class="booking-info-value">@Model.CustomerName</span>
+                    </div>
+                    <div class="booking-info-item">
+                        <span class="booking-info-label">📞 Số điện thoại:</span>
+                        <span class="booking-info-value">@Model.CustomerPhone</span>
+                    </div>
+                    <div class="booking-info-item">
+                        <span class="booking-info-label">✉️ Email:</span>
+                        <span class="booking-info-value">@Model.CustomerEmail</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Note))
+                    {
+                        <div class="booking-info-item">
+                            <span class="booking-info-label">📝 Ghi chú:</span>
+                            <span class="booking-info-value">@Model.Note</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Payment Information -->
+            <div class="booking-card">
+                <h3>💰 Thông tin thanh toán</h3>
+                <div class="booking-info-grid">
+                    <div class="booking-info-item">
+                        <span class="booking-info-label">💵 Giá sân:</span>
+                        <span class="booking-info-value">@Model.FieldPriceDisplay</span>
+                    </div>
+                    @if (Model.DiscountAmount > 0)
+                    {
+                        <div class="booking-info-item">
+                            <span class="booking-info-label">🎟️ Giảm giá:</span>
+                            <span class="booking-info-value">-@Model.DiscountAmountDisplay</span>
+                        </div>
+                    }
+                    <div class="booking-info-item" style="border-top: 2px solid #FF6B35; padding-top: 15px; margin-top: 10px;">
+                        <span class="booking-info-label" style="font-weight: 700; color: #2D3748;">💳 Tổng tiền:</span>
+                        <span class="booking-info-value" style="font-size: 1.2rem; font-weight: 900; color: #C1272D;">@Model.TotalAmountDisplay</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Timeline -->
+            <div class="booking-card">
+                <h3>📋 Lịch sử đặt sân</h3>
+                <div class="booking-timeline">
+                    @foreach (var timeline in Model.Timeline)
+                    {
+                        <div class="timeline-item">
+                            <div class="timeline-dot @(timeline.IsActive ? "active" : "")"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-time">@timeline.Time.ToString("dd/MM/yyyy HH:mm")</div>
+                                <div>@timeline.Description</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </main>
+
+        <!-- Action Sidebar -->
+        <aside class="action-sidebar">
+            <div class="action-section">
+                <div class="action-title">⚡ Thao tác nhanh</div>
+
+                @if (Model.CanCancel)
+                {
+                    <form method="post" action="@Url.Action("Cancel", "Book", new { id = Model.BookingId })">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-action btn-cancel"
+                                onclick="return confirm('Bạn có chắc chắn muốn hủy đặt sân này?')">
+                            ❌ Hủy đặt sân
+                        </button>
+                    </form>
+                }
+
+                @if (Model.CanModify)
+                {
+                    <a href="@Url.Action("Edit", "Book", new { id = Model.BookingId })" class="btn-action btn-modify">
+                        ✏️ Chỉnh sửa
+                    </a>
+                }
+
+                <a href="@Url.Action("MyBookings", "Book")" class="btn-action btn-back-booking">
+                    ← Quay lại danh sách
+                </a>
+            </div>
+
+            <div class="action-section">
+                <div class="action-title">📞 Hỗ trợ</div>
+                <div style="color: #4A5568; font-size: 14px; line-height: 1.6;">
+                    <div style="margin-bottom: 10px;">
+                        <strong>Hotline:</strong><br>
+                        📞 0123 456 789
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Email:</strong><br>
+                        ✉️ support@sanbong.com
+                    </div>
+                    <div>
+                        <strong>Giờ hỗ trợ:</strong><br>
+                        🕐 6:00 - 22:00 hàng ngày
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <div class="action-title">📋 Lưu ý</div>
+                <div style="color: #4A5568; font-size: 13px; line-height: 1.5;">
+                    <p>• Vui lòng có mặt trước 15 phút</p>
+                    <p>• Mang theo giấy tờ tùy thân</p>
+                    <p>• Tuân thủ quy định của sân</p>
+                    <p>• Liên hệ nếu cần thay đổi</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>

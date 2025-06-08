@@ -14,9 +14,20 @@ namespace Soccer.Font_end.Services
             _apiBaseUrl = configuration["ApiBaseUrl"] ?? "https://localhost:7237/api";
         }
 
-        public async Task<(List<ProductViewModel> Products, int TotalItems, string Error)> GetProductsAsync(string sort = null, int? colorId = null, int? sizeId = null, int? categoryId = null, int? brandId = null, decimal? minPrice = null, decimal? maxPrice = null, int page = 1, int pageSize = 10)
+        public async Task<(List<ProductViewModel> Products, int TotalItems, string Error)> GetProductsAsync(
+            string sort = null,
+            int? colorId = null,
+            int? sizeId = null,
+            int? categoryId = null,
+            int? brandId = null,
+            decimal? minPrice = null,
+            decimal? maxPrice = null,
+            string search = null,
+            int page = 1,
+            int pageSize = 10)
         {
             var url = $"{_apiBaseUrl}/Product?";
+
             if (!string.IsNullOrEmpty(sort)) url += $"sort={sort}&";
             if (colorId.HasValue) url += $"colorId={colorId.Value}&";
             if (sizeId.HasValue) url += $"sizeId={sizeId.Value}&";
@@ -24,6 +35,8 @@ namespace Soccer.Font_end.Services
             if (brandId.HasValue) url += $"brandId={brandId.Value}&";
             if (minPrice.HasValue) url += $"minPrice={minPrice.Value}&";
             if (maxPrice.HasValue) url += $"maxPrice={maxPrice.Value}&";
+            if (!string.IsNullOrEmpty(search)) url += $"search={Uri.EscapeDataString(search)}&";
+
             url += $"page={page}&pageSize={pageSize}";
             url = url.TrimEnd('&');
 

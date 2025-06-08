@@ -12,11 +12,12 @@
         public TimeOnly EndTime { get; set; }
         public string Status { get; set; } = null!;
         public List<string> ImageUrls { get; set; } = new();
-
+        public bool IsAvailable => Status.Equals("Available", StringComparison.OrdinalIgnoreCase);
         // Properties for display
         public string PriceDisplay => $"{PricePerHour:N0} VNĐ/giờ";
         public string TimeDisplay => $"{StartTime:HH:mm} - {EndTime:HH:mm}";
         public string FirstImageUrl => ImageUrls.FirstOrDefault() ?? "/images/default-field.jpg";
+        public int TimeslotId { get; set; }
     }
 
     public class TimeslotViewModel

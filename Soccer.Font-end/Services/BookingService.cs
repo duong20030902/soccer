@@ -263,8 +263,14 @@ namespace Soccer.Font_end.Services
 
     public class CreateBookingRequest
     {
-        public int ScheduleId { get; set; }
+        public int? ScheduleId { get; set; }
+        public int? FieldId { get; set; }
+        public DateOnly BookingDate { get; set; }
+        public int TimeslotId { get; set; }
         public int UserId { get; set; }
+        public string CustomerName { get; set; } = string.Empty;
+        public string CustomerPhone { get; set; } = string.Empty;
+        public string CustomerEmail { get; set; } = string.Empty;
         public string? Notes { get; set; }
     }
 

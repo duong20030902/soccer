@@ -1,0 +1,488 @@
+﻿@using Soccer.Font_end.Services
+@model FieldDetailViewModel
+@{
+    ViewData["Title"] = "Chi tiết sân bóng";
+}
+
+<style>
+    /* Field Detail Page Design - Matching Index Color Scheme */
+    .detail-hero {
+        background: linear-gradient(135deg, #FF6B35 0%, #C1272D 100%);
+        position: relative;
+        padding: 60px 0;
+        text-align: center;
+        color: #FFFFFF;
+        margin-bottom: 40px;
+        overflow: hidden;
+        margin-top: 6.5%;
+    }
+
+        .detail-hero::before {
+            content: '⚽';
+            position: absolute;
+            font-size: 12rem;
+            opacity: 0.1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .detail-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+    .detail-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .detail-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    /* Main Content */
+    .field-main-info {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(255, 107, 53, 0.15);
+        padding: 30px;
+        border: 2px solid #FF8C42;
+    }
+
+    .field-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 3px solid #FFD23F;
+    }
+
+    .field-title h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2D3748;
+        margin: 0 0 10px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .field-number-badge {
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: #FFFFFF;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    .field-type-badge {
+        background: linear-gradient(135deg, #FFD23F, #FF8C42);
+        color: #1A1A1A;
+        padding: 8px 16px;
+        border-radius: 16px;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-top: 10px;
+        display: inline-block;
+    }
+
+    .field-status {
+        text-align: right;
+    }
+
+    .status-badge-large {
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+
+    .status-available {
+        background: linear-gradient(135deg, #48BB78, #38A169);
+        color: #FFFFFF;
+    }
+
+    .status-unavailable {
+        background: linear-gradient(135deg, #E53E3E, #C53030);
+        color: #FFFFFF;
+    }
+
+    .field-price-large {
+        font-size: 2rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #C1272D, #FF6B35);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Field Information Sections */
+    .info-section {
+        margin-bottom: 30px;
+        padding: 24px;
+        background: #F7FAFC;
+        border-radius: 12px;
+        border-left: 4px solid #FF6B35;
+    }
+
+        .info-section h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2D3748;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #4A5568;
+        font-size: 14px;
+    }
+
+        .info-item strong {
+            color: #2D3748;
+            font-weight: 600;
+        }
+
+    /* Sidebar */
+    .booking-sidebar {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(255, 107, 53, 0.15);
+        padding: 24px;
+        height: fit-content;
+        position: sticky;
+        top: 20px;
+        border: 2px solid #FF8C42;
+    }
+
+    .sidebar-section {
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #E0E0E0;
+    }
+
+        .sidebar-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+    .sidebar-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2D3748;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+        .sidebar-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #FF6B35, #C1272D);
+            border-radius: 2px;
+        }
+
+    .btn-book-large {
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: #FFFFFF;
+        border: none;
+        padding: 16px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        text-decoration: none;
+        text-align: center;
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: block;
+        margin-bottom: 15px;
+    }
+
+        .btn-book-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+            color: #FFFFFF;
+            text-decoration: none;
+            background: linear-gradient(135deg, #C1272D, #8B0000);
+        }
+
+    .btn-back {
+        background: transparent;
+        border: 2px solid #FF6B35;
+        color: #FF6B35;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        width: 100%;
+        text-decoration: none;
+        text-align: center;
+        display: block;
+    }
+
+        .btn-back:hover {
+            background: #FF6B35;
+            color: #FFFFFF;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+    /* Image Gallery */
+    .field-gallery {
+        margin-bottom: 30px;
+    }
+
+    .main-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        border: 3px solid #FF8C42;
+    }
+
+    .thumbnail-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    .thumbnail {
+        width: 100%;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid #E0E0E0;
+    }
+
+        .thumbnail:hover {
+            border-color: #FF6B35;
+            transform: scale(1.05);
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .detail-layout
+
+    {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .booking-sidebar {
+        position: static;
+    }
+
+    .field-header {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .field-status {
+        text-align: left;
+    }
+
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="detail-hero">
+    <div class="detail-container">
+        <h1>Chi tiết sân bóng</h1>
+    </div>
+</div>
+
+<div class="detail-container">
+    <div class="detail-layout">
+        <!-- Main Content -->
+        <main class="field-main-info">
+            <!-- Field Header -->
+            <div class="field-header">
+                <div class="field-title">
+                    <h2>
+                        <span class="field-number-badge">@Model.FieldId</span>
+                        @Model.FieldName
+                    </h2>
+                    <span class="field-type-badge">Sân 7 người</span>
+                </div>
+                <div class="field-status">
+                    <div class="status-badge-large @(Model.IsAvailable ? "status-available" : "status-unavailable")">
+                        @(Model.IsAvailable ? "Còn trống" : "Hết sân")
+                    </div>
+                    <div class="field-price-large">@Model.PriceDisplay</div>
+                    <div style="color: #718096; font-size: 14px;">/ 1 giờ</div>
+                </div>
+            </div>
+
+            <!-- Field Gallery -->
+            <div class="field-gallery">
+                <img src="@Model.MainImage" alt="@Model.FieldName" class="main-image">
+                <div class="thumbnail-grid">
+                    @foreach (var image in Model.Images.Take(4))
+                    {
+                        <img src="@image" alt="Hình ảnh sân" class="thumbnail">
+                    }
+                </div>
+            </div>
+
+            <!-- Field Information -->
+            <div class="info-section">
+                <h3>📍 Thông tin vị trí</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span>📍</span>
+                        <strong>Địa chỉ:</strong> @Model.Location
+                    </div>
+                    <div class="info-item">
+                        <span>🚗</span>
+                        <strong>Bãi đỗ xe:</strong> Có sẵn
+                    </div>
+                    <div class="info-item">
+                        <span>🚌</span>
+                        <strong>Giao thông:</strong> Thuận tiện
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>⚽ Thông tin sân</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span>📏</span>
+                        <strong>Kích thước:</strong> @Model.Size
+                    </div>
+                    <div class="info-item">
+                        <span>🌱</span>
+                        <strong>Loại cỏ:</strong> @Model.GrassType
+                    </div>
+                    <div class="info-item">
+                        <span>💡</span>
+                        <strong>Ánh sáng:</strong> @Model.Lighting
+                    </div>
+                    <div class="info-item">
+                        <span>🏆</span>
+                        <strong>Chất lượng:</strong> @Model.Quality
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>🛠️ Tiện ích đi kèm</h3>
+                <div class="info-grid">
+                    @foreach (var facility in Model.Facilities)
+                    {
+                        <div class="info-item">
+                            <span>✓</span>
+                            <strong>@facility</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>📝 Mô tả chi tiết</h3>
+                <p style="color: #4A5568; line-height: 1.6;">@Model.Description</p>
+            </div>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="booking-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">📅 Đặt sân ngay</div>
+                @if (Model.IsAvailable)
+                {
+                    <a href="@Url.Action("Create", "Book", new { fieldId = Model.FieldId })" class="btn-book-large">
+                        Đặt sân ngay
+                    </a>
+                }
+                else
+                {
+                    <button class="btn-book-large" style="background: #E53E3E; cursor: not-allowed;" disabled>
+                        Hết sân
+                    </button>
+                }
+                <a href="@Url.Action("Index", "Book")" class="btn-back">
+                    ← Quay lại danh sách
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">💰 Bảng giá</div>
+                <div style="color: #4A5568; font-size: 14px; line-height: 1.6;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Giờ thường:</span>
+                        <strong>@Model.RegularPrice</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Giờ vàng:</span>
+                        <strong>@Model.PeakPrice</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Cuối tuần:</span>
+                        <strong>@Model.WeekendPrice</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">📞 Liên hệ</div>
+                <div style="color: #4A5568; font-size: 14px; line-height: 1.6;">
+                    <div style="margin-bottom: 8px;">
+                        <strong>Hotline:</strong> 0123 456 789
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <strong>Email:</strong> support@sanbong.com
+                    </div>
+                    <div>
+                        <strong>Giờ hoạt động:</strong> 6:00 - 22:00
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>

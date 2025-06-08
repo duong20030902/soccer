@@ -272,6 +272,27 @@
             text-decoration: none;
         }
 
+    .size-options.error {
+        border: 2px solid #ff4757 !important;
+        border-radius: 8px;
+        padding: 10px;
+        animation: shake 0.5s ease-in-out;
+    }
+
+    @@keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-5px);
+        }
+
+        75% {
+            transform: translateX(5px);
+        }
+    }
+
     .color-options {
         display: flex;
         gap: 12px;
@@ -326,6 +347,34 @@
             color: #FFFFFF;
             text-decoration: none;
         }
+
+        .btn-add-cart.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+            .btn-add-cart.loading::after {
+                content: '';
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                margin: auto;
+                border: 2px solid transparent;
+                border-top-color: #ffffff;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 
     .btn-buy-now {
         flex: 2;
@@ -678,7 +727,12 @@
                                     <a href="#" class="size-option" data-size="@size.SizeId">@size.SizeName</a>
                                 }
                             </div>
+                            <input type="hidden" id="selectedSizeId" />
                         </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" id="selectedSizeId" value="1" />
                     }
 
                     @if (Model.AvailableColors != null && Model.AvailableColors.Any())
@@ -842,6 +896,82 @@
             e.preventDefault();
             document.querySelectorAll('.size-option').forEach(opt => opt.classList.remove('active'));
             this.classList.add('active');
+            const sizeId = this.dataset.size;
+            document.getElementById('selectedSizeId').value = sizeId;
+        });
+    });
+
+    document.querySelector('.addToCart')?.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const productId = this.getAttribute('data-productid');
+        const quantity = 1;
+
+        // Kiểm tra xem sản phẩm có size options không
+        const sizeOptionsContainer = document.querySelector('.size-options');
+        const hasSizeOptions = sizeOptionsContainer && sizeOptionsContainer.children.length > 0;
+
+        let sizeId;
+
+        if (hasSizeOptions) {
+            // Nếu có size options, yêu cầu phải chọn
+            sizeId = document.getElementById('selectedSizeId')?.value;
+            if (!sizeId) {
+                alert("❗ Vui lòng chọn size trước khi thêm vào giỏ hàng.");
+                sizeOptionsContainer.style.border = '2px solid red';
+                setTimeout(() => {
+                    sizeOptionsContainer.style.border = '';
+                }, 3000);
+                return;
+            }
+        } else {
+            // Nếu không có size options, dùng size mặc định
+            sizeId = 1; // Hoặc null tùy theo API backend
+        }
+
+        // Hiển thị loading
+        const originalText = this.textContent;
+        this.textContent = '🔄 Đang thêm...';
+        this.style.pointerEvents = 'none';
+
+        fetch(`https://localhost:7237/api/cart/add?productId=${productId}&quantity=${quantity}&sizeId=${sizeId}`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.Message || `HTTP ${response.status}: Thêm sản phẩm thất bại`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert("✅ Đã thêm vào giỏ hàng thành công!");
+            console.log('Dữ liệu giỏ hàng:', data);
+            updateCartBadge();
+
+            this.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            this.textContent = '✅ Đã thêm!';
+
+            setTimeout(() => {
+                this.style.background = '';
+                this.textContent = originalText;
+            }, 2000);
+        })
+        .catch(error => {
+            alert(`❌ Thêm thất bại: ${error.message}`);
+            console.error('Lỗi chi tiết:', error);
+        })
+        .finally(() => {
+            this.style.pointerEvents = '';
+            if (this.textContent.includes('Đang thêm')) {
+                this.textContent = originalText;
+            }
         });
     });
 
@@ -855,7 +985,26 @@
     });
 
     // Wishlist toggle
-    document.querySelector('.btn-wishlist').addEventListener('click', function() {
+    document.querySelector('.btn-wishlist')?.addEventListener('click', function() {
         this.classList.toggle('active');
+        const isActive = this.classList.contains('active');
+        this.textContent = isActive ? '💖' : '❤️';
     });
+
+    // Hàm cập nhật badge giỏ hàng
+    function updateCartBadge() {
+        fetch('https://localhost:7237/api/cart/checkout', {
+            credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(data => {
+            const totalItems = data.reduce((sum, item) => sum + item.Quantity, 0);
+            const badge = document.querySelector('.cart-badge, .cart-count');
+            if (badge) {
+                badge.textContent = totalItems;
+                badge.style.display = totalItems > 0 ? 'inline' : 'none';
+            }
+        })
+        .catch(error => console.log('Không thể cập nhật badge giỏ hàng:', error));
+    }
 </script>

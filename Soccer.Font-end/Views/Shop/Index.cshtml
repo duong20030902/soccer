@@ -5,6 +5,9 @@
     int brandCounter = 0;
     int totalPages = Model.TotalItems > 0 ? (int)Math.Ceiling((double)Model.TotalItems / Model.PageSize) : 1;
 }
+@{
+    ViewData["Title"] = "Cửa Hàng";
+}
 
 <style>
     /* Custom CSS for Modern Shop Design */
@@ -584,6 +587,378 @@
     }
 </style>
 
+<style>
+    /* Giữ nguyên CSS hiện tại và thêm CSS mới */
+    .auto-filter-section {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .filter-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .manual-filter-section {
+        padding: 15px;
+        background: #fff;
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+    }
+
+    .price-search-row {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .price-range {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .price-separator {
+        font-weight: bold;
+        color: #6c757d;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .active-filters {
+        margin-top: 15px;
+        padding: 10px;
+        background: #e7f3ff;
+        border-radius: 6px;
+        border-left: 4px solid #007bff;
+    }
+
+    .filter-label {
+        font-weight: bold;
+        color: #495057;
+        margin-right: 10px;
+    }
+
+    .filter-tag {
+        display: inline-block;
+        background: #007bff;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 15px;
+        margin: 2px;
+        font-size: 12px;
+    }
+
+    .remove-filter {
+        background: none;
+        border: none;
+        color: white;
+        margin-left: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+        .remove-filter:hover {
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+
+    .clear-all-filters {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 4px 12px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 12px;
+        margin-left: 10px;
+    }
+
+        .clear-all-filters:hover {
+            background: #c82333;
+        }
+
+    .color-swatch.active {
+        border-color: #FF6B35 !important;
+        transform: scale(1.15);
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.6);
+    }
+
+    .size-option.active,
+    .brand-list a.active {
+        background: linear-gradient(135deg, #FF6B35, #FF8C42) !important;
+        color: #FFFFFF !important;
+        border-color: #C1272D !important;
+    }
+
+    .quick-filters {
+        margin-bottom: 15px;
+        padding: 10px;
+        background: #f1f3f4;
+        border-radius: 6px;
+    }
+
+    .quick-filter-label {
+        font-weight: bold;
+        margin-right: 10px;
+        color: #495057;
+    }
+
+    .quick-filter-btn {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 15px;
+        margin: 2px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s ease;
+    }
+
+        .quick-filter-btn:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .filter-row,
+        .price-search-row {
+            flex-direction: column;
+        }
+
+        .price-range {
+            width: 100%;
+        }
+    }
+
+    /* Top Filters Section */
+    .top-filters-section {
+        background: linear-gradient(135deg, #F8F9FA, #E9ECEF);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 2px solid #FF8C42;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.1);
+    }
+
+    /* Search Box Top */
+    .search-box-top {
+        margin-bottom: 15px;
+    }
+
+    .search-input-wrapper {
+        display: flex;
+        gap: 10px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .search-input-top {
+        flex: 1;
+        border: 2px solid #E0E0E0;
+        border-radius: 25px;
+        padding: 12px 20px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: #FFFFFF;
+    }
+
+        .search-input-top:focus {
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+            outline: none;
+        }
+
+    .search-btn-top {
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: #FFFFFF;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        min-width: 80px;
+    }
+
+        .search-btn-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+            background: linear-gradient(135deg, #C1272D, #8B0000);
+        }
+
+    /* Active Filters Top */
+    .active-filters-top {
+        background: #FFFFFF;
+        border-radius: 10px;
+        padding: 15px;
+        border: 2px solid #E0E0E0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+        .active-filters-top .filter-label {
+            font-weight: bold;
+            color: #495057;
+            margin-right: 15px;
+            font-size: 14px;
+        }
+
+        .active-filters-top .filter-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B35, #FF8C42);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+        }
+
+        .active-filters-top .remove-filter {
+            background: none;
+            border: none;
+            color: white;
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+            .active-filters-top .remove-filter:hover {
+                background: rgba(255,255,255,0.3);
+                transform: scale(1.1);
+            }
+
+        .active-filters-top .clear-all-filters {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+            .active-filters-top .clear-all-filters:hover {
+                background: #c82333;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+            }
+
+    /* Responsive cho mobile */
+    @@media (max-width: 768px) {
+        .search-input-wrapper {
+            flex-direction: column;
+            max-width: 100%;
+        }
+
+        .search-btn-top {
+            border-radius: 8px;
+        }
+
+        .search-input-top {
+            border-radius: 8px;
+        }
+
+        .top-filters-section {
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .active-filters-top .filter-tag {
+            display: block;
+            margin: 5px 0;
+            text-align: center;
+        }
+
+        .active-filters-top .clear-all-filters {
+            display: block;
+            width: 100%;
+            margin: 10px 0 0 0;
+            padding: 10px;
+        }
+    }
+
+    /* Header Controls */
+    .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .page-size-selector {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .page-size-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2D3748;
+        white-space: nowrap;
+    }
+
+    .page-size-dropdown {
+        border: 2px solid #E0E0E0;
+        border-radius: 8px;
+        padding: 8px 12px;
+        background: #FFFFFF;
+        font-weight: 500;
+        font-size: 14px;
+        min-width: 150px;
+        transition: all 0.3s ease;
+    }
+
+        .page-size-dropdown:focus {
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+            outline: none;
+        }
+
+    /* Responsive cho mobile */
+    @@media (max-width: 768px) {
+        .header-controls {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .page-size-selector {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .page-size-dropdown,
+        .sort-dropdown {
+            width: 100%;
+            max-width: none;
+        }
+    }
+</style>
+
 <div class=innerbannerwrap>
     <div class=content></div>
     <div class=innerbanner><h2 class=bannerHeadline>cửa hàng của<span> chúng tôi</span></h2></div>
@@ -601,6 +976,22 @@
     <div class="shop-layout">
         <!-- Filters Sidebar -->
         <aside class="filters-sidebar">
+            <!-- Quick Filter Buttons -->
+            <div class="quick-filters">
+                <span class="quick-filter-label">Lọc nhanh:</span>
+                <button type="button" class="quick-filter-btn" onclick="updateUrlParameter('sort', 'price_asc')">
+                    💰 Giá rẻ nhất
+                </button>
+                <button type="button" class="quick-filter-btn" onclick="updateUrlParameter('sort', 'newest')">
+                    ⭐ Mới nhất
+                </button>
+                <button type="button" class="quick-filter-btn" onclick="setQuickPriceFilter('', '500000');">
+                    🔥 Dưới 500K
+                </button>
+                <button type="button" class="quick-filter-btn" onclick="setQuickPriceFilter('500000', '1000000');">
+                    💎 500K - 1M
+                </button>
+            </div>
             <!-- Brand Filter -->
             <div class="filter-section" id="brandsWidget">
                 <div class="filter-title">🏷️ Thương hiệu đồng hành</div>
@@ -609,17 +1000,43 @@
                     {
                         if (brand.BrandID == 17)
                         {
-                            continue;
-                        }
-
-                        brandCounter++;
-                        if (brandCounter <= maxBrandsToShow)
-                        {
-                            <li><a href="#">@brand.BrandName</a></li>
+                            brandCounter++;
+                            if (brandCounter <= maxBrandsToShow)
+                            {
+                                <li>
+                                    <a href="#" data-brand-id="@brand.BrandID"
+                                       class="@(Model.CurrentBrandId == brand.BrandID ? "active" : "")">Không thương hiệu</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="extra-brand" style="display: none;">
+                                    <a href="#" data-brand-id="@brand.BrandID"
+                                       class="@(Model.CurrentBrandId == brand.BrandID ? "active" : "")">Không thương hiệu</a>
+                                </li>
+                            }
                         }
                         else
                         {
-                            <li class="extra-brand" style="display: none;"><a href="#">@brand.BrandName</a></li>
+                            brandCounter++;
+                            if (brandCounter <= maxBrandsToShow)
+                            {
+                                <li>
+                                    <a href="#" data-brand-id="@brand.BrandID"
+                                       class="@(Model.CurrentBrandId == brand.BrandID ? "active" : "")">
+                                        @brand.BrandName
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="extra-brand" style="display: none;">
+                                    <a href="#" data-brand-id="@brand.BrandID"
+                                       class="@(Model.CurrentBrandId == brand.BrandID ? "active" : "")">
+                                        @brand.BrandName
+                                    </a>
+                                </li>
+                            }
                         }
                     }
                 </ul>
@@ -629,13 +1046,41 @@
                 }
             </div>
 
+
+            <!-- Category Filter -->
+            <div class="filter-section">
+                <div class="filter-title">📏 Danh mục sản phẩm</div>
+                <select class="sort-dropdown" name="categoryId">
+                    <option value="">Tất cả danh mục</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        if (Model.CurrentCategoryId == category.CategoryID)
+                        {
+                            <option value="@category.CategoryID" selected>
+                                @category.CategoryName
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@category.CategoryID">
+                                @category.CategoryName
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+
             <!-- Color Filter -->
             <div class="filter-section">
                 <div class="filter-title">🎨 Sắc màu đam mê</div>
                 <div class="color-swatches">
                     @foreach (var color in Model.Colors)
                     {
-                        <a href="#" class="color-swatch" style="background-color:@color.ColorCode" title="@color.ColorName"></a>
+                        <a href="#" class="color-swatch @(Model.CurrentColorId == color.ColorId ? "active" : "")"
+                           style="background-color:@color.ColorCode"
+                           title="@color.ColorName"
+                           data-color-id="@color.ColorId">
+                        </a>
                     }
                 </div>
             </div>
@@ -646,45 +1091,325 @@
                 <div class="size-options">
                     @foreach (var size in Model.Sizes)
                     {
-                        <a href="#" class="size-option">@size.SizeName</a>
+                        <a href="#" class="size-option @(Model.CurrentSizeId == size.SizeId ? "active" : "")"
+                           data-size-id="@size.SizeId">@size.SizeName</a>
                     }
                 </div>
             </div>
 
             <!-- Category & Price Filter -->
             <div class="filter-section">
-                <div class="filter-title">🔍 Bộ lọc tìm kiếm</div>
-                <form method="get" asp-action="Index">
-                    <select class="sort-dropdown" name="categoryId">
-                        <option value="">Tất cả danh mục</option>
-                        @foreach (var category in Model.Categories)
-                        {
-                            <option value="@category.CategoryID" selected="@(Context.Request.Query["categoryId"] == category.CategoryID.ToString())">@category.CategoryName</option>
-                        }
-                    </select>
+                <div class="filter-title">💰 Tìm kiếm nâng cao</div>
+                <form method="get" asp-action="Index" id="filterForm">
+                    @if (Model.CurrentCategoryId.HasValue)
+                    {
+                        <input type="hidden" name="categoryId" value="@Model.CurrentCategoryId" />
+                    }
+                    @if (Model.CurrentBrandId.HasValue)
+                    {
+                        <input type="hidden" name="brandId" value="@Model.CurrentBrandId" />
+                    }
+                    @if (Model.CurrentColorId.HasValue)
+                    {
+                        <input type="hidden" name="colorId" value="@Model.CurrentColorId" />
+                    }
+                    @if (Model.CurrentSizeId.HasValue)
+                    {
+                        <input type="hidden" name="sizeId" value="@Model.CurrentSizeId" />
+                    }
+                    @if (!string.IsNullOrEmpty(Model.CurrentSort))
+                    {
+                        <input type="hidden" name="sort" value="@Model.CurrentSort" />
+                    }
 
-                    <input type="number" name="minPrice" value="@Context.Request.Query["minPrice"]" class="form-control" placeholder="Giá thấp nhất" />
-                    <input type="number" name="maxPrice" value="@Context.Request.Query["maxPrice"]" class="form-control" placeholder="Giá cao nhất" />
+                    @* <input type="number" name="minPrice" value="@Context.Request.Query["minPrice"]" class="form-control" placeholder="Giá thấp nhất" /> *@
+                    @* <input type="number" name="maxPrice" value="@Context.Request.Query["maxPrice"]" class="form-control" placeholder="Giá cao nhất" /> *@
+                    <input type="number" name="minPrice" value="@Model.CurrentMinPrice"
+                           class="form-control" placeholder="Giá từ..." min="0" />
+                    <input type="number" name="maxPrice" value="@Model.CurrentMaxPrice"
+                           class="form-control" placeholder="Giá đến..." min="0" />
 
-                    <button type="submit" class="filter-btn">🔍 Lọc sản phẩm</button>
+                    <div class="search-box">
+                        <input type="text" name="search" value="@Model.CurrentSearch"
+                               class="form-control" placeholder="Tìm kiếm sản phẩm..." />
+                    </div>
+                    <button type="submit" class="filter-btn" style="margin-top: 10px;">🔍 Lọc giá & Tìm kiếm</button>
                 </form>
             </div>
+            <!-- Active Filters Display -->
+            @if (Model.CurrentCategoryId.HasValue || Model.CurrentBrandId.HasValue ||
+            Model.CurrentColorId.HasValue || Model.CurrentSizeId.HasValue ||
+            Model.CurrentMinPrice.HasValue || Model.CurrentMaxPrice.HasValue ||
+            !string.IsNullOrEmpty(Model.CurrentSearch))
+            {
+                <div class="active-filters">
+                    <span class="filter-label">Bộ lọc đang áp dụng:</span>
+
+                    @if (Model.CurrentCategoryId.HasValue)
+                    {
+                        var category = Model.Categories.FirstOrDefault(c => c.CategoryID == Model.CurrentCategoryId);
+                        <span class="filter-tag">
+                            Danh mục: @category?.CategoryName
+                            <button type="button" onclick="clearFilterType('categoryId')" class="remove-filter">×</button>
+                        </span>
+                    }
+
+                    @if (Model.CurrentBrandId.HasValue)
+                    {
+                        var brand = Model.Brands.FirstOrDefault(b => b.BrandID == Model.CurrentBrandId);
+                        <span class="filter-tag">
+                            Thương hiệu: @brand?.BrandName
+                            <button type="button" onclick="clearFilterType('brandId')" class="remove-filter">×</button>
+                        </span>
+                    }
+
+                    @if (Model.CurrentColorId.HasValue)
+                    {
+                        var color = Model.Colors.FirstOrDefault(c => c.ColorId == Model.CurrentColorId);
+                        <span class="filter-tag">
+                            Màu: @color?.ColorName
+                            <button type="button" onclick="clearFilterType('colorId')" class="remove-filter">×</button>
+                        </span>
+                    }
+
+                    @if (Model.CurrentSizeId.HasValue)
+                    {
+                        var size = Model.Sizes.FirstOrDefault(s => s.SizeId == Model.CurrentSizeId);
+                        <span class="filter-tag">
+                            Kích cỡ: @size?.SizeName
+                            <button type="button" onclick="clearFilterType('sizeId')" class="remove-filter">×</button>
+                        </span>
+                    }
+
+                    @if (Model.CurrentMinPrice.HasValue || Model.CurrentMaxPrice.HasValue)
+                    {
+                        <span class="filter-tag">
+                            Giá: @(Model.CurrentMinPrice?.ToString("N0") ?? "0") - @(Model.CurrentMaxPrice?.ToString("N0") ?? "∞") VNĐ
+                            <button type="button" onclick="clearPriceFilter()" class="remove-filter">×</button>
+                        </span>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.CurrentSearch))
+                    {
+                        <span class="filter-tag">
+                            Tìm kiếm: "@Model.CurrentSearch"
+                            <button type="button" onclick="clearFilterType('search')" class="remove-filter">×</button>
+                        </span>
+                    }
+
+                    <button type="button" onclick="clearFilters()" class="clear-all-filters">
+                        🗑️ Xóa tất cả
+                    </button>
+                </div>
+            }
         </aside>
 
         <!-- Products Section -->
         <main class="products-section">
+            <!-- Search and Active Filters Section -->
+            <div class="top-filters-section">
+                <!-- Search Box -->
+                <div class="search-box-top">
+                    <form method="get" asp-action="Index" id="searchForm">
+                        @if (Model.CurrentCategoryId.HasValue)
+                        {
+                            <input type="hidden" name="categoryId" value="@Model.CurrentCategoryId" />
+                        }
+                        @if (Model.CurrentBrandId.HasValue)
+                        {
+                            <input type="hidden" name="brandId" value="@Model.CurrentBrandId" />
+                        }
+                        @if (Model.CurrentColorId.HasValue)
+                        {
+                            <input type="hidden" name="colorId" value="@Model.CurrentColorId" />
+                        }
+                        @if (Model.CurrentSizeId.HasValue)
+                        {
+                            <input type="hidden" name="sizeId" value="@Model.CurrentSizeId" />
+                        }
+                        @if (!string.IsNullOrEmpty(Model.CurrentSort))
+                        {
+                            <input type="hidden" name="sort" value="@Model.CurrentSort" />
+                        }
+                        @if (Model.CurrentMinPrice.HasValue)
+                        {
+                            <input type="hidden" name="minPrice" value="@Model.CurrentMinPrice" />
+                        }
+                        @if (Model.CurrentMaxPrice.HasValue)
+                        {
+                            <input type="hidden" name="maxPrice" value="@Model.CurrentMaxPrice" />
+                        }
+
+                        <div class="search-input-wrapper">
+                            <input type="text" name="search" value="@Model.CurrentSearch"
+                                   class="form-control search-input-top" placeholder="🔍 Tìm kiếm sản phẩm..." />
+                            <button type="submit" class="search-btn-top">Tìm</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Active Filters Display -->
+                @if (Model.CurrentCategoryId.HasValue || Model.CurrentBrandId.HasValue ||
+                Model.CurrentColorId.HasValue || Model.CurrentSizeId.HasValue ||
+                Model.CurrentMinPrice.HasValue || Model.CurrentMaxPrice.HasValue ||
+                !string.IsNullOrEmpty(Model.CurrentSearch))
+                {
+                    <div class="active-filters-top">
+                        <span class="filter-label">Bộ lọc đang áp dụng:</span>
+
+                        @if (Model.CurrentCategoryId.HasValue)
+                        {
+                            var category = Model.Categories.FirstOrDefault(c => c.CategoryID == Model.CurrentCategoryId);
+                            <span class="filter-tag">
+                                Danh mục: @category?.CategoryName
+                                <button type="button" onclick="clearFilterType('categoryId')" class="remove-filter">×</button>
+                            </span>
+                        }
+
+                        @if (Model.CurrentBrandId.HasValue)
+                        {
+                            var brand = Model.Brands.FirstOrDefault(b => b.BrandID == Model.CurrentBrandId);
+                            <span class="filter-tag">
+                                Thương hiệu: @brand?.BrandName
+                                <button type="button" onclick="clearFilterType('brandId')" class="remove-filter">×</button>
+                            </span>
+                        }
+
+                        @if (Model.CurrentColorId.HasValue)
+                        {
+                            var color = Model.Colors.FirstOrDefault(c => c.ColorId == Model.CurrentColorId);
+                            <span class="filter-tag">
+                                Màu: @color?.ColorName
+                                <button type="button" onclick="clearFilterType('colorId')" class="remove-filter">×</button>
+                            </span>
+                        }
+
+                        @if (Model.CurrentSizeId.HasValue)
+                        {
+                            var size = Model.Sizes.FirstOrDefault(s => s.SizeId == Model.CurrentSizeId);
+                            <span class="filter-tag">
+                                Kích cỡ: @size?.SizeName
+                                <button type="button" onclick="clearFilterType('sizeId')" class="remove-filter">×</button>
+                            </span>
+                        }
+
+                        @if (Model.CurrentMinPrice.HasValue || Model.CurrentMaxPrice.HasValue)
+                        {
+                            <span class="filter-tag">
+                                Giá: @(Model.CurrentMinPrice?.ToString("N0") ?? "0") - @(Model.CurrentMaxPrice?.ToString("N0") ?? "∞") VNĐ
+                                <button type="button" onclick="clearPriceFilter()" class="remove-filter">×</button>
+                            </span>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.CurrentSearch))
+                        {
+                            <span class="filter-tag">
+                                Tìm kiếm: "@Model.CurrentSearch"
+                                <button type="button" onclick="clearFilterType('search')" class="remove-filter">×</button>
+                            </span>
+                        }
+
+                        <button type="button" onclick="clearFilters()" class="clear-all-filters">
+                            🗑️ Xóa tất cả
+                        </button>
+                    </div>
+                }
+            </div>
             <div class="section-header">
                 <div>
                     <h2 style="margin: 0; color: #2d3748; font-size: 1.5rem;">Sản phẩm nổi bật</h2>
-                    <div class="products-count">Hiển thị @Model.Products.Count() sản phẩm</div>
+                    <div class="products-count">Hiển thị @Model.Products.Count() trong tổng số @Model.TotalItems sản phẩm</div>
                 </div>
-                <select class="sort-dropdown">
-                    <option value="">Sắp xếp theo</option>
-                    <option value="price_asc">Giá thấp đến cao</option>
-                    <option value="price_desc">Giá cao đến thấp</option>
-                    <option value="name_asc">Tên A-Z</option>
-                    <option value="name_desc">Tên Z-A</option>
-                </select>
+                <div class="header-controls">
+                    <!-- Page Size Selector -->
+                    <div class="page-size-selector">
+                        <label for="pageSizeSelect" class="page-size-label">Hiển thị:</label>
+                        <select id="pageSizeSelect" class="page-size-dropdown" name="pageSize">
+                            @foreach (var size in Model.PageSizeOptions)
+                            {
+                                if (Model.PageSize == size)
+                                {
+                                    <option value="@size" selected>
+                                        @size sản phẩm
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@size">
+                                        @size sản phẩm
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <label for="pageSizeSelect" class="page-size-label">Sắp xếp theo:</label>
+                    <select class="sort-dropdown" name="sort">
+                        <option value="">Mặc định</option>
+                        @if (Model.CurrentSort == "price_asc")
+                        {
+                            <option value="price_asc" selected>
+                                Giá thấp đến cao
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="price_asc">
+                                Giá thấp đến cao
+                            </option>
+                        }
+                        @if (Model.CurrentSort == "price_desc")
+                        {
+                            <option value="price_desc" selected>
+                                Giá cao đến thấp
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="price_desc">
+                                Giá cao đến thấp
+                            </option>
+                        }
+
+                        @if (Model.CurrentSort == "name_asc")
+                        {
+                            <option value="name_asc" selected>
+                                Tên A-Z
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="name_asc">
+                                Tên A-Z
+                            </option>
+                        }
+
+                        @if (Model.CurrentSort == "name_desc")
+                        {
+                            <option value="name_desc" selected>
+                                Tên Z-A
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="name_desc">
+                                Tên Z-A
+                            </option>
+                        }
+
+                        @if (Model.CurrentSort == "newest")
+                        {
+                            <option value="newest" selected>
+                                Mới nhất
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="newest">
+                                Mới nhất
+                            </option>
+                        }
+                    </select>
+                </div>
             </div>
 
             @{
@@ -764,7 +1489,18 @@
                             @if (Model.CurrentPage > 1)
                             {
                                 <li class="page-item">
-                                    <a class="page-link" href="@Url.Action("Index", "Shop", new { page = Model.CurrentPage - 1, sort = Context.Request.Query["sort"], brandId = Context.Request.Query["brandId"], colorId = Context.Request.Query["colorId"], sizeId = Context.Request.Query["sizeId"], categoryId = Context.Request.Query["categoryId"], minPrice = Context.Request.Query["minPrice"], maxPrice = Context.Request.Query["maxPrice"] })" aria-label="Previous">
+                                    <a class="page-link" href="@Url.Action("Index", "Shop", new {
+                                        page = Model.CurrentPage - 1,
+                                        sort = Model.CurrentSort,
+                                        brandId = Model.CurrentBrandId,
+                                        colorId = Model.CurrentColorId,
+                                        sizeId = Model.CurrentSizeId,
+                                        categoryId = Model.CurrentCategoryId,
+                                        minPrice = Model.CurrentMinPrice,
+                                        maxPrice = Model.CurrentMaxPrice,
+                                        search = Model.CurrentSearch,
+                                        pageSize = Model.PageSize
+                                    })" aria-label="Previous">
                                         <span aria-hidden="true">«</span>
                                         <span class="sr-only">Trước</span>
                                     </a>
@@ -782,13 +1518,35 @@
                             @for (int i = 1; i <= totalPages; i++)
                             {
                                 <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                                    <a class="page-link" href="@Url.Action("Index", "Shop", new { page = i, sort = Context.Request.Query["sort"], brandId = Context.Request.Query["brandId"], colorId = Context.Request.Query["colorId"], sizeId = Context.Request.Query["sizeId"], categoryId = Context.Request.Query["categoryId"], minPrice = Context.Request.Query["minPrice"], maxPrice = Context.Request.Query["maxPrice"] })">@i</a>
+                                    <a class="page-link" href="@Url.Action("Index", "Shop", new {
+                                        page = i,
+                                        sort = Model.CurrentSort,
+                                        brandId = Model.CurrentBrandId,
+                                        colorId = Model.CurrentColorId,
+                                        sizeId = Model.CurrentSizeId,
+                                        categoryId = Model.CurrentCategoryId,
+                                        minPrice = Model.CurrentMinPrice,
+                                        maxPrice = Model.CurrentMaxPrice,
+                                        search = Model.CurrentSearch,
+                                        pageSize = Model.PageSize
+                                    })">@i</a>
                                 </li>
                             }
                             @if (Model.CurrentPage < totalPages)
                             {
                                 <li class="page-item">
-                                    <a class="page-link" href="@Url.Action("Index", "Shop", new { page = Model.CurrentPage + 1, sort = Context.Request.Query["sort"], brandId = Context.Request.Query["brandId"], colorId = Context.Request.Query["colorId"], sizeId = Context.Request.Query["sizeId"], categoryId = Context.Request.Query["categoryId"], minPrice = Context.Request.Query["minPrice"], maxPrice = Context.Request.Query["maxPrice"] })" aria-label="Next">
+                                    <a class="page-link" href="@Url.Action("Index", "Shop", new {
+                                        page = Model.CurrentPage + 1,
+                                        sort = Model.CurrentSort,
+                                        brandId = Model.CurrentBrandId,
+                                        colorId = Model.CurrentColorId,
+                                        sizeId = Model.CurrentSizeId,
+                                        categoryId = Model.CurrentCategoryId,
+                                        minPrice = Model.CurrentMinPrice,
+                                        maxPrice = Model.CurrentMaxPrice,
+                                        search = Model.CurrentSearch,
+                                        pageSize = Model.PageSize
+                                    })" aria-label="Next">
                                         <span aria-hidden="true">»</span>
                                         <span class="sr-only">Sau</span>
                                     </a>
@@ -814,28 +1572,86 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Xử lý loading ảnh
-            $('.product-image img').each(function() {
-                const $img = $(this);
-                const $container = $img.parent();
+            // Auto-submit khi thay đổi dropdown (trừ price range)
+            $('select[name="categoryId"], select[name="sort"]').on('change', function() {
+                autoSubmitFilter();
+            });
 
-                $img.on('load', function() {
-                    $container.addClass('loaded');
-                }).on('error', function() {
-                    $container.addClass('no-image');
-                    $img.hide();
-                });
+            // Xử lý click vào color swatches - tự động lọc
+            $('.color-swatch').on('click', function(e) {
+                e.preventDefault();
+                const colorId = $(this).data('color-id');
 
-                // Kiểm tra nếu ảnh đã load
-                if (this.complete) {
-                    $container.addClass('loaded');
+                $('.color-swatch').removeClass('active');
+
+                if (getUrlParameter('colorId') !== colorId.toString()) {
+                    $(this).addClass('active');
+                    updateUrlParameter('colorId', colorId);
+                } else {
+                    updateUrlParameter('colorId', '');
                 }
+            });
+
+            // Xử lý click vào size options - tự động lọc
+            $('.size-option').on('click', function(e) {
+                e.preventDefault();
+                const sizeId = $(this).data('size-id');
+
+                $('.size-option').removeClass('active');
+
+                if (getUrlParameter('sizeId') !== sizeId.toString()) {
+                    $(this).addClass('active');
+                    updateUrlParameter('sizeId', sizeId);
+                } else {
+                    updateUrlParameter('sizeId', '');
+                }
+            });
+
+            // Xử lý click vào brand links - tự động lọc
+            $('.brand-list a').on('click', function(e) {
+                e.preventDefault();
+                const brandId = $(this).data('brand-id');
+
+                $('.brand-list a').removeClass('active');
+
+                if (getUrlParameter('brandId') !== brandId.toString()) {
+                    $(this).addClass('active');
+                    updateUrlParameter('brandId', brandId);
+                } else {
+                    updateUrlParameter('brandId', '');
+                }
+            });
+
+            // Xử lý form submit cho price range và search
+            $('#filterForm').on('submit', function(e) {
+                e.preventDefault();
+                submitPriceAndSearchFilter();
+            });
+
+            // Xử lý Enter key trong search box
+            $('input[name="search"]').on('keypress', function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    submitPriceAndSearchFilter();
+                }
+            });
+
+            // Debounce cho search input (tự động tìm kiếm sau 5000ms không gõ)
+            let searchTimeout;
+            $('input[name="search"]').on('input', function() {
+                clearTimeout(searchTimeout);
+                const searchValue = $(this).val();
+
+                searchTimeout = setTimeout(function() {
+                    if (searchValue.length >= 2 || searchValue.length === 0) {
+                        updateUrlParameter('search', searchValue);
+                    }
+                }, 5000);
             });
 
             // Show/Hide more brands
             $('#showMoreBrands').on('click', function (e) {
                 e.preventDefault();
-
                 let $extraBrands = $('#brandsWidget .extra-brand');
                 let isVisible = $extraBrands.is(':visible');
 
@@ -854,13 +1670,36 @@
                 $(this).toggleClass('active');
             });
 
+            // Xử lý loading ảnh
+            $('.product-image img').each(function() {
+                const $img = $(this);
+                const $container = $img.parent();
+
+                $img.on('load', function() {
+                    $container.addClass('loaded');
+                }).on('error', function() {
+                    $container.addClass('no-image');
+                    $img.hide();
+                });
+
+                if (this.complete) {
+                    $container.addClass('loaded');
+                }
+            });
+
+            setTimeout(function() {
+              const shopContainer = document.querySelector('.shop-container');
+              if (shopContainer) {
+                shopContainer.scrollIntoView({ behavior: 'smooth' });
+              }
+            }, 100);
+
             // Add smooth scrolling for mobile
             if (window.innerWidth <= 768) {
                 $('.product-card').on('click', function() {
                     $(this).find('.product-title a')[0].click();
                 });
             }
-
             // Add loading effect for images
             $('.product-image').each(function() {
                 const $this = $(this);
@@ -878,8 +1717,185 @@
                 }
             });
         });
-    </script>
 
+        // Xử lý thay đổi page size
+        $('#pageSizeSelect').on('change', function() {
+            const pageSize = $(this).val();
+            updateUrlParameter('pageSize', pageSize);
+        });
+
+        // Hàm tự động submit filter (cho dropdown)
+        function autoSubmitFilter() {
+            const url = new URL(window.location);
+
+            const categoryId = $('select[name="categoryId"]').val();
+            const sort = $('select[name="sort"]').val();
+            const pageSize = $('#pageSizeSelect').val();
+
+            updateUrlParameterSilent(url, 'categoryId', categoryId);
+            updateUrlParameterSilent(url, 'sort', sort);
+            updateUrlParameterSilent(url, 'pageSize', pageSize);
+
+            // Giữ lại các filter khác
+            const currentBrandId = getUrlParameter('brandId');
+            const currentColorId = getUrlParameter('colorId');
+            const currentSizeId = getUrlParameter('sizeId');
+            const currentMinPrice = getUrlParameter('minPrice');
+            const currentMaxPrice = getUrlParameter('maxPrice');
+            const currentSearch = getUrlParameter('search');
+
+            if (currentBrandId) updateUrlParameterSilent(url, 'brandId', currentBrandId);
+            if (currentColorId) updateUrlParameterSilent(url, 'colorId', currentColorId);
+            if (currentSizeId) updateUrlParameterSilent(url, 'sizeId', currentSizeId);
+            if (currentMinPrice) updateUrlParameterSilent(url, 'minPrice', currentMinPrice);
+            if (currentMaxPrice) updateUrlParameterSilent(url, 'maxPrice', currentMaxPrice);
+            if (currentSearch) updateUrlParameterSilent(url, 'search', currentSearch);
+
+            url.searchParams.set('page', '1');
+            window.location.href = url.toString();
+        }
+
+        // Hàm submit cho price và search
+        function submitPriceAndSearchFilter() {
+            const url = new URL(window.location);
+
+            const minPrice = $('input[name="minPrice"]').val();
+            const maxPrice = $('input[name="maxPrice"]').val();
+            const search = $('input[name="search"]').val();
+
+            updateUrlParameterSilent(url, 'minPrice', minPrice);
+            updateUrlParameterSilent(url, 'maxPrice', maxPrice);
+            updateUrlParameterSilent(url, 'search', search);
+
+            url.searchParams.set('page', '1');
+            window.location.href = url.toString();
+        }
+
+        // Hàm helper để cập nhật URL parameter
+        function updateUrlParameterSilent(url, param, value) {
+            if (value && value !== '' && value !== '0') {
+                url.searchParams.set(param, value);
+            } else {
+                url.searchParams.delete(param);
+            }
+        }
+
+        // Hàm cập nhật URL parameter và redirect
+        function updateUrlParameter(param, value) {
+            const url = new URL(window.location);
+            updateUrlParameterSilent(url, param, value);
+            url.searchParams.set('page', '1');
+            window.location.href = url.toString();
+        }
+
+        // Hàm lấy giá trị parameter từ URL
+        function getUrlParameter(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Hàm xóa tất cả bộ lọc
+        function clearFilters() {
+            window.location.href = window.location.pathname;
+        }
+
+        // Hàm xóa từng loại filter
+        function clearFilterType(filterType) {
+            updateUrlParameter(filterType, '');
+        }
+
+        // Hàm xóa price filter
+        function clearPriceFilter() {
+            const url = new URL(window.location);
+            url.searchParams.delete('minPrice');
+            url.searchParams.delete('maxPrice');
+            url.searchParams.set('page', '1');
+            window.location.href = url.toString();
+        }
+
+        // Hàm set quick price filter
+        function setQuickPriceFilter(minPrice, maxPrice) {
+            const url = new URL(window.location);
+            if (minPrice) {
+                url.searchParams.set('minPrice', minPrice);
+            } else {
+                url.searchParams.delete('minPrice');
+            }
+            if (maxPrice) {
+                url.searchParams.set('maxPrice', maxPrice);
+            } else {
+                url.searchParams.delete('maxPrice');
+            }
+            url.searchParams.set('page', '1');
+            window.location.href = url.toString();
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.addToCart').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const productId = this.getAttribute('data-productid');
+                    const quantity = 1;
+                    const sizeId = 1; // Hoặc lấy từ dropdown size nếu có
+
+                    // Hiển thị loading
+                    const originalText = this.textContent;
+                    this.textContent = 'Đang thêm...';
+                    this.disabled = true;
+
+                    fetch(`https://localhost:7237/api/cart/add?productId=${productId}&quantity=${quantity}&sizeId=${sizeId}`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        console.log('Trạng thái phản hồi:', response.status);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert("✅ Đã thêm vào giỏ hàng!");
+                        console.log('Dữ liệu giỏ hàng:', data);
+
+                        // Cập nhật số lượng giỏ hàng nếu có
+                        updateCartCount();
+                    })
+                    .catch(error => {
+                        alert("❌ Thêm thất bại: " + error.message);
+                        console.error('Lỗi:', error);
+                    })
+                    .finally(() => {
+                        // Khôi phục nút
+                        this.textContent = originalText;
+                        this.disabled = false;
+                    });
+                });
+            });
+        });
+
+        // Hàm cập nhật số lượng giỏ hàng
+        function updateCartCount() {
+            fetch('https://localhost:7237/api/cart/checkout', {
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const cartCount = data.reduce((total, item) => total + item.Quantity, 0);
+                const cartCountElement = document.querySelector('.cart-count');
+                if (cartCountElement) {
+                    cartCountElement.textContent = cartCount;
+                }
+            })
+            .catch(error => console.error('Lỗi cập nhật giỏ hàng:', error));
+        }
+    </script>
     <style>
         .product-image {
             background-color: #f7fafc;

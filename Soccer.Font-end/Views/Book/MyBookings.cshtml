@@ -1,0 +1,37 @@
+﻿@using Soccer.Font_end.Services
+@model PagedResult<BookingResponseDto>
+@{
+    ViewData["Title"] = "Booking của tôi";
+}
+<div class=innerbannerwrap>
+    <div class=innerbanner><h2 class=bannerHeadline> <span></span></h2></div>
+</div>
+<div class="container">
+    <h2>Danh sách booking của tôi</h2>
+
+    @if (Model.Data.Any())
+    {
+        <div class="row">
+            @foreach (var booking in Model.Data)
+            {
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Booking #@booking.BookingId</h5>
+                            <p class="card-text">
+                                <strong>Ngày:</strong> @booking.BookingTime.ToString("dd/MM/yyyy HH:mm")<br>
+                                <strong>Giá:</strong> @booking.Price.ToString("N0")đ<br>
+                                <strong>Trạng thái:</strong> @booking.Status
+                            </p>
+                            <a href="@Url.Action("Details", new { id = booking.BookingId })" class="btn btn-primary">Xem chi tiết</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Bạn chưa có booking nào.</p>
+    }
+</div>

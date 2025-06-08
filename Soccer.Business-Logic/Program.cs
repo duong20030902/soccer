@@ -115,7 +115,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 
-builder.Services.AddCors(options =>
+/*builder.Services.AddCors(options =>
 {
     options.AddPolicy("CORSPolicy", policy =>
     {
@@ -124,6 +124,16 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
+    });
+});*/
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy("CORSPolicy", builder =>
+    {
+        builder.SetIsOriginAllowed(origin => true)
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials();
     });
 });
 
