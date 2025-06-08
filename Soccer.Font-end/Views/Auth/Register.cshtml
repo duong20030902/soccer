@@ -1,0 +1,297 @@
+﻿@model Soccer.Font_end.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 40px auto;
+        padding: 30px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 5px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        color: white;
+        position: relative;
+    }
+
+        .auth-container h2 {
+            text-align: center;
+            color: #e81e25;
+            margin-bottom: 30px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #ddd;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+
+            .form-group input:focus {
+                outline: none;
+                border-color: #e81e25;
+            }
+
+    .btn-submit {
+        background: #e81e25;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-family: 'Oswald', sans-serif;
+        width: 100%;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-submit:hover {
+            background: #c61017;
+        }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #aaa;
+    }
+
+        .auth-footer a {
+            color: #e81e25;
+            text-decoration: none;
+        }
+
+    .banner-auth {
+        background: url('/images/banner/background01.jpg') center/cover no-repeat;
+        position: relative;
+        padding: 80px 0;
+    }
+
+        .banner-auth::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+    .banner-auth-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+    }
+
+        .banner-auth-content h1 {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+            .banner-auth-content h1 span {
+                color: #e81e25;
+            }
+
+    .social-login {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        border-radius: 3px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 45%;
+    }
+
+        .social-btn.facebook {
+            background: #3b5998;
+        }
+
+        .social-btn.google {
+            background: #dd4b39;
+        }
+
+        .social-btn i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+        .checkbox-group input {
+            margin-right: 10px;
+            width: auto;
+        }
+
+    .form-divider {
+        margin: 25px 0;
+        text-align: center;
+        position: relative;
+    }
+
+        .form-divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 42%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 42%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-divider span {
+            background: rgba(0, 0, 0, 0.7);
+            position: relative;
+            z-index: 1;
+            padding: 0 10px;
+            color: #aaa;
+        }
+
+    .validation-message {
+        color: #ff6b6b;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+</style>
+
+<!-- Banner Section -->
+<div class="banner-auth" style="margin-top: 100px;">
+    <div class="container">
+        <div class="banner-auth-content">
+            <h1>Đăng <span>ký</span></h1>
+            <p>Tạo tài khoản để trải nghiệm đầy đủ các tính năng của chúng tôi!</p>
+        </div>
+    </div>
+</div>
+
+<!-- Register Section -->
+<section class="auth-section bg-white">
+    <div class="container">
+        <div class="row">
+            <div class="auth-container">
+                <h2>Đăng ký tài khoản</h2>
+
+                @if (ViewData["RegisterError"] != null)
+                {
+                    <div class="alert alert-danger">@ViewData["RegisterError"]</div>
+                }
+
+                <form asp-action="Register" asp-controller="Auth" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="FullName">Họ tên</label>
+                        <input asp-for="FullName" type="text" placeholder="Nhập họ tên của bạn" required>
+                        <span asp-validation-for="FullName" class="validation-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="RegisterEmail">Email</label>
+                        <input asp-for="RegisterEmail" type="email" placeholder="Nhập email của bạn" required>
+                        <span asp-validation-for="RegisterEmail" class="validation-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber">Số điện thoại</label>
+                        <input asp-for="PhoneNumber" type="tel" placeholder="Nhập số điện thoại của bạn" required>
+                        <span asp-validation-for="PhoneNumber" class="validation-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="RegisterPassword">Mật khẩu</label>
+                        <input asp-for="RegisterPassword" type="password" placeholder="Tạo mật khẩu" required>
+                        <span asp-validation-for="RegisterPassword" class="validation-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword">Xác nhận mật khẩu</label>
+                        <input asp-for="ConfirmPassword" type="password" placeholder="Xác nhận mật khẩu" required>
+                        <span asp-validation-for="ConfirmPassword" class="validation-message"></span>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input asp-for="AgreeTerms" type="checkbox" required>
+                        <label asp-for="AgreeTerms">Tôi đồng ý với <a href="#">Điều khoản sử dụng</a> và <a href="#">Chính sách bảo mật</a></label>
+                        <span asp-validation-for="AgreeTerms" class="validation-message"></span>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Đăng ký</button>
+
+                    <div class="auth-footer">
+                        <span>Đã có tài khoản? <a asp-action="Login" asp-controller="Auth">Đăng nhập ngay</a></span>
+                    </div>
+
+                 @*    <div class="form-divider">
+                        <span>Hoặc</span>
+                    </div>
+
+                    <div class="social-login">
+                        <div class="social-btn facebook">
+                            <i class="fa fa-facebook"></i> Facebook
+                        </div>
+                        <div class="social-btn google">
+                            <i class="fa fa-google"></i> Google
+                        </div>
+                    </div> *@
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

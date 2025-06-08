@@ -120,12 +120,13 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CORSPolicy", policy =>
     {
         policy
-            .WithOrigins("https://soccer.soccertips.org", "http://localhost:7170")
+            .WithOrigins("https://localhost:7170", "https://www.soccer.soccertips.org")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
     });
 });
+
 
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -1,4 +1,4 @@
-using Soccer.Font_end.Areas.Services;
+﻿using Soccer.Font_end.Areas.Services;
 using Soccer.Font_end.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,8 +28,14 @@ builder.Services.AddScoped<TimeslotService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<Soccer.Font_end.Services.FieldService>();
 builder.Services.AddScoped<Soccer.Font_end.Services.BookingService>();
-builder.Services.AddSession();
-//builder.WebHost.UseUrls("http://+:8080");
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Đặt thời gian timeout cho session
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.Lax; // Hoặc None nếu cần hỗ trợ cross-site
+});
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
