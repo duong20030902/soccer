@@ -114,7 +114,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-
+/*
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CORSPolicy", policy =>
@@ -125,17 +125,17 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials();
     });
-});
-/*builder.Services.AddCors(opts =>
+});*/
+builder.Services.AddCors(opts =>
 {
     opts.AddPolicy("CORSPolicy", builder =>
     {
-        builder.SetIsOriginAllowed(origin => true)
+        builder.AllowAnyOrigin()
                .AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials();
     });
-});*/
+});
 
 
 builder.Services.AddScoped<EmailService>();
