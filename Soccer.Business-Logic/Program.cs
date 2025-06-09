@@ -80,11 +80,11 @@ using Microsoft.AspNetCore.Authorization;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpContextAccessor();
-// Add services to the container.
+// Thêm dịch vụ vào container.
 builder.Services.AddDbContext<SoccerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ServerConnection")));
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Cấu hình Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -114,30 +114,18 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-
+// Cấu hình CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CORSPolicy", policy =>
     {
         policy
-            .WithOrigins("https://www.soccer.soccertips.org", 
-            "https://localhost:7170")
+            .WithOrigins("https://www.soccer.soccertips.org", "https://localhost:7170")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
     });
 });
-/*builder.Services.AddCors(opts =>
-{
-    opts.AddPolicy("CORSPolicy", builder =>
-    {
-        builder.AllowAnyOrigin()
-               .AllowAnyHeader()
-               .AllowAnyMethod()
-               .AllowCredentials();
-    });
-});
-*/
 
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -156,17 +144,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Session configuration
+// Cấu hình Session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromHours(24); // Thời gian sống của session
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
-    options.Cookie.SameSite = SameSiteMode.None; // Quan trọng để làm việc với CORS
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Yêu cầu HTTPS
+
+    // Điều chỉnh SameSite và SecurePolicy dựa trên việc có HTTPS hay không
+    var isHttps = builder.Environment.IsProduction() || builder.Configuration["Kestrel:Endpoints:Https"] != null;
+    if (isHttps)
+    {
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Yêu cầu HTTPS
+    }
+    else
+    {
+        options.Cookie.SameSite = SameSiteMode.Lax; // Mặc định Lax nếu không có HTTPS
+        options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Cho phép HTTP nếu cần
+    }
 });
-// Add custom authorization policy
+
+// Thêm chính sách ủy quyền tùy chỉnh
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AllowCookieAuth", policy =>
@@ -184,14 +184,16 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Cấu hình pipeline HTTP
+app.UseHsts(); // Bật HTTP Strict Transport Security
+app.UseHttpsRedirection(); // Chuyển hướng tất cả yêu cầu sang HTTPS
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseSession();
 app.UseCors("CORSPolicy");
 app.UseAuthentication();
@@ -199,3 +201,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
