@@ -120,7 +120,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CORSPolicy", policy =>
     {
         policy
-            .WithOrigins("https://www.soccer.soccertips.org")
+            .WithOrigins("https://www.soccer.soccertips.org", 
+            "https://localhost:7170")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
