@@ -1,25 +1,18 @@
-﻿@* @using Soccer.Font_end.ViewModels *@
+﻿
+
+
+@* @using Soccer.Font_end.ViewModels *@
 @* @model List<CartItemViewModel> *@
 @* @{ *@
 @*     ViewData["Title"] = "Chi tiết giỏ hàng"; *@
-@*     decimal totalCartPrice = 0; *@
-@*     string cartName = "Thanh toán đơn hàng"; *@
 @*     string bankAccount = "CASS0356439203"; *@
 @*     string bankID = "OCB"; *@
 @*     string bankOwner = "Nguyen Viet Nam"; *@
 @* } *@
 
+@* <!-- Use <text> to ensure CSS is not parsed as Razor code --> *@
 @* <style> *@
-@*     .table tbody tr { *@
-@*         transition: none; /* Remove all transitions */ *@
-@*         background: #FFFFFF; *@
-@*     } *@
-
-@*         .table tbody tr:hover { *@
-@*             background: #FFFFFF; /* Keep background static */ *@
-@*             transform: none; /* No movement */ *@
-@*             box-shadow: none; /* No shadow */ *@
-@*         } *@
+@*     <text > *@
 @*     /* Modern Cart Page Design - Đồng nhất với Shop Theme */ *@
 @*     .cart-page { *@
 @*         padding: 40px 0; *@
@@ -50,14 +43,17 @@
 @*             animation: float 6s ease-in-out infinite; *@
 @*         } *@
 
-@*     @@keyframes float { *@
-@*         0%, 100% { *@
-@*             transform: translate(-50%, -50%) translateY(0px); *@
-@*         } *@
+@*           float { *@
+@*         0%, 100% *@
 
-@*         50% { *@
-@*             transform: translate(-50%, -50%) translateY(-20px); *@
-@*         } *@
+@*     { *@
+@*         transform: translate(-50%, -50%) translateY(0px); *@
+@*     } *@
+
+@*     50% { *@
+@*         transform: translate(-50%, -50%) translateY(-20px); *@
+@*     } *@
+
 @*     } *@
 
 @*     .innerbanner { *@
@@ -113,14 +109,17 @@
 @*             animation: gradient-flow 3s linear infinite; *@
 @*         } *@
 
-@*     @@keyframes gradient-flow { *@
-@*         0% { *@
-@*             background-position: 0% 0%; *@
-@*         } *@
+@*           gradient-flow { *@
+@*         0% *@
 
-@*         100% { *@
-@*             background-position: 200% 0%; *@
-@*         } *@
+@*     { *@
+@*         background-position: 0% 0%; *@
+@*     } *@
+
+@*     100% { *@
+@*         background-position: 200% 0%; *@
+@*     } *@
+
 @*     } *@
 
 @*     .heading.small { *@
@@ -246,14 +245,14 @@
 @*     } *@
 
 @*     .table tbody tr { *@
-@*         transition: all 0.3s ease; *@
+@*         transition: none; *@
 @*         background: #FFFFFF; *@
 @*     } *@
 
 @*         .table tbody tr:hover { *@
-@*             background: linear-gradient(135deg, #FFF8F6, #FFF0ED); *@
-@*             transform: translateY(-2px); *@
-@*             box-shadow: 0 8px 25px rgba(255, 107, 53, 0.15); *@
+@*             background: #FFFFFF; *@
+@*             transform: none; *@
+@*             box-shadow: none; *@
 @*         } *@
 
 @*         .table tbody tr:last-child td { *@
@@ -497,16 +496,19 @@
 @*             animation: pulse 2s infinite; *@
 @*         } *@
 
-@*     @@keyframes pulse { *@
-@*         0%, 100% { *@
-@*             opacity: 0.6; *@
-@*             transform: scale(1); *@
-@*         } *@
+@*           pulse { *@
+@*         0%, 100% *@
 
-@*         50% { *@
-@*             opacity: 1; *@
-@*             transform: scale(1.1); *@
-@*         } *@
+@*     { *@
+@*         opacity: 0.6; *@
+@*         transform: scale(1); *@
+@*     } *@
+
+@*     50% { *@
+@*         opacity: 1; *@
+@*         transform: scale(1.1); *@
+@*     } *@
+
 @*     } *@
 
 @*     #qrcodeImg { *@
@@ -533,14 +535,17 @@
 @*         animation: spin 1s linear infinite; *@
 @*     } *@
 
-@*     @@keyframes spin { *@
-@*         0% { *@
-@*             transform: rotate(0deg); *@
-@*         } *@
+@*           spin { *@
+@*         0% *@
 
-@*         100% { *@
-@*             transform: rotate(360deg); *@
-@*         } *@
+@*     { *@
+@*         transform: rotate(0deg); *@
+@*     } *@
+
+@*     100% { *@
+@*         transform: rotate(360deg); *@
+@*     } *@
+
 @*     } *@
 
 @*     #successMessage { *@
@@ -643,84 +648,93 @@
 @*         } *@
 
 @*     /* Responsive Design */ *@
-@*     @@media (max-width: 1024px) { *@
-@*         .cart-content { *@
-@*             grid-template-columns: 1fr; *@
-@*             gap: 30px; *@
-@*         } *@
+@*          (max-width: 1024px) { *@
+@*         .cart-content *@
 
-@*         .payment-summary { *@
-@*             position: static; *@
-@*         } *@
+@*     { *@
+@*         grid-template-columns: 1fr; *@
+@*         gap: 30px; *@
 @*     } *@
 
-@*     @@media (max-width: 768px) { *@
-@*         .bannerHeadline { *@
-@*             font-size: 2.5rem; *@
-@*         } *@
-
-@*         .heading.small { *@
-@*             font-size: 2.2rem; *@
-@*         } *@
-
-@*         .cart-table-section, *@
-@*         .payment-summary, *@
-@*         .qr-container { *@
-@*             padding: 25px; *@
-@*             margin: 0 10px; *@
-@*         } *@
-
-@*         .table-responsive { *@
-@*             overflow-x: auto; *@
-@*         } *@
-
-@*         .table { *@
-@*             min-width: 700px; *@
-@*         } *@
-
-@*             .table td, .table th { *@
-@*                 padding: 12px 8px; *@
-@*                 font-size: 14px; *@
-@*             } *@
-
-@*         .product-image-cell img { *@
-@*             width: 50px; *@
-@*             height: 50px; *@
-@*         } *@
-
-@*         #qrcodeImg { *@
-@*             width: 200px; *@
-@*             height: 200px; *@
-@*         } *@
+@*     .payment-summary { *@
+@*         position: static; *@
 @*     } *@
 
-@*     @@media (max-width: 480px) { *@
-@*         .container { *@
-@*             padding: 0 10px; *@
+@*     } *@
+
+@*          (max-width: 768px) { *@
+@*         .bannerHeadline *@
+
+@*     { *@
+@*         font-size: 2.5rem; *@
+@*     } *@
+
+@*     .heading.small { *@
+@*         font-size: 2.2rem; *@
+@*     } *@
+
+@*     .cart-table-section, *@
+@*     .payment-summary, *@
+@*     .qr-container { *@
+@*         padding: 25px; *@
+@*         margin: 0 10px; *@
+@*     } *@
+
+@*     .table-responsive { *@
+@*         overflow-x: auto; *@
+@*     } *@
+
+@*     .table { *@
+@*         min-width: 700px; *@
+@*     } *@
+
+@*         .table td, .table th { *@
+@*             padding: 12px 8px; *@
+@*             font-size: 14px; *@
 @*         } *@
 
-@*         .bannerHeadline { *@
-@*             font-size: 2rem; *@
-@*         } *@
+@*     .product-image-cell img { *@
+@*         width: 50px; *@
+@*         height: 50px; *@
+@*     } *@
 
-@*         .heading.small { *@
-@*             font-size: 1.8rem; *@
-@*         } *@
+@*     #qrcodeImg { *@
+@*         width: 200px; *@
+@*         height: 200px; *@
+@*     } *@
 
-@*         .table { *@
-@*             min-width: 600px; *@
-@*         } *@
+@*     } *@
 
-@*         .btn-red { *@
-@*             padding: 16px 25px; *@
-@*             font-size: 1rem; *@
-@*         } *@
+@*          (max-width: 480px) { *@
+@*         .container *@
 
-@*         .payment-info p { *@
-@*             flex-direction: column; *@
-@*             align-items: flex-start; *@
-@*             gap: 5px; *@
-@*         } *@
+@*     { *@
+@*         padding: 0 10px; *@
+@*     } *@
+
+@*     .bannerHeadline { *@
+@*         font-size: 2rem; *@
+@*     } *@
+
+@*     .heading.small { *@
+@*         font-size: 1.8rem; *@
+@*     } *@
+
+@*     .table { *@
+@*         min-width: 600px; *@
+@*     } *@
+
+@*     .btn-red { *@
+@*         padding: 16px 25px; *@
+@*         font-size: 1rem; *@
+@*     } *@
+
+@*     .payment-info p { *@
+@*         flex-direction: column; *@
+@*         align-items: flex-start; *@
+@*         gap: 5px; *@
+@*     } *@
+
 @*     } *@
 
 @*     /* Loading States */ *@
@@ -745,11 +759,71 @@
 @*         border-radius: 50%; *@
 @*         animation: spin 1s linear infinite; *@
 @*     } *@
+
+@*     </text > *@
+
+
+@*     .modal { *@
+@*         display: none; *@
+@*         position: fixed; *@
+@*         z-index: 1; *@
+@*         left: 0; *@
+@*         top: 0; *@
+@*         width: 100%; *@
+@*         height: 100%; *@
+@*         overflow: auto; *@
+@*         background-color: rgba(0,0,0,0.4); *@
+@*     } *@
+
+@*     .modal-content { *@
+@*         background-color: #fefefe; *@
+@*         margin: 15% auto; *@
+@*         padding: 20px; *@
+@*         border: 1px solid #888; *@
+@*         width: 80%; *@
+@*         max-width: 500px; *@
+@*         border-radius: 5px; *@
+@*     } *@
+
+@*     .close { *@
+@*         color: #aaa; *@
+@*         float: right; *@
+@*         font-size: 28px; *@
+@*         font-weight: bold; *@
+@*     } *@
+
+@*         .close:hover, *@
+@*         .close:focus { *@
+@*             color: black; *@
+@*             text-decoration: none; *@
+@*             cursor: pointer; *@
+@*         } *@
+
+@*     .form-group { *@
+@*         margin-bottom: 15px; *@
+@*     } *@
+
+@*     .form-control { *@
+@*         width: 100%; *@
+@*         padding: 8px; *@
+@*         box-sizing: border-box; *@
+@*     } *@
+
+@*     .btn { *@
+@*         padding: 10px 20px; *@
+@*         cursor: pointer; *@
+@*     } *@
+
+@*     .btn-primary { *@
+@*         background-color: #007bff; *@
+@*         color: white; *@
+@*         border: none; *@
+@*     } *@
+
+@*         .btn-primary:hover { *@
+@*             background-color: #0056b3; *@
+@*         } *@
 @* </style> *@
-
-
-
-
 
 @* <!-- Hero Banner --> *@
 @* <div class="innerbannerwrap"> *@
@@ -793,12 +867,13 @@
 @*                                 <th>Số lượng</th> *@
 @*                                 <th>Đơn giá</th> *@
 @*                                 <th>Thành tiền</th> *@
+@*                                 <th>Hành động</th> <!-- Thêm cột Hành động --> *@
 @*                             </tr> *@
 @*                         </thead> *@
 @*                         <tbody id="cartBody"></tbody> *@
 @*                         <tfoot> *@
 @*                             <tr> *@
-@*                                 <td colspan="5">🧾 Tổng thanh toán:</td> *@
+@*                                 <td colspan="6">🧾 Tổng thanh toán:</td> *@
 @*                                 <td colspan="2" id="totalCartPrice"></td> *@
 @*                             </tr> *@
 @*                         </tfoot> *@
@@ -835,6 +910,32 @@
 @*             <div class="form-group"> *@
 @*                 <label for="addressSelect">Chọn địa chỉ đã lưu:</label> *@
 @*                 <select id="addressSelect" class="form-control"></select> *@
+
+@*             </div> *@
+@*             <button id="updateAddressBtn" class="btn btn-primary">Sửa Địa chỉ</button> *@
+@*         </div> *@
+
+@*         <div id="addressModal" class="modal"> *@
+@*             <div class="modal-content"> *@
+@*                 <span class="close">&times;</span> *@
+@*                 <h5>Chỉnh sửa Địa chỉ</h5> *@
+@*                 <div class="form-group"> *@
+@*                     <label for="modalRecipientName">Tên người nhận:</label> *@
+@*                     <input type="text" id="modalRecipientName" class="form-control"> *@
+@*                 </div> *@
+@*                 <div class="form-group"> *@
+@*                     <label for="modalStreetAddress">Địa chỉ:</label> *@
+@*                     <input type="text" id="modalStreetAddress" class="form-control"> *@
+@*                 </div> *@
+@*                 <div class="form-group"> *@
+@*                     <label for="modalCityProvince">Thành phố/Tỉnh:</label> *@
+@*                     <input type="text" id="modalCityProvince" class="form-control"> *@
+@*                 </div> *@
+@*                 <div class="form-group"> *@
+@*                     <label for="modalPostalCode">Mã bưu điện:</label> *@
+@*                     <input type="text" id="modalPostalCode" class="form-control"> *@
+@*                 </div> *@
+@*                 <button id="saveAddressBtn" class="btn btn-primary">Lưu</button> *@
 @*             </div> *@
 @*         </div> *@
 
@@ -877,7 +978,7 @@
 @*                 try { *@
 @*                     const response = await fetch('https://api.soccer.soccertips.org/api/cart/checkout', { *@
 @*                         method: 'GET', *@
-@*                         credentials: 'include' // Gửi cookie nếu cần *@
+@*                         credentials: 'include' *@
 @*                     }); *@
 @*                     if (!response.ok) { *@
 @*                         throw new Error(`HTTP error! Status: ${response.status}`); *@
@@ -915,32 +1016,38 @@
 @*                     totalCartPrice += totalPrice; *@
 @*                     const row = ` *@
 @*                         <tr> *@
-@*                             <td class="product-image-cell"> *@
-@*                                 ${item.imageUrl ? `<img src="${getImageUrl(item.imageUrl)}" alt="${item.productName}" onerror="this.src='/images/default-product.jpg';" />` : '<div style="width: 70px; height: 70px; background: #f0f0f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #999;">📷</div>'} *@
-@*                             </td> *@
+@*                            <td class="product-image-cell"> *@
+@*                     <img src="${getImageUrl(item.imageUrl)}" alt="${item.productName}" *@
+@*                          onerror="this.src='https://i.pinimg.com/564x/f8/e3/d9/f8e3d945eeb3f45efa550fa7c03ba79c.jpg';" /> *@
+@*                 </td> *@
 @*                             <td><strong>${item.productName}</strong></td> *@
 @*                             <td><span style="color: #FF6B35; font-weight: 600;">#${item.productId}</span></td> *@
 @*                             <td><span style="background: #FFD23F; color: #1A1A1A; padding: 4px 8px; border-radius: 6px; font-weight: 600;">${item.sizeName}</span></td> *@
 @*                             <td><span style="background: #FF6B35; color: #FFFFFF; padding: 4px 8px; border-radius: 6px; font-weight: 600;">${item.quantity}</span></td> *@
 @*                             <td><strong style="color: #C1272D;">${item.unitPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></td> *@
 @*                             <td><strong style="color: #C1272D; font-size: 1.1rem;">${totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></td> *@
+@*                            <td><button class="btn-remove" data-product-id="${item.productId}">Xóa</button></td> *@
 @*                         </tr> *@
 @*                     `; *@
 @*                     cartBody.innerHTML += row; *@
 @*                 }); *@
+@*                     document.querySelectorAll('.btn-remove').forEach(button => { *@
+@*             button.addEventListener('click', () => { *@
+@*                 const productId = button.getAttribute('data-product-id'); *@
+@*                 removeItem(productId); *@
+@*             }); *@
+@*         }); *@
 
 @*                 totalCartPriceElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }); *@
 @*                 subtotalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }); *@
 @*                 totalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }); *@
 @*             } *@
 
-@*             // Hàm xử lý URL ảnh *@
-@*             function getImageUrl(imageUrl) { *@
-@*                 if (!imageUrl) return "/images/default-product.jpg"; *@
-@*                 if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) return imageUrl; *@
-@*                 return `/images/${imageUrl.replace(" ", "_").replace("/", "_")}.jpg`; *@
-@*             } *@
-
+@*                      function getImageUrl(imageUrl) { *@
+@*             return imageUrl?.startsWith("http://") || imageUrl?.startsWith("https://") *@
+@*                 ? imageUrl *@
+@*                 : `/images/${(imageUrl ?? "default-product").replace(/[ /]/g, "_")}.jpg`; *@
+@*         } *@
 @*             // Lấy danh sách địa chỉ *@
 @*             async function fetchUserAddresses() { *@
 @*                 try { *@
@@ -967,9 +1074,43 @@
 @*                     } *@
 @*                 } catch (error) { *@
 @*                     console.error('Error fetching addresses:', error); *@
-@*                     alert('Lỗi khi lấy danh sách địa chỉ: ' + error.message); *@
+@*                     alert('Lỗi khi lấy danh sách địa chỉ:(vui lòng đăng nhập) ' + error.message); *@
+@*                     window.location.href = '/Auth/Login'; *@
 @*                 } *@
 @*             } *@
+
+@*             // Thêm logic xóa sản phẩm *@
+@*                  async function removeItem(productId) { *@
+@*             try { *@
+@*                 console.log('removeItem called with productId:', productId, 'Type:', typeof productId); *@
+@*                 const url = `https://api.soccer.soccertips.org/api/cart/remove?productId=${Number(productId)}`; // Pass productId as query param *@
+@*                 console.log('Sending remove request - URL:', url); *@
+
+@*                 const response = await fetch(url, { *@
+@*                     method: 'POST', *@
+@*                     headers: { *@
+@*                         'Content-Type': 'application/json', *@
+@*                     }, *@
+@*                     credentials: 'include', // Include cookies for session *@
+@*                 }); *@
+
+@*                 const data = await response.json(); // Parse JSON response *@
+@*                 console.log('API response:', response.status, data); *@
+
+@*                 if (!response.ok) { *@
+@*                     throw new Error(data.message || `HTTP error! Status: ${response.status}`); *@
+@*                 } *@
+
+@*                 await fetchCartData(); // Refresh cart data *@
+@*                 document.getElementById('errorMessage').style.display = 'none'; *@
+@*                 return data; // Optionally return the response data *@
+@*             } catch (error) { *@
+@*                 console.error('Error details:', error); *@
+@*                 document.getElementById('errorMessage').textContent = `Error removing item: ${error.message}`; *@
+@*                 document.getElementById('errorMessage').style.display = 'block'; *@
+@*                 throw error; // Re-throw for further handling if needed *@
+@*             } *@
+@*         } *@
 
 @*             // Tạo mã QR thanh toán *@
 @*             if (generateQRButton) { *@
@@ -1123,7 +1264,10 @@
 
 @*                 const style = document.createElement('style'); *@
 @*                 style.textContent = ` *@
-
+@*           fall { *@
+@*                         0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; } *@
+@*                         100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } *@
+@*                     } *@
 @*                 `; *@
 @*                 document.head.appendChild(style); *@
 
@@ -1133,22 +1277,72 @@
 @*                 }, 5000); *@
 @*             } *@
 
+@*             // Address Editing Logic *@
+@*         const updateAddressBtn = document.getElementById('updateAddressBtn'); *@
+@*         const addressModal = document.getElementById('addressModal'); *@
+@*         const closeModal = document.querySelector('.close'); *@
+@*         const saveAddressBtn = document.getElementById('saveAddressBtn'); *@
+
+@*         updateAddressBtn.addEventListener('click', () => { *@
+@*             const addressId = addressSelect.value; *@
+@*             if (!addressId) { *@
+@*                 alert('Vui lòng chọn địa chỉ để sửa!'); *@
+@*                 return; *@
+@*             } *@
+@*             addressModal.style.display = 'block'; *@
+@*         }); *@
+
+@*         closeModal.addEventListener('click', () => { *@
+@*             addressModal.style.display = 'none'; *@
+@*         }); *@
+
+@*         saveAddressBtn.addEventListener('click', async () => { *@
+@*             const updatedAddress = { *@
+@*                 RecipientName: document.getElementById('modalRecipientName').value, *@
+@*                 StreetAddress: document.getElementById('modalStreetAddress').value, *@
+@*                 CityProvince: document.getElementById('modalCityProvince').value, *@
+@*                 PostalCode: document.getElementById('modalPostalCode').value *@
+@*             }; *@
+
+@*             try { *@
+@*                 const response = await fetch(`https://api.soccer.soccertips.org/api/cart/update-address`, { *@
+@*                     method: 'POST', *@
+@*                     headers: { 'Content-Type': 'application/json' }, *@
+@*                     body: JSON.stringify(updatedAddress), *@
+@*                     credentials: 'include' *@
+@*                 }); *@
+@*                 if (response.ok) { *@
+@*                     alert('Địa chỉ đã được cập nhật thành công!'); *@
+@*                     addressModal.style.display = 'none'; *@
+@*                     fetchUserAddresses(); // Refresh address list *@
+@*                 } else { *@
+@*                     const error = await response.json(); *@
+@*                     alert('Lỗi khi cập nhật địa chỉ: ' + error.message); *@
+@*                 } *@
+@*             } catch (error) { *@
+@*                 console.error('Error updating address:', error); *@
+@*                 alert('Đã xảy ra lỗi khi cập nhật địa chỉ.'); *@
+@*             } *@
+@*         }); *@
+
+@*             window.addEventListener('click', (event) => { *@
+@*                 if (event.target == addressModal) { *@
+@*                     addressModal.style.display = 'none'; *@
+@*                 } *@
+@*             }); *@
+
 @*             // Tải dữ liệu khi trang được load *@
 @*             fetchCartData(); *@
 @*             fetchUserAddresses(); *@
-
 @*         }); *@
 @*     </script> *@
 @* } *@
-
 
 
 @using Soccer.Font_end.ViewModels
 @model List<CartItemViewModel>
 @{
     ViewData["Title"] = "Chi tiết giỏ hàng";
-    // decimal totalCartPrice = 0; // Commented out since it's unused
-    // string cartName = "Thanh toán đơn hàng"; // Commented out since it's unused
     string bankAccount = "CASS0356439203";
     string bankID = "OCB";
     string bankOwner = "Nguyen Viet Nam";
@@ -1156,7 +1350,6 @@
 
 <!-- Use <text> to ensure CSS is not parsed as Razor code -->
 <style>
-    @* Escape the style content to prevent Razor interference *@
     <text >
     /* Modern Cart Page Design - Đồng nhất với Shop Theme */
     .cart-page {
@@ -1188,14 +1381,17 @@
             animation: float 6s ease-in-out infinite;
         }
 
-    @@keyframes float {
-        0%, 100% {
-            transform: translate(-50%, -50%) translateY(0px);
-        }
+    float {
+        0%, 100%
 
-        50% {
-            transform: translate(-50%, -50%) translateY(-20px);
-        }
+    {
+        transform: translate(-50%, -50%) translateY(0px);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) translateY(-20px);
+    }
+
     }
 
     .innerbanner {
@@ -1251,14 +1447,17 @@
             animation: gradient-flow 3s linear infinite;
         }
 
-    @@keyframes gradient-flow {
-        0% {
-            background-position: 0% 0%;
-        }
+    gradient-flow {
+        0%
 
-        100% {
-            background-position: 200% 0%;
-        }
+    {
+        background-position: 0% 0%;
+    }
+
+    100% {
+        background-position: 200% 0%;
+    }
+
     }
 
     .heading.small {
@@ -1635,16 +1834,19 @@
             animation: pulse 2s infinite;
         }
 
-    @@keyframes pulse {
-        0%, 100% {
-            opacity: 0.6;
-            transform: scale(1);
-        }
+    pulse {
+        0%, 100%
 
-        50% {
-            opacity: 1;
-            transform: scale(1.1);
-        }
+    {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
     }
 
     #qrcodeImg {
@@ -1671,14 +1873,17 @@
         animation: spin 1s linear infinite;
     }
 
-    @@keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
+    spin {
+        0%
 
-        100% {
-            transform: rotate(360deg);
-        }
+    {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+
     }
 
     #successMessage {
@@ -1710,8 +1915,7 @@
         margin-bottom: 25px;
         font-family: 'Open Sans', sans-serif;
         font-weight: 600;
-        font-size: 1.1rem;
-        border: 3px solid;
+        74f3c4b5c4e7" title="Cart.cshtml" contentType="text/html"> font-size: 1.1rem; border: 3px solid;
     }
 
     .alert-danger {
@@ -1781,84 +1985,93 @@
         }
 
     /* Responsive Design */
-    @@media (max-width: 1024px) {
-        .cart-content {
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
+    (max-width: 1024px) {
+        .cart-content
 
-        .payment-summary {
-            position: static;
-        }
+    {
+        grid-template-columns: 1fr;
+        gap: 30px;
     }
 
-    @@media (max-width: 768px) {
-        .bannerHeadline {
-            font-size: 2.5rem;
-        }
-
-        .heading.small {
-            font-size: 2.2rem;
-        }
-
-        .cart-table-section,
-        .payment-summary,
-        .qr-container {
-            padding: 25px;
-            margin: 0 10px;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        .table {
-            min-width: 700px;
-        }
-
-            .table td, .table th {
-                padding: 12px 8px;
-                font-size: 14px;
-            }
-
-        .product-image-cell img {
-            width: 50px;
-            height: 50px;
-        }
-
-        #qrcodeImg {
-            width: 200px;
-            height: 200px;
-        }
+    .payment-summary {
+        position: static;
     }
 
-    @@media (max-width: 480px) {
-        .container {
-            padding: 0 10px;
+    }
+
+    (max-width: 768px) {
+        .bannerHeadline
+
+    {
+        font-size: 2.5rem;
+    }
+
+    .heading.small {
+        font-size: 2.2rem;
+    }
+
+    .cart-table-section,
+    .payment-summary,
+    .qr-container {
+        padding: 25px;
+        margin: 0 10px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        min-width: 700px;
+    }
+
+        .table td, .table th {
+            padding: 12px 8px;
+            font-size: 14px;
         }
 
-        .bannerHeadline {
-            font-size: 2rem;
-        }
+    .product-image-cell img {
+        width: 50px;
+        height: 50px;
+    }
 
-        .heading.small {
-            font-size: 1.8rem;
-        }
+    #qrcodeImg {
+        width: 200px;
+        height: 200px;
+    }
 
-        .table {
-            min-width: 600px;
-        }
+    }
 
-        .btn-red {
-            padding: 16px 25px;
-            font-size: 1rem;
-        }
+    (max-width: 480px) {
+        .container
 
-        .payment-info p {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 5px;
-        }
+    {
+        padding: 0 10px;
+    }
+
+    .bannerHeadline {
+        font-size: 2rem;
+    }
+
+    .heading.small {
+        font-size: 1.8rem;
+    }
+
+    .table {
+        min-width: 600px;
+    }
+
+    .btn-red {
+        padding: 16px 25px;
+        font-size: 1rem;
+    }
+
+    .payment-info p {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
     }
 
     /* Loading States */
@@ -1883,6 +2096,67 @@
         border-radius: 50%;
         animation: spin 1s linear infinite;
     }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 5px;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
 
     </text >
 </style>
@@ -1929,12 +2203,14 @@
                                 <th>Số lượng</th>
                                 <th>Đơn giá</th>
                                 <th>Thành tiền</th>
+
+                                <th>Hành động</th>
                             </tr>
                         </thead>
                         <tbody id="cartBody"></tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="5">🧾 Tổng thanh toán:</td>
+                                <td colspan="6">🧾 Tổng thanh toán:</td>
                                 <td colspan="2" id="totalCartPrice"></td>
                             </tr>
                         </tfoot>
@@ -1971,6 +2247,31 @@
             <div class="form-group">
                 <label for="addressSelect">Chọn địa chỉ đã lưu:</label>
                 <select id="addressSelect" class="form-control"></select>
+            </div>
+            <button id="updateAddressBtn" class="btn btn-primary">Sửa Địa chỉ</button>
+        </div>
+
+        <div id="addressModal" class="modal">
+            <div class="modal-content">
+                <span class="close">×</span>
+                <h5>Chỉnh sửa Địa chỉ</h5>
+                <div class="form-group">
+                    <label for="modalRecipientName">Tên người nhận:</label>
+                    <input type="text" id="modalRecipientName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="modalStreetAddress">Địa chỉ:</label>
+                    <input type="text" id="modalStreetAddress" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="modalCityProvince">Thành phố/Tỉnh:</label>
+                    <input type="text" id="modalCityProvince" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="modalPostalCode">Mã bưu điện:</label>
+                    <input type="text" id="modalPostalCode" class="form-control">
+                </div>
+                <button id="saveAddressBtn" class="btn btn-primary">Lưu</button>
             </div>
         </div>
 
@@ -2052,7 +2353,8 @@
                     const row = `
                         <tr>
                             <td class="product-image-cell">
-                                ${item.imageUrl ? `<img src="${getImageUrl(item.imageUrl)}" alt="${item.productName}" onerror="this.src='/images/default-product.jpg';" />` : '<div style="width: 70px; height: 70px; background: #f0f0f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #999;">📷</div>'}
+                                <img src="${getImageUrl(item.imageUrl)}" alt="${item.productName}"
+                                     onerror="this.src='https://i.pinimg.com/564x/f8/e3/d9/f8e3d945eeb3f45efa550fa7c03ba79c.jpg';" />
                             </td>
                             <td><strong>${item.productName}</strong></td>
                             <td><span style="color: #FF6B35; font-weight: 600;">#${item.productId}</span></td>
@@ -2060,21 +2362,66 @@
                             <td><span style="background: #FF6B35; color: #FFFFFF; padding: 4px 8px; border-radius: 6px; font-weight: 600;">${item.quantity}</span></td>
                             <td><strong style="color: #C1272D;">${item.unitPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></td>
                             <td><strong style="color: #C1272D; font-size: 1.1rem;">${totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></td>
+
+                            <td><button class="btn-remove" data-product-id="${item.productId}" data-size-id="${item.sizeId}">Xóa</button></td>
                         </tr>
                     `;
                     cartBody.innerHTML += row;
                 });
+
+                // Thêm sự kiện cho các nút xóa
+                document.querySelectorAll('.btn-remove').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const productId = button.getAttribute('data-product-id');
+                        removeItem(productId);
+                    });
+                });
+
+                // Thêm sự kiện cho các input mô tả
+                document.querySelectorAll('.description-input').forEach(input => {
+                    input.addEventListener('change', async () => {
+                        const productId = input.getAttribute('data-product-id');
+                        const sizeId = input.getAttribute('data-size-id');
+                        const description = input.value || null; // Gửi null nếu chuỗi rỗng
+                        const quantity = items.find(item => item.productId == productId && item.sizeId == sizeId).quantity;
+
+                        console.log('Payload gửi lên:', { productId, sizeId, quantity, description }); // Debug payload
+
+                        try {
+                            const url = `https://api.soccer.soccertips.org/api/cart/update?productId=${Number(productId)}&sizeId=${Number(sizeId)}&quantity=${quantity}&description=${encodeURIComponent(description || '')}`;
+                            const response = await fetch(url, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                credentials: 'include'
+                            });
+
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(`HTTP error! Status: ${response.status} - ${errorText}`);
+                            }
+
+                            console.log('Description updated successfully');
+                            await fetchCartData(); // Tải lại giỏ hàng
+                        } catch (error) {
+                            console.error('Error updating description:', error);
+                            document.getElementById('errorMessage').textContent = 'Lỗi khi cập nhật mô tả: ' + error.message;
+                            document.getElementById('errorMessage').style.display = 'block';
+                        }
+                    });
+                });
+
 
                 totalCartPriceElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
                 subtotalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
                 totalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             }
 
-            // Hàm xử lý URL ảnh
             function getImageUrl(imageUrl) {
-                if (!imageUrl) return "/images/default-product.jpg";
-                if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) return imageUrl;
-                return `/images/${imageUrl.replace(" ", "_").replace("/", "_")}.jpg`;
+                return imageUrl?.startsWith("http://") || imageUrl?.startsWith("https://")
+                    ? imageUrl
+                    : `/images/${(imageUrl ?? "default-product").replace(/[ /]/g, "_")}.jpg`;
             }
 
             // Lấy danh sách địa chỉ
@@ -2103,7 +2450,41 @@
                     }
                 } catch (error) {
                     console.error('Error fetching addresses:', error);
-                    alert('Lỗi khi lấy danh sách địa chỉ: ' + error.message);
+                    alert('Lỗi khi lấy danh sách địa chỉ:(vui lòng đăng nhập) ' + error.message);
+                    window.location.href = '/Auth/Login';
+                }
+            }
+
+            // Thêm logic xóa sản phẩm
+            async function removeItem(productId) {
+                try {
+                    console.log('removeItem called with productId:', productId, 'Type:', typeof productId);
+                    const url = `https://api.soccer.soccertips.org/api/cart/remove?productId=${Number(productId)}`;
+                    console.log('Sending remove request - URL:', url);
+
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'include',
+                    });
+
+                    const data = await response.json();
+                    console.log('API response:', response.status, data);
+
+                    if (!response.ok) {
+                        throw new Error(data.message || `HTTP error! Status: ${response.status}`);
+                    }
+
+                    await fetchCartData();
+                    document.getElementById('errorMessage').style.display = 'none';
+                    return data;
+                } catch (error) {
+                    console.error('Error details:', error);
+                    document.getElementById('errorMessage').textContent = `Error removing item: ${error.message}`;
+                    document.getElementById('errorMessage').style.display = 'block';
+                    throw error;
                 }
             }
 
@@ -2207,7 +2588,12 @@
                 const addressId = addressSelect.value || 0;
                 const payload = {
                     addressId: addressId,
-                    paymentContent: paymentContent
+                    orderDescription: cartItems.map(item => ({
+                        productId: item.productId,
+                        sizeId: item.sizeId,
+                        quantity: item.quantity,
+                        description: item.description || null // Gửi description, null nếu không có
+                    }))
                 };
 
                 try {
@@ -2259,7 +2645,7 @@
 
                 const style = document.createElement('style');
                 style.textContent = `
-                    @@keyframes fall {
+         fall {
                         0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
                         100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
                     }
@@ -2272,13 +2658,64 @@
                 }, 5000);
             }
 
+            // Address Editing Logic
+            const updateAddressBtn = document.getElementById('updateAddressBtn');
+            const addressModal = document.getElementById('addressModal');
+            const closeModal = document.querySelector('.close');
+            const saveAddressBtn = document.getElementById('saveAddressBtn');
+
+            updateAddressBtn.addEventListener('click', () => {
+                const addressId = addressSelect.value;
+                if (!addressId) {
+                    alert('Vui lòng chọn địa chỉ để sửa!');
+                    return;
+                }
+                addressModal.style.display = 'block';
+            });
+
+            closeModal.addEventListener('click', () => {
+                addressModal.style.display = 'none';
+            });
+
+            saveAddressBtn.addEventListener('click', async () => {
+                const updatedAddress = {
+                    RecipientName: document.getElementById('modalRecipientName').value,
+                    StreetAddress: document.getElementById('modalStreetAddress').value,
+                    CityProvince: document.getElementById('modalCityProvince').value,
+                    PostalCode: document.getElementById('modalPostalCode').value
+                };
+
+                try {
+                    const response = await fetch(`https://api.soccer.soccertips.org/api/cart/update-address`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedAddress),
+                        credentials: 'include'
+                    });
+                    if (response.ok) {
+                        alert('Địa chỉ đã được cập nhật thành công!');
+                        addressModal.style.display = 'none';
+                        fetchUserAddresses();
+                    } else {
+                        const error = await response.json();
+                        alert('Lỗi khi cập nhật địa chỉ: ' + error.message);
+                    }
+                } catch (error) {
+                    console.error('Error updating address:', error);
+                    alert('Đã xảy ra lỗi khi cập nhật địa chỉ.');
+                }
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target == addressModal) {
+                    addressModal.style.display = 'none';
+                }
+            });
+
             // Tải dữ liệu khi trang được load
             fetchCartData();
             fetchUserAddresses();
         });
     </script>
 }
-
-
-
 
