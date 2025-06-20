@@ -1,1345 +1,4 @@
-﻿
-
-
-@* @using Soccer.Font_end.ViewModels *@
-@* @model List<CartItemViewModel> *@
-@* @{ *@
-@*     ViewData["Title"] = "Chi tiết giỏ hàng"; *@
-@*     string bankAccount = "CASS0356439203"; *@
-@*     string bankID = "OCB"; *@
-@*     string bankOwner = "Nguyen Viet Nam"; *@
-@* } *@
-
-@* <!-- Use <text> to ensure CSS is not parsed as Razor code --> *@
-@* <style> *@
-@*     <text > *@
-@*     /* Modern Cart Page Design - Đồng nhất với Shop Theme */ *@
-@*     .cart-page { *@
-@*         padding: 40px 0; *@
-@*         background: linear-gradient(135deg, #F8F9FA 0%, #E8F4FD 100%); *@
-@*         min-height: 100vh; *@
-@*     } *@
-
-@*     .innerbannerwrap { *@
-@*         background: linear-gradient(135deg, rgba(255, 107, 53, 0.9), rgba(193, 39, 45, 0.9)), url('/images/banner/background01.jpg') center/cover no-repeat; *@
-@*         height: 350px; *@
-@*         position: relative; *@
-@*         display: flex; *@
-@*         align-items: center; *@
-@*         justify-content: center; *@
-@*         overflow: hidden; *@
-@*     } *@
-
-@*         .innerbannerwrap::before { *@
-@*             content: '🛒'; *@
-@*             position: absolute; *@
-@*             font-size: 15rem; *@
-@*             opacity: 0.1; *@
-@*             top: 50%; *@
-@*             left: 50%; *@
-@*             transform: translate(-50%, -50%); *@
-@*             pointer-events: none; *@
-@*             color: #FFFFFF; *@
-@*             animation: float 6s ease-in-out infinite; *@
-@*         } *@
-
-@*           float { *@
-@*         0%, 100% *@
-
-@*     { *@
-@*         transform: translate(-50%, -50%) translateY(0px); *@
-@*     } *@
-
-@*     50% { *@
-@*         transform: translate(-50%, -50%) translateY(-20px); *@
-@*     } *@
-
-@*     } *@
-
-@*     .innerbanner { *@
-@*         text-align: center; *@
-@*         position: relative; *@
-@*         z-index: 2; *@
-@*     } *@
-
-@*     .bannerHeadline { *@
-@*         color: #FFFFFF; *@
-@*         font-family: 'Oswald', sans-serif; *@
-@*         font-size: 3.5rem; *@
-@*         text-transform: uppercase; *@
-@*         font-weight: 700; *@
-@*         text-shadow: 3px 3px 6px rgba(0,0,0,0.4); *@
-@*         margin-bottom: 1rem; *@
-@*         letter-spacing: 2px; *@
-@*     } *@
-
-@*         .bannerHeadline span { *@
-@*             color: #FFD23F; *@
-@*             text-shadow: 3px 3px 6px rgba(0,0,0,0.6); *@
-@*         } *@
-
-@*     /* Container & Layout */ *@
-@*     .container { *@
-@*         max-width: 1400px; *@
-@*         margin: 0 auto; *@
-@*         padding: 0 20px; *@
-@*     } *@
-
-@*     .cart-header { *@
-@*         text-align: center; *@
-@*         margin-bottom: 50px; *@
-@*         padding: 40px 20px; *@
-@*         background: #FFFFFF; *@
-@*         border-radius: 20px; *@
-@*         box-shadow: 0 10px 40px rgba(255, 107, 53, 0.15); *@
-@*         border: 3px solid #FF8C42; *@
-@*         position: relative; *@
-@*         overflow: hidden; *@
-@*     } *@
-
-@*         .cart-header::before { *@
-@*             content: ''; *@
-@*             position: absolute; *@
-@*             top: 0; *@
-@*             left: 0; *@
-@*             right: 0; *@
-@*             height: 6px; *@
-@*             background: linear-gradient(90deg, #FF6B35, #FFD23F, #C1272D, #FF6B35); *@
-@*             background-size: 200% 100%; *@
-@*             animation: gradient-flow 3s linear infinite; *@
-@*         } *@
-
-@*           gradient-flow { *@
-@*         0% *@
-
-@*     { *@
-@*         background-position: 0% 0%; *@
-@*     } *@
-
-@*     100% { *@
-@*         background-position: 200% 0%; *@
-@*     } *@
-
-@*     } *@
-
-@*     .heading.small { *@
-@*         font-family: 'Oswald', sans-serif; *@
-@*         font-size: 3rem; *@
-@*         text-transform: uppercase; *@
-@*         margin-bottom: 25px; *@
-@*         background: linear-gradient(135deg, #C1272D, #FF6B35); *@
-@*         -webkit-background-clip: text; *@
-@*         -webkit-text-fill-color: transparent; *@
-@*         background-clip: text; *@
-@*         font-weight: 700; *@
-@*         letter-spacing: 1px; *@
-@*     } *@
-
-@*     .heading span { *@
-@*         color: #FFD23F; *@
-@*     } *@
-
-@*     .headParagraph { *@
-@*         font-family: 'Open Sans', sans-serif; *@
-@*         font-size: 1.6rem; *@
-@*         color: #718096; *@
-@*         max-width: 900px; *@
-@*         margin: 0 auto; *@
-@*         line-height: 1.8; *@
-@*         font-weight: 500; *@
-@*     } *@
-
-@*     /* Cart Content Layout */ *@
-@*     .cart-content { *@
-@*         display: grid; *@
-@*         grid-template-columns: 2fr 1fr; *@
-@*         gap: 40px; *@
-@*         margin-bottom: 40px; *@
-@*     } *@
-
-@*     /* Cart Table Section */ *@
-@*     .cart-table-section { *@
-@*         background: #FFFFFF; *@
-@*         border-radius: 20px; *@
-@*         box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15); *@
-@*         padding: 35px; *@
-@*         border: 3px solid #FF8C42; *@
-@*         position: relative; *@
-@*         overflow: hidden; *@
-@*     } *@
-
-@*         .cart-table-section::before { *@
-@*             content: ''; *@
-@*             position: absolute; *@
-@*             top: -2px; *@
-@*             left: -2px; *@
-@*             right: -2px; *@
-@*             bottom: -2px; *@
-@*             background: linear-gradient(45deg, #FF6B35, #FFD23F, #C1272D, #FF6B35); *@
-@*             border-radius: 20px; *@
-@*             z-index: -1; *@
-@*             opacity: 0.1; *@
-@*         } *@
-
-@*     .section-title { *@
-@*         font-family: 'Oswald', sans-serif; *@
-@*         font-size: 1.8rem; *@
-@*         color: #2D3748; *@
-@*         margin-bottom: 25px; *@
-@*         text-transform: uppercase; *@
-@*         font-weight: 700; *@
-@*         display: flex; *@
-@*         align-items: center; *@
-@*         gap: 12px; *@
-@*     } *@
-
-@*         .section-title::before { *@
-@*             content: '📋'; *@
-@*             font-size: 1.5rem; *@
-@*         } *@
-
-@*     .table-responsive { *@
-@*         border-radius: 16px; *@
-@*         overflow: hidden; *@
-@*         box-shadow: 0 8px 25px rgba(0,0,0,0.1); *@
-@*     } *@
-
-@*     .table { *@
-@*         font-family: 'Open Sans', sans-serif; *@
-@*         background-color: transparent; *@
-@*         margin-bottom: 0; *@
-@*         border-collapse: separate; *@
-@*         border-spacing: 0; *@
-@*     } *@
-
-@*     .thead-dark th { *@
-@*         background: linear-gradient(135deg, #FF6B35, #C1272D); *@
-@*         color: #FFFFFF; *@
-@*         font-family: 'Oswald', sans-serif; *@
-@*         text-transform: uppercase; *@
-@*         font-weight: 700; *@
-@*         letter-spacing: 1px; *@
-@*         border: none; *@
-@*         padding: 20px 16px; *@
-@*         font-size: 0.9rem; *@
-@*         position: relative; *@
-@*     } *@
-
-@*         .thead-dark th::after { *@
-@*             content: ''; *@
-@*             position: absolute; *@
-@*             bottom: 0; *@
-@*             left: 0; *@
-@*             right: 0; *@
-@*             height: 3px; *@
-@*             background: #FFD23F; *@
-@*         } *@
-
-@*     .table td, .table th { *@
-@*         padding: 18px 16px; *@
-@*         vertical-align: middle; *@
-@*         text-align: center; *@
-@*         border: none; *@
-@*         border-bottom: 2px solid #F1F5F9; *@
-@*         font-weight: 500; *@
-@*     } *@
-
-@*     .table tbody tr { *@
-@*         transition: none; *@
-@*         background: #FFFFFF; *@
-@*     } *@
-
-@*         .table tbody tr:hover { *@
-@*             background: #FFFFFF; *@
-@*             transform: none; *@
-@*             box-shadow: none; *@
-@*         } *@
-
-@*         .table tbody tr:last-child td { *@
-@*             border-bottom: none; *@
-@*         } *@
-
-@*     .table tfoot td { *@
-@*         font-weight: 700; *@
-@*         background: linear-gradient(135deg, #FFD23F, #FF8C42); *@
-@*         color: #1A1A1A; *@
-@*         font-size: 1.2rem; *@
-@*         border: none; *@
-@*         padding: 25px 16px; *@
-@*         text-transform: uppercase; *@
-@*         letter-spacing: 0.5px; *@
-@*     } *@
-
-@*     /* Product Image in Table */ *@
-@*     .product-image-cell img { *@
-@*         width: 70px; *@
-@*         height: 70px; *@
-@*         object-fit: cover; *@
-@*         border-radius: 12px; *@
-@*         border: 3px solid #E0E0E0; *@
-@*         transition: all 0.3s ease; *@
-@*     } *@
-
-@*         .product-image-cell img:hover { *@
-@*             border-color: #FF6B35; *@
-@*             transform: scale(1.1); *@
-@*             box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3); *@
-@*         } *@
-
-@*     /* Payment Summary Section */ *@
-@*     .payment-summary { *@
-@*         background: #FFFFFF; *@
-@*         border-radius: 20px; *@
-@*         box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15); *@
-@*         padding: 35px; *@
-@*         border: 3px solid #FF8C42; *@
-@*         height: fit-content; *@
-@*         position: sticky; *@
-@*         top: 20px; *@
-@*     } *@
-
-@*     .summary-title { *@
-@*         font-family: 'Oswald', sans-serif; *@
-@*         font-size: 1.8rem; *@
-@*         color: #2D3748; *@
-@*         margin-bottom: 25px; *@
-@*         text-transform: uppercase; *@
-@*         font-weight: 700; *@
-@*         display: flex; *@
-@*         align-items: center; *@
-@*         gap: 12px; *@
-@*     } *@
-
-@*         .summary-title::before { *@
-@*             content: '💰'; *@
-@*             font-size: 1.5rem; *@
-@*         } *@
-
-@*     .summary-row { *@
-@*         display: flex; *@
-@*         justify-content: space-between; *@
-@*         align-items: center; *@
-@*         padding: 15px 0; *@
-@*         border-bottom: 2px solid #F1F5F9; *@
-@*         font-family: 'Open Sans', sans-serif; *@
-@*         font-weight: 500; *@
-@*     } *@
-
-@*         .summary-row:last-child { *@
-@*             border-bottom: none; *@
-@*             margin-top: 10px; *@
-@*             padding: 20px 0; *@
-@*             background: linear-gradient(135deg, #FFD23F, #FF8C42); *@
-@*             margin: 20px -20px -20px; *@
-@*             padding-left: 20px; *@
-@*             padding-right: 20px; *@
-@*             border-radius: 0 0 16px 16px; *@
-@*             font-weight: 700; *@
-@*             font-size: 1.3rem; *@
-@*             color: #1A1A1A; *@
-@*             text-transform: uppercase; *@
-@*             letter-spacing: 0.5px; *@
-@*         } *@
-
-@*     /* Buttons */ *@
-@*     .btn-red { *@
-@*         background: linear-gradient(135deg, #FF6B35, #C1272D); *@
-@*         color: #FFFFFF; *@
-@*         border: none; *@
-@*         padding: 18px 35px; *@
-@*         border-radius: 12px; *@
-@*         font-family: 'Oswald', sans-serif; *@
-@*         text-transform: uppercase; *@
-@*         font-weight: 700; *@
-@*         font-size: 1.1rem; *@
-@*         letter-spacing: 1px; *@
-@*         transition: all 0.3s ease; *@
-@*         cursor: pointer; *@
-@*         box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4); *@
-@*         width: 100%; *@
-@*         position: relative; *@
-@*         overflow: hidden; *@
-@*     } *@
-
-@*         .btn-red::before { *@
-@*             content: ''; *@
-@*             position: absolute; *@
-@*             top: 0; *@
-@*             left: -100%; *@
-@*             width: 100%; *@
-@*             height: 100%; *@
-@*             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); *@
-@*             transition: left 0.5s; *@
-@*         } *@
-
-@*         .btn-red:hover::before { *@
-@*             left: 100%; *@
-@*         } *@
-
-@*         .btn-red:hover { *@
-@*             background: linear-gradient(135deg, #C1272D, #8B0000); *@
-@*             transform: translateY(-3px); *@
-@*             box-shadow: 0 12px 30px rgba(255, 107, 53, 0.5); *@
-@*             color: #FFFFFF; *@
-@*         } *@
-
-@*     /* QR Code Section */ *@
-@*     .qr-container { *@
-@*         background: #FFFFFF; *@
-@*         padding: 35px; *@
-@*         border-radius: 20px; *@
-@*         box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15); *@
-@*         text-align: center; *@
-@*         border: 3px solid #FF8C42; *@
-@*         margin-top: 30px; *@
-@*         position: relative; *@
-@*         overflow: hidden; *@
-@*     } *@
-
-@*         .qr-container::before { *@
-@*             content: ''; *@
-@*             position: absolute; *@
-@*             top: 0; *@
-@*             left: 0; *@
-@*             right: 0; *@
-@*             height: 6px; *@
-@*             background: linear-gradient(90deg, #FF6B35, #FFD23F, #C1272D); *@
-@*             background-size: 200% 100%; *@
-@*             animation: gradient-flow 3s linear infinite; *@
-@*         } *@
-
-@*         .qr-container h4 { *@
-@*             font-family: 'Oswald', sans-serif; *@
-@*             font-size: 2rem; *@
-@*             background: linear-gradient(135deg, #C1272D, #FF6B35); *@
-@*             -webkit-background-clip: text; *@
-@*             -webkit-text-fill-color: transparent; *@
-@*             background-clip: text; *@
-@*             margin-bottom: 30px; *@
-@*             text-transform: uppercase; *@
-@*             font-weight: 700; *@
-@*             letter-spacing: 1px; *@
-@*             display: flex; *@
-@*             align-items: center; *@
-@*             justify-content: center; *@
-@*             gap: 15px; *@
-@*         } *@
-
-@*             .qr-container h4::before { *@
-@*                 content: '📱'; *@
-@*                 font-size: 1.8rem; *@
-@*                 -webkit-text-fill-color: initial; *@
-@*             } *@
-
-@*     .payment-info { *@
-@*         margin-bottom: 30px; *@
-@*         font-family: 'Open Sans', sans-serif; *@
-@*         color: #2D3748; *@
-@*         background: linear-gradient(135deg, #FFF8F6, #FFF0ED); *@
-@*         padding: 25px; *@
-@*         border-radius: 16px; *@
-@*         border: 3px solid #FFD23F; *@
-@*         position: relative; *@
-@*     } *@
-
-@*         .payment-info::before { *@
-@*             content: '💳'; *@
-@*             position: absolute; *@
-@*             top: -15px; *@
-@*             left: 25px; *@
-@*             background: #FFFFFF; *@
-@*             padding: 8px 12px; *@
-@*             border-radius: 50%; *@
-@*             font-size: 1.5rem; *@
-@*             border: 3px solid #FFD23F; *@
-@*         } *@
-
-@*         .payment-info p { *@
-@*             margin: 12px 0; *@
-@*             font-size: 1.1rem; *@
-@*             line-height: 1.6; *@
-@*             display: flex; *@
-@*             justify-content: space-between; *@
-@*             align-items: center; *@
-@*             padding: 8px 0; *@
-@*             border-bottom: 1px solid #E0E0E0; *@
-@*         } *@
-
-@*             .payment-info p:last-child { *@
-@*                 border-bottom: none; *@
-@*             } *@
-
-@*             .payment-info p strong { *@
-@*                 color: #C1272D; *@
-@*                 font-weight: 700; *@
-@*                 font-family: 'Oswald', sans-serif; *@
-@*                 text-transform: uppercase; *@
-@*                 letter-spacing: 0.5px; *@
-@*             } *@
-
-@*     .qr-image-wrapper { *@
-@*         margin: 30px 0; *@
-@*         padding: 25px; *@
-@*         background: linear-gradient(135deg, #F8F9FA, #E8F4FD); *@
-@*         border-radius: 16px; *@
-@*         border: 3px dashed #FF6B35; *@
-@*         position: relative; *@
-@*     } *@
-
-@*         .qr-image-wrapper::before { *@
-@*             content: '⚡'; *@
-@*             position: absolute; *@
-@*             top: 10px; *@
-@*             right: 15px; *@
-@*             font-size: 1.5rem; *@
-@*             opacity: 0.6; *@
-@*             animation: pulse 2s infinite; *@
-@*         } *@
-
-@*           pulse { *@
-@*         0%, 100% *@
-
-@*     { *@
-@*         opacity: 0.6; *@
-@*         transform: scale(1); *@
-@*     } *@
-
-@*     50% { *@
-@*         opacity: 1; *@
-@*         transform: scale(1.1); *@
-@*     } *@
-
-@*     } *@
-
-@*     #qrcodeImg { *@
-@*         width: 250px; *@
-@*         height: 250px; *@
-@*         border-radius: 16px; *@
-@*         box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3); *@
-@*         border: 4px solid #FFFFFF; *@
-@*         transition: all 0.3s ease; *@
-@*     } *@
-
-@*         #qrcodeImg:hover { *@
-@*             transform: scale(1.05); *@
-@*             box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4); *@
-@*         } *@
-
-@*     #spinner { *@
-@*         margin: 25px auto; *@
-@*         border: 6px solid #FFD23F; *@
-@*         border-radius: 50%; *@
-@*         border-top: 6px solid #FF6B35; *@
-@*         width: 60px; *@
-@*         height: 60px; *@
-@*         animation: spin 1s linear infinite; *@
-@*     } *@
-
-@*           spin { *@
-@*         0% *@
-
-@*     { *@
-@*         transform: rotate(0deg); *@
-@*     } *@
-
-@*     100% { *@
-@*         transform: rotate(360deg); *@
-@*     } *@
-
-@*     } *@
-
-@*     #successMessage { *@
-@*         color: #28a745; *@
-@*         font-family: 'Oswald', sans-serif; *@
-@*         font-weight: 700; *@
-@*         margin-top: 20px; *@
-@*         font-size: 1.4rem; *@
-@*         text-transform: uppercase; *@
-@*         letter-spacing: 1px; *@
-@*         padding: 20px; *@
-@*         background: linear-gradient(135deg, #D4EDDA, #C3E6CB); *@
-@*         border-radius: 12px; *@
-@*         border: 3px solid #28a745; *@
-@*         position: relative; *@
-@*         overflow: hidden; *@
-@*     } *@
-
-@*         #successMessage::before { *@
-@*             content: '✅'; *@
-@*             margin-right: 10px; *@
-@*             font-size: 1.6rem; *@
-@*         } *@
-
-@*     /* Alert Styling */ *@
-@*     .alert { *@
-@*         padding: 20px 25px; *@
-@*         border-radius: 16px; *@
-@*         margin-bottom: 25px; *@
-@*         font-family: 'Open Sans', sans-serif; *@
-@*         font-weight: 600; *@
-@*         font-size: 1.1rem; *@
-@*         border: 3px solid; *@
-@*     } *@
-
-@*     .alert-danger { *@
-@*         background: linear-gradient(135deg, #F8D7DA, #F5C6CB); *@
-@*         border-color: #DC3545; *@
-@*         color: #721C24; *@
-@*     } *@
-
-@*         .alert-danger::before { *@
-@*             content: '⚠️ '; *@
-@*             font-size: 1.3rem; *@
-@*             margin-right: 8px; *@
-@*         } *@
-
-@*     /* Empty Cart State */ *@
-@*     .empty-cart { *@
-@*         text-align: center; *@
-@*         padding: 60px 20px; *@
-@*         background: #FFFFFF; *@
-@*         border-radius: 20px; *@
-@*         box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15); *@
-@*         border: 3px solid #FF8C42; *@
-@*     } *@
-
-@*         .empty-cart::before { *@
-@*             content: '🛒'; *@
-@*             font-size: 8rem; *@
-@*             opacity: 0.3; *@
-@*             display: block; *@
-@*             margin-bottom: 20px; *@
-@*         } *@
-
-@*         .empty-cart h3 { *@
-@*             font-family: 'Oswald', sans-serif; *@
-@*             font-size: 2rem; *@
-@*             color: #2D3748; *@
-@*             margin-bottom: 15px; *@
-@*             text-transform: uppercase; *@
-@*         } *@
-
-@*         .empty-cart p { *@
-@*             font-family: 'Open Sans', sans-serif; *@
-@*             color: #718096; *@
-@*             font-size: 1.1rem; *@
-@*             margin-bottom: 30px; *@
-@*         } *@
-
-@*     .btn-shop { *@
-@*         background: linear-gradient(135deg, #FFD23F, #FF8C42); *@
-@*         color: #1A1A1A; *@
-@*         border: none; *@
-@*         padding: 15px 30px; *@
-@*         border-radius: 12px; *@
-@*         font-family: 'Oswald', sans-serif; *@
-@*         text-transform: uppercase; *@
-@*         font-weight: 700; *@
-@*         text-decoration: none; *@
-@*         transition: all 0.3s ease; *@
-@*         display: inline-block; *@
-@*     } *@
-
-@*         .btn-shop:hover { *@
-@*             transform: translateY(-3px); *@
-@*             box-shadow: 0 8px 25px rgba(255, 210, 63, 0.4); *@
-@*             color: #1A1A1A; *@
-@*             text-decoration: none; *@
-@*         } *@
-
-@*     /* Responsive Design */ *@
-@*          (max-width: 1024px) { *@
-@*         .cart-content *@
-
-@*     { *@
-@*         grid-template-columns: 1fr; *@
-@*         gap: 30px; *@
-@*     } *@
-
-@*     .payment-summary { *@
-@*         position: static; *@
-@*     } *@
-
-@*     } *@
-
-@*          (max-width: 768px) { *@
-@*         .bannerHeadline *@
-
-@*     { *@
-@*         font-size: 2.5rem; *@
-@*     } *@
-
-@*     .heading.small { *@
-@*         font-size: 2.2rem; *@
-@*     } *@
-
-@*     .cart-table-section, *@
-@*     .payment-summary, *@
-@*     .qr-container { *@
-@*         padding: 25px; *@
-@*         margin: 0 10px; *@
-@*     } *@
-
-@*     .table-responsive { *@
-@*         overflow-x: auto; *@
-@*     } *@
-
-@*     .table { *@
-@*         min-width: 700px; *@
-@*     } *@
-
-@*         .table td, .table th { *@
-@*             padding: 12px 8px; *@
-@*             font-size: 14px; *@
-@*         } *@
-
-@*     .product-image-cell img { *@
-@*         width: 50px; *@
-@*         height: 50px; *@
-@*     } *@
-
-@*     #qrcodeImg { *@
-@*         width: 200px; *@
-@*         height: 200px; *@
-@*     } *@
-
-@*     } *@
-
-@*          (max-width: 480px) { *@
-@*         .container *@
-
-@*     { *@
-@*         padding: 0 10px; *@
-@*     } *@
-
-@*     .bannerHeadline { *@
-@*         font-size: 2rem; *@
-@*     } *@
-
-@*     .heading.small { *@
-@*         font-size: 1.8rem; *@
-@*     } *@
-
-@*     .table { *@
-@*         min-width: 600px; *@
-@*     } *@
-
-@*     .btn-red { *@
-@*         padding: 16px 25px; *@
-@*         font-size: 1rem; *@
-@*     } *@
-
-@*     .payment-info p { *@
-@*         flex-direction: column; *@
-@*         align-items: flex-start; *@
-@*         gap: 5px; *@
-@*     } *@
-
-@*     } *@
-
-@*     /* Loading States */ *@
-@*     .loading-overlay { *@
-@*         position: fixed; *@
-@*         top: 0; *@
-@*         left: 0; *@
-@*         width: 100%; *@
-@*         height: 100%; *@
-@*         background: rgba(0,0,0,0.5); *@
-@*         display: flex; *@
-@*         align-items: center; *@
-@*         justify-content: center; *@
-@*         z-index: 9999; *@
-@*     } *@
-
-@*     .loading-spinner { *@
-@*         width: 80px; *@
-@*         height: 80px; *@
-@*         border: 8px solid #FFD23F; *@
-@*         border-top: 8px solid #FF6B35; *@
-@*         border-radius: 50%; *@
-@*         animation: spin 1s linear infinite; *@
-@*     } *@
-
-@*     </text > *@
-
-
-@*     .modal { *@
-@*         display: none; *@
-@*         position: fixed; *@
-@*         z-index: 1; *@
-@*         left: 0; *@
-@*         top: 0; *@
-@*         width: 100%; *@
-@*         height: 100%; *@
-@*         overflow: auto; *@
-@*         background-color: rgba(0,0,0,0.4); *@
-@*     } *@
-
-@*     .modal-content { *@
-@*         background-color: #fefefe; *@
-@*         margin: 15% auto; *@
-@*         padding: 20px; *@
-@*         border: 1px solid #888; *@
-@*         width: 80%; *@
-@*         max-width: 500px; *@
-@*         border-radius: 5px; *@
-@*     } *@
-
-@*     .close { *@
-@*         color: #aaa; *@
-@*         float: right; *@
-@*         font-size: 28px; *@
-@*         font-weight: bold; *@
-@*     } *@
-
-@*         .close:hover, *@
-@*         .close:focus { *@
-@*             color: black; *@
-@*             text-decoration: none; *@
-@*             cursor: pointer; *@
-@*         } *@
-
-@*     .form-group { *@
-@*         margin-bottom: 15px; *@
-@*     } *@
-
-@*     .form-control { *@
-@*         width: 100%; *@
-@*         padding: 8px; *@
-@*         box-sizing: border-box; *@
-@*     } *@
-
-@*     .btn { *@
-@*         padding: 10px 20px; *@
-@*         cursor: pointer; *@
-@*     } *@
-
-@*     .btn-primary { *@
-@*         background-color: #007bff; *@
-@*         color: white; *@
-@*         border: none; *@
-@*     } *@
-
-@*         .btn-primary:hover { *@
-@*             background-color: #0056b3; *@
-@*         } *@
-@* </style> *@
-
-@* <!-- Hero Banner --> *@
-@* <div class="innerbannerwrap"> *@
-@*     <div class="content"></div> *@
-@*     <div class="innerbanner"> *@
-@*         <h2 class="bannerHeadline">chi tiết <span>giỏ hàng</span></h2> *@
-@*     </div> *@
-@* </div> *@
-
-@* <!-- Main Cart Section --> *@
-@* <section class="cart-page"> *@
-@*     <div class="container"> *@
-@*         <!-- Cart Header --> *@
-@*         <div class="cart-header"> *@
-@*             <h2 class="heading small">giỏ hàng thanh toán</h2> *@
-@*             <p class="headParagraph"> *@
-@*                 Xem lại các sản phẩm trong giỏ hàng của bạn và tiến hành thanh toán dễ dàng, nhanh chóng. *@
-@*                 Chúng tôi hỗ trợ phương thức thanh toán an toàn và tiện lợi qua VietQR! *@
-@*             </p> *@
-@*         </div> *@
-
-@*         <div id="errorMessage" class="alert alert-danger" style="display: none;"></div> *@
-@*         <div id="emptyCart" class="empty-cart" style="display: none;"> *@
-@*             <h3>Giỏ hàng trống</h3> *@
-@*             <p>Bạn chưa có sản phẩm nào trong giỏ hàng. Hãy khám phá cửa hàng của chúng tôi!</p> *@
-@*             <a href="@Url.Action("Index", "Shop")" class="btn-shop">🛍️ Mua sắm ngay</a> *@
-@*         </div> *@
-
-@*         <div class="cart-content" id="cartContent" style="display: none;"> *@
-@*             <!-- Cart Table Section --> *@
-@*             <div class="cart-table-section"> *@
-@*                 <h3 class="section-title">Sản phẩm đã chọn</h3> *@
-@*                 <div class="table-responsive"> *@
-@*                     <table class="table"> *@
-@*                         <thead class="thead-dark"> *@
-@*                             <tr> *@
-@*                                 <th>Ảnh</th> *@
-@*                                 <th>Tên sản phẩm</th> *@
-@*                                 <th>Mã SP</th> *@
-@*                                 <th>Size</th> *@
-@*                                 <th>Số lượng</th> *@
-@*                                 <th>Đơn giá</th> *@
-@*                                 <th>Thành tiền</th> *@
-@*                                 <th>Hành động</th> <!-- Thêm cột Hành động --> *@
-@*                             </tr> *@
-@*                         </thead> *@
-@*                         <tbody id="cartBody"></tbody> *@
-@*                         <tfoot> *@
-@*                             <tr> *@
-@*                                 <td colspan="6">🧾 Tổng thanh toán:</td> *@
-@*                                 <td colspan="2" id="totalCartPrice"></td> *@
-@*                             </tr> *@
-@*                         </tfoot> *@
-@*                     </table> *@
-@*                 </div> *@
-@*             </div> *@
-
-@*             <!-- Payment Summary Section --> *@
-@*             <div class="payment-summary"> *@
-@*                 <h3 class="summary-title">Tóm tắt đơn hàng</h3> *@
-@*                 <div class="summary-row"> *@
-@*                     <span>Tạm tính:</span> *@
-@*                     <span id="subtotal"></span> *@
-@*                 </div> *@
-@*                 <div class="summary-row"> *@
-@*                     <span>Phí vận chuyển:</span> *@
-@*                     <span style="color: #28a745; font-weight: 600;">Miễn phí</span> *@
-@*                 </div> *@
-@*                 <div class="summary-row"> *@
-@*                     <span>Giảm giá:</span> *@
-@*                     <span style="color: #28a745; font-weight: 600;">0 đ</span> *@
-@*                 </div> *@
-@*                 <div class="summary-row"> *@
-@*                     <span>💰 Tổng cộng:</span> *@
-@*                     <span id="total"></span> *@
-@*                 </div> *@
-@*                 <button id="generateQR" class="btn-red">🏦 Tạo mã QR thanh toán</button> *@
-@*             </div> *@
-@*         </div> *@
-
-@*         <!-- Address Form Section --> *@
-@*         <div class="address-form"> *@
-@*             <h5>Địa chỉ giao hàng</h5> *@
-@*             <div class="form-group"> *@
-@*                 <label for="addressSelect">Chọn địa chỉ đã lưu:</label> *@
-@*                 <select id="addressSelect" class="form-control"></select> *@
-
-@*             </div> *@
-@*             <button id="updateAddressBtn" class="btn btn-primary">Sửa Địa chỉ</button> *@
-@*         </div> *@
-
-@*         <div id="addressModal" class="modal"> *@
-@*             <div class="modal-content"> *@
-@*                 <span class="close">&times;</span> *@
-@*                 <h5>Chỉnh sửa Địa chỉ</h5> *@
-@*                 <div class="form-group"> *@
-@*                     <label for="modalRecipientName">Tên người nhận:</label> *@
-@*                     <input type="text" id="modalRecipientName" class="form-control"> *@
-@*                 </div> *@
-@*                 <div class="form-group"> *@
-@*                     <label for="modalStreetAddress">Địa chỉ:</label> *@
-@*                     <input type="text" id="modalStreetAddress" class="form-control"> *@
-@*                 </div> *@
-@*                 <div class="form-group"> *@
-@*                     <label for="modalCityProvince">Thành phố/Tỉnh:</label> *@
-@*                     <input type="text" id="modalCityProvince" class="form-control"> *@
-@*                 </div> *@
-@*                 <div class="form-group"> *@
-@*                     <label for="modalPostalCode">Mã bưu điện:</label> *@
-@*                     <input type="text" id="modalPostalCode" class="form-control"> *@
-@*                 </div> *@
-@*                 <button id="saveAddressBtn" class="btn btn-primary">Lưu</button> *@
-@*             </div> *@
-@*         </div> *@
-
-@*         <!-- QR Code Section --> *@
-@*         <div class="qr-container"> *@
-@*             <h4>Thanh toán VietQR</h4> *@
-@*             <div id="paymentInfo" class="payment-info" style="display: none;"></div> *@
-@*             <div class="qr-image-wrapper"> *@
-@*                 <img id="qrcodeImg" src="" alt="QR Code" style="display:none;" /> *@
-@*                 <div id="spinner" style="display:none;"></div> *@
-@*             </div> *@
-@*             <div id="successMessage" style="display:none;">Thanh toán thành công! Cảm ơn bạn đã mua hàng.</div> *@
-@*         </div> *@
-@*     </div> *@
-@* </section> *@
-
-@* @section Scripts { *@
-@*     <script> *@
-@*         document.addEventListener('DOMContentLoaded', () => { *@
-@*             let isPaid = false; *@
-@*             let paymentCheckInterval; *@
-@*             const maxWaitTime = 8 * 60 * 1000; // 8 phút *@
-@*             let startTime; *@
-@*             const qrCodeImg = document.getElementById('qrcodeImg'); *@
-@*             const spinner = document.getElementById('spinner'); *@
-@*             const successMessage = document.getElementById('successMessage'); *@
-@*             const paymentInfo = document.getElementById('paymentInfo'); *@
-@*             const generateQRButton = document.getElementById('generateQR'); *@
-@*             const addressSelect = document.getElementById('addressSelect'); *@
-@*             let paymentContent = ""; *@
-@*             let cartItems = []; *@
-@*             let totalCartPrice = 0; *@
-
-@*             const bankAccount = '@bankAccount'; *@
-@*             const bankID = '@bankID'; *@
-@*             const bankOwner = '@bankOwner'; *@
-
-@*             // Lấy dữ liệu giỏ hàng từ API *@
-@*             async function fetchCartData() { *@
-@*                 try { *@
-@*                     const response = await fetch('https://api.soccer.soccertips.org/api/cart/checkout', { *@
-@*                         method: 'GET', *@
-@*                         credentials: 'include' *@
-@*                     }); *@
-@*                     if (!response.ok) { *@
-@*                         throw new Error(`HTTP error! Status: ${response.status}`); *@
-@*                     } *@
-@*                     cartItems = await response.json(); *@
-@*                     console.log('Cart Items:', cartItems); *@
-@*                     displayCartItems(cartItems); *@
-@*                 } catch (error) { *@
-@*                     console.error('Error fetching cart data:', error); *@
-@*                     document.getElementById('errorMessage').textContent = 'Không thể tải dữ liệu giỏ hàng: ' + error.message; *@
-@*                     document.getElementById('errorMessage').style.display = 'block'; *@
-@*                 } *@
-@*             } *@
-
-@*             // Hiển thị sản phẩm trong giỏ hàng *@
-@*             function displayCartItems(items) { *@
-@*                 const cartBody = document.getElementById('cartBody'); *@
-@*                 const totalCartPriceElement = document.getElementById('totalCartPrice'); *@
-@*                 const subtotalElement = document.getElementById('subtotal'); *@
-@*                 const totalElement = document.getElementById('total'); *@
-@*                 totalCartPrice = 0; *@
-
-@*                 if (!items || items.length === 0) { *@
-@*                     document.getElementById('emptyCart').style.display = 'block'; *@
-@*                     document.getElementById('cartContent').style.display = 'none'; *@
-@*                     return; *@
-@*                 } *@
-
-@*                 document.getElementById('emptyCart').style.display = 'none'; *@
-@*                 document.getElementById('cartContent').style.display = 'grid'; *@
-
-@*                 cartBody.innerHTML = ''; *@
-@*                 items.forEach(item => { *@
-@*                     const totalPrice = item.quantity * item.unitPrice; *@
-@*                     totalCartPrice += totalPrice; *@
-@*                     const row = ` *@
-@*                         <tr> *@
-@*                            <td class="product-image-cell"> *@
-@*                     <img src="${getImageUrl(item.imageUrl)}" alt="${item.productName}" *@
-@*                          onerror="this.src='https://i.pinimg.com/564x/f8/e3/d9/f8e3d945eeb3f45efa550fa7c03ba79c.jpg';" /> *@
-@*                 </td> *@
-@*                             <td><strong>${item.productName}</strong></td> *@
-@*                             <td><span style="color: #FF6B35; font-weight: 600;">#${item.productId}</span></td> *@
-@*                             <td><span style="background: #FFD23F; color: #1A1A1A; padding: 4px 8px; border-radius: 6px; font-weight: 600;">${item.sizeName}</span></td> *@
-@*                             <td><span style="background: #FF6B35; color: #FFFFFF; padding: 4px 8px; border-radius: 6px; font-weight: 600;">${item.quantity}</span></td> *@
-@*                             <td><strong style="color: #C1272D;">${item.unitPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></td> *@
-@*                             <td><strong style="color: #C1272D; font-size: 1.1rem;">${totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></td> *@
-@*                            <td><button class="btn-remove" data-product-id="${item.productId}">Xóa</button></td> *@
-@*                         </tr> *@
-@*                     `; *@
-@*                     cartBody.innerHTML += row; *@
-@*                 }); *@
-@*                     document.querySelectorAll('.btn-remove').forEach(button => { *@
-@*             button.addEventListener('click', () => { *@
-@*                 const productId = button.getAttribute('data-product-id'); *@
-@*                 removeItem(productId); *@
-@*             }); *@
-@*         }); *@
-
-@*                 totalCartPriceElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }); *@
-@*                 subtotalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }); *@
-@*                 totalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }); *@
-@*             } *@
-
-@*                      function getImageUrl(imageUrl) { *@
-@*             return imageUrl?.startsWith("http://") || imageUrl?.startsWith("https://") *@
-@*                 ? imageUrl *@
-@*                 : `/images/${(imageUrl ?? "default-product").replace(/[ /]/g, "_")}.jpg`; *@
-@*         } *@
-@*             // Lấy danh sách địa chỉ *@
-@*             async function fetchUserAddresses() { *@
-@*                 try { *@
-@*                     const response = await fetch('https://api.soccer.soccertips.org/api/Cart/addresses', { *@
-@*                         method: 'GET', *@
-@*                         credentials: 'include' *@
-@*                     }); *@
-@*                     if (!response.ok) { *@
-@*                         throw new Error(`HTTP error! Status: ${response.status}`); *@
-@*                     } *@
-@*                     const addresses = await response.json(); *@
-@*                     console.log('Addresses:', addresses); *@
-
-@*                     addressSelect.innerHTML = ''; *@
-@*                     if (addresses.length === 0) { *@
-@*                         addressSelect.innerHTML = '<option value="">Không có địa chỉ nào</option>'; *@
-@*                     } else { *@
-@*                         addresses.forEach(address => { *@
-@*                             const option = document.createElement('option'); *@
-@*                             option.value = address.addressID; *@
-@*                             option.textContent = `${address.streetAddress}, ${address.cityProvince}`; *@
-@*                             addressSelect.appendChild(option); *@
-@*                         }); *@
-@*                     } *@
-@*                 } catch (error) { *@
-@*                     console.error('Error fetching addresses:', error); *@
-@*                     alert('Lỗi khi lấy danh sách địa chỉ:(vui lòng đăng nhập) ' + error.message); *@
-@*                     window.location.href = '/Auth/Login'; *@
-@*                 } *@
-@*             } *@
-
-@*             // Thêm logic xóa sản phẩm *@
-@*                  async function removeItem(productId) { *@
-@*             try { *@
-@*                 console.log('removeItem called with productId:', productId, 'Type:', typeof productId); *@
-@*                 const url = `https://api.soccer.soccertips.org/api/cart/remove?productId=${Number(productId)}`; // Pass productId as query param *@
-@*                 console.log('Sending remove request - URL:', url); *@
-
-@*                 const response = await fetch(url, { *@
-@*                     method: 'POST', *@
-@*                     headers: { *@
-@*                         'Content-Type': 'application/json', *@
-@*                     }, *@
-@*                     credentials: 'include', // Include cookies for session *@
-@*                 }); *@
-
-@*                 const data = await response.json(); // Parse JSON response *@
-@*                 console.log('API response:', response.status, data); *@
-
-@*                 if (!response.ok) { *@
-@*                     throw new Error(data.message || `HTTP error! Status: ${response.status}`); *@
-@*                 } *@
-
-@*                 await fetchCartData(); // Refresh cart data *@
-@*                 document.getElementById('errorMessage').style.display = 'none'; *@
-@*                 return data; // Optionally return the response data *@
-@*             } catch (error) { *@
-@*                 console.error('Error details:', error); *@
-@*                 document.getElementById('errorMessage').textContent = `Error removing item: ${error.message}`; *@
-@*                 document.getElementById('errorMessage').style.display = 'block'; *@
-@*                 throw error; // Re-throw for further handling if needed *@
-@*             } *@
-@*         } *@
-
-@*             // Tạo mã QR thanh toán *@
-@*             if (generateQRButton) { *@
-@*                 generateQRButton.addEventListener('click', () => { *@
-@*                     const randomDigits = Math.floor(10000 + Math.random() * 90000); *@
-@*                     paymentContent = `STARTLIGHT${randomDigits}`; *@
-
-@*                     const vietQRLink = `https://img.vietqr.io/image/${bankID}-${bankAccount}-compact2.png?amount=${totalCartPrice}&addInfo=${encodeURIComponent(paymentContent)}&accountName=${encodeURIComponent(bankOwner)}`; *@
-
-@*                     paymentInfo.innerHTML = ` *@
-@*                         <p><strong>Nội dung chuyển khoản:</strong> <span>${paymentContent}</span></p> *@
-@*                         <p><strong>Số tiền:</strong> <span>${totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span></p> *@
-@*                         <p><strong>Tên tài khoản:</strong> <span>${bankOwner}</span></p> *@
-@*                         <p><strong>Số tài khoản:</strong> <span>${bankAccount}</span></p> *@
-@*                         <p><strong>Ngân hàng:</strong> <span>${bankID}</span></p> *@
-@*                     `; *@
-
-@*                     paymentInfo.style.display = 'block'; *@
-@*                     qrCodeImg.src = vietQRLink; *@
-@*                     qrCodeImg.style.display = "block"; *@
-
-@*                     generateQRButton.innerHTML = '⏳ Đang tạo QR...'; *@
-@*                     generateQRButton.disabled = true; *@
-
-@*                     setTimeout(() => { *@
-@*                         generateQRButton.innerHTML = '✅ QR đã tạo'; *@
-@*                         startPaymentCheck(); *@
-@*                     }, 1000); *@
-@*                 }); *@
-@*             } *@
-
-@*             // Kiểm tra trạng thái thanh toán *@
-@*             const startPaymentCheck = () => { *@
-@*                 startTime = Date.now(); *@
-@*                 if (spinner) spinner.style.display = "block"; *@
-@*                 if (successMessage) successMessage.style.display = "none"; *@
-@*                 isPaid = false; *@
-
-@*                 paymentCheckInterval = setInterval(checkPaymentStatus, 5000); *@
-
-@*                 setTimeout(() => { *@
-@*                     if (!isPaid) { *@
-@*                         clearInterval(paymentCheckInterval); *@
-@*                         if (spinner) spinner.style.display = "none"; *@
-@*                         alert("⏰ Hết thời gian chờ! Vui lòng quét lại mã QR để thanh toán."); *@
-@*                         if (generateQRButton) { *@
-@*                             generateQRButton.innerHTML = '🔄 Tạo lại mã QR'; *@
-@*                             generateQRButton.disabled = false; *@
-@*                         } *@
-@*                     } *@
-@*                 }, maxWaitTime); *@
-@*             }; *@
-
-@*             const checkPaymentStatus = async () => { *@
-@*                 try { *@
-@*                     const response = await fetch('https://script.google.com/macros/s/AKfycbzt1ULPE6Wk31IfEg8Wf_mOALhTmsSoDmyAlPIxp71jIKbnX4tnXZLf6FDz3A7VhovGSA/exec'); *@
-@*                     const result = await response.json(); *@
-
-@*                     if (result.error || !result.data) { *@
-@*                         console.error("Lỗi API hoặc không có dữ liệu!"); *@
-@*                         return; *@
-@*                     } *@
-
-@*                     const transactions = result.data; *@
-@*                     console.log("Danh sách giao dịch:", transactions); *@
-
-@*                     const transaction = transactions.find(item => *@
-@*                         item["content"] === paymentContent && *@
-@*                         item["price"] == totalCartPrice && *@
-@*                         item["Số tài khoản"] === bankAccount *@
-@*                     ); *@
-
-@*                     if (transaction && !isPaid) { *@
-@*                         const confirmationResult = await confirmOrder(); *@
-@*                         if (confirmationResult.ok) { *@
-@*                             isPaid = true; *@
-@*                             clearInterval(paymentCheckInterval); *@
-@*                             if (spinner) spinner.style.display = "none"; *@
-@*                             if (successMessage) { *@
-@*                                 successMessage.style.display = "block"; *@
-@*                                 successMessage.textContent = `Đơn hàng đã được xác nhận! Mã đơn hàng: ${confirmationResult.orderId}`; *@
-@*                             } *@
-@*                             createConfetti(); *@
-
-@*                             setTimeout(() => { *@
-@*                                 window.location.href = '@Url.Action("Index", "Shop")'; *@
-@*                             }, 3000); *@
-@*                         } else { *@
-@*                             alert(`Lỗi xác nhận đơn hàng: ${confirmationResult.message}`); *@
-@*                         } *@
-@*                     } *@
-@*                 } catch (error) { *@
-@*                     console.error("Lỗi khi kiểm tra thanh toán:", error); *@
-@*                 } *@
-@*             }; *@
-
-@*             // Xác nhận đơn hàng *@
-@*             async function confirmOrder() { *@
-@*                 const addressId = addressSelect.value || 0; *@
-@*                 const payload = { *@
-@*                     addressId: addressId, *@
-@*                     paymentContent: paymentContent *@
-@*                 }; *@
-
-@*                 try { *@
-@*                     const response = await fetch('https://api.soccer.soccertips.org/api/cart/confirm-payment', { *@
-@*                         method: 'POST', *@
-@*                         headers: { 'Content-Type': 'application/json' }, *@
-@*                         body: JSON.stringify(payload), *@
-@*                         credentials: 'include' *@
-@*                     }); *@
-
-@*                     const result = await response.json(); *@
-@*                     if (response.ok) { *@
-@*                         return { ok: true, orderId: result.orderId }; *@
-@*                     } else { *@
-@*                         return { ok: false, message: result.message || 'Lỗi xác nhận đơn hàng.' }; *@
-@*                     } *@
-@*                 } catch (error) { *@
-@*                     console.error('Error confirming order:', error); *@
-@*                     return { ok: false, message: 'Lỗi xác nhận đơn hàng. Vui lòng thử lại.' }; *@
-@*                 } *@
-@*             } *@
-
-@*             // Hiệu ứng confetti *@
-@*             function createConfetti() { *@
-@*                 const colors = ['#FF6B35', '#FFD23F', '#C1272D', '#FF8C42']; *@
-@*                 const confettiContainer = document.createElement('div'); *@
-@*                 confettiContainer.style.position = 'fixed'; *@
-@*                 confettiContainer.style.top = '0'; *@
-@*                 confettiContainer.style.left = '0'; *@
-@*                 confettiContainer.style.width = '100%'; *@
-@*                 confettiContainer.style.height = '100%'; *@
-@*                 confettiContainer.style.pointerEvents = 'none'; *@
-@*                 confettiContainer.style.zIndex = '9999'; *@
-@*                 document.body.appendChild(confettiContainer); *@
-
-@*                 for (let i = 0; i < 50; i++) { *@
-@*                     const confetti = document.createElement('div'); *@
-@*                     confetti.style.position = 'absolute'; *@
-@*                     confetti.style.width = '10px'; *@
-@*                     confetti.style.height = '10px'; *@
-@*                     confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; *@
-@*                     confetti.style.left = Math.random() * 100 + '%'; *@
-@*                     confetti.style.animationDuration = Math.random() * 3 + 2 + 's'; *@
-@*                     confetti.style.animationName = 'fall'; *@
-@*                     confetti.style.animationIterationCount = '1'; *@
-@*                     confetti.style.animationFillMode = 'forwards'; *@
-@*                     confettiContainer.appendChild(confetti); *@
-@*                 } *@
-
-@*                 const style = document.createElement('style'); *@
-@*                 style.textContent = ` *@
-@*           fall { *@
-@*                         0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; } *@
-@*                         100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } *@
-@*                     } *@
-@*                 `; *@
-@*                 document.head.appendChild(style); *@
-
-@*                 setTimeout(() => { *@
-@*                     document.body.removeChild(confettiContainer); *@
-@*                     document.head.removeChild(style); *@
-@*                 }, 5000); *@
-@*             } *@
-
-@*             // Address Editing Logic *@
-@*         const updateAddressBtn = document.getElementById('updateAddressBtn'); *@
-@*         const addressModal = document.getElementById('addressModal'); *@
-@*         const closeModal = document.querySelector('.close'); *@
-@*         const saveAddressBtn = document.getElementById('saveAddressBtn'); *@
-
-@*         updateAddressBtn.addEventListener('click', () => { *@
-@*             const addressId = addressSelect.value; *@
-@*             if (!addressId) { *@
-@*                 alert('Vui lòng chọn địa chỉ để sửa!'); *@
-@*                 return; *@
-@*             } *@
-@*             addressModal.style.display = 'block'; *@
-@*         }); *@
-
-@*         closeModal.addEventListener('click', () => { *@
-@*             addressModal.style.display = 'none'; *@
-@*         }); *@
-
-@*         saveAddressBtn.addEventListener('click', async () => { *@
-@*             const updatedAddress = { *@
-@*                 RecipientName: document.getElementById('modalRecipientName').value, *@
-@*                 StreetAddress: document.getElementById('modalStreetAddress').value, *@
-@*                 CityProvince: document.getElementById('modalCityProvince').value, *@
-@*                 PostalCode: document.getElementById('modalPostalCode').value *@
-@*             }; *@
-
-@*             try { *@
-@*                 const response = await fetch(`https://api.soccer.soccertips.org/api/cart/update-address`, { *@
-@*                     method: 'POST', *@
-@*                     headers: { 'Content-Type': 'application/json' }, *@
-@*                     body: JSON.stringify(updatedAddress), *@
-@*                     credentials: 'include' *@
-@*                 }); *@
-@*                 if (response.ok) { *@
-@*                     alert('Địa chỉ đã được cập nhật thành công!'); *@
-@*                     addressModal.style.display = 'none'; *@
-@*                     fetchUserAddresses(); // Refresh address list *@
-@*                 } else { *@
-@*                     const error = await response.json(); *@
-@*                     alert('Lỗi khi cập nhật địa chỉ: ' + error.message); *@
-@*                 } *@
-@*             } catch (error) { *@
-@*                 console.error('Error updating address:', error); *@
-@*                 alert('Đã xảy ra lỗi khi cập nhật địa chỉ.'); *@
-@*             } *@
-@*         }); *@
-
-@*             window.addEventListener('click', (event) => { *@
-@*                 if (event.target == addressModal) { *@
-@*                     addressModal.style.display = 'none'; *@
-@*                 } *@
-@*             }); *@
-
-@*             // Tải dữ liệu khi trang được load *@
-@*             fetchCartData(); *@
-@*             fetchUserAddresses(); *@
-@*         }); *@
-@*     </script> *@
-@* } *@
-
-
-@using Soccer.Font_end.ViewModels
+﻿@using Soccer.Font_end.ViewModels
 @model List<CartItemViewModel>
 @{
     ViewData["Title"] = "Chi tiết giỏ hàng";
@@ -1353,14 +12,14 @@
     <text >
     /* Modern Cart Page Design - Đồng nhất với Shop Theme */
     .cart-page {
-        padding: 40px 0;
+        padding: 20px 0;
         background: linear-gradient(135deg, #F8F9FA 0%, #E8F4FD 100%);
         min-height: 100vh;
     }
 
     .innerbannerwrap {
         background: linear-gradient(135deg, rgba(255, 107, 53, 0.9), rgba(193, 39, 45, 0.9)), url('/images/banner/background01.jpg') center/cover no-repeat;
-        height: 350px;
+        height: 250px;
         position: relative;
         display: flex;
         align-items: center;
@@ -1371,7 +30,7 @@
         .innerbannerwrap::before {
             content: '🛒';
             position: absolute;
-            font-size: 15rem;
+            font-size: 10rem;
             opacity: 0.1;
             top: 50%;
             left: 50%;
@@ -1389,7 +48,7 @@
     }
 
     50% {
-        transform: translate(-50%, -50%) translateY(-20px);
+        transform: translate(-50%, -50%) translateY(-15px);
     }
 
     }
@@ -1403,34 +62,34 @@
     .bannerHeadline {
         color: #FFFFFF;
         font-family: 'Oswald', sans-serif;
-        font-size: 3.5rem;
+        font-size: 2.5rem;
         text-transform: uppercase;
         font-weight: 700;
-        text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
-        margin-bottom: 1rem;
-        letter-spacing: 2px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+        margin-bottom: 0.8rem;
+        letter-spacing: 1.5px;
     }
 
         .bannerHeadline span {
             color: #FFD23F;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.6);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
         }
 
     /* Container & Layout */
     .container {
-        max-width: 1400px;
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 0 15px;
     }
 
     .cart-header {
         text-align: center;
-        margin-bottom: 50px;
-        padding: 40px 20px;
+        margin-bottom: 20px;
+        padding: 20px 15px;
         background: #FFFFFF;
-        border-radius: 20px;
-        box-shadow: 0 10px 40px rgba(255, 107, 53, 0.15);
-        border: 3px solid #FF8C42;
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.12);
+        border: 2px solid #FF8C42;
         position: relative;
         overflow: hidden;
     }
@@ -1441,7 +100,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 6px;
+            height: 4px;
             background: linear-gradient(90deg, #FF6B35, #FFD23F, #C1272D, #FF6B35);
             background-size: 200% 100%;
             animation: gradient-flow 3s linear infinite;
@@ -1462,9 +121,9 @@
 
     .heading.small {
         font-family: 'Oswald', sans-serif;
-        font-size: 3rem;
+        font-size: 2rem;
         text-transform: uppercase;
-        margin-bottom: 25px;
+        margin-bottom: 15px;
         background: linear-gradient(135deg, #C1272D, #FF6B35);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -1479,11 +138,11 @@
 
     .headParagraph {
         font-family: 'Open Sans', sans-serif;
-        font-size: 1.6rem;
+        font-size: 1.2rem;
         color: #718096;
-        max-width: 900px;
+        max-width: 700px;
         margin: 0 auto;
-        line-height: 1.8;
+        line-height: 1.5;
         font-weight: 500;
     }
 
@@ -1491,19 +150,22 @@
     .cart-content {
         display: grid;
         grid-template-columns: 2fr 1fr;
-        gap: 40px;
-        margin-bottom: 40px;
+        gap: 20px;
+        margin-bottom: 20px;
     }
 
     /* Cart Table Section */
     .cart-table-section {
         background: #FFFFFF;
-        border-radius: 20px;
-        box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15);
-        padding: 35px;
-        border: 3px solid #FF8C42;
+        border-radius: 10px;
+        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.12);
+        padding: 10px; /* Reduced padding */
+        border: 2px solid #FF8C42;
         position: relative;
         overflow: hidden;
+        width: 100%;
+        max-height: 200px; /* Reduced height */
+        overflow-y: auto; /* Vertical scrolling */
     }
 
         .cart-table-section::before {
@@ -1514,40 +176,45 @@
             right: -2px;
             bottom: -2px;
             background: linear-gradient(45deg, #FF6B35, #FFD23F, #C1272D, #FF6B35);
-            border-radius: 20px;
+            border-radius: 10px;
             z-index: -1;
             opacity: 0.1;
         }
 
     .section-title {
         font-family: 'Oswald', sans-serif;
-        font-size: 1.8rem;
+        font-size: 1.2rem; /* Reduced size */
         color: #2D3748;
-        margin-bottom: 25px;
+        margin-bottom: 10px; /* Reduced margin */
         text-transform: uppercase;
         font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 6px; /* Reduced gap */
     }
 
         .section-title::before {
             content: '📋';
-            font-size: 1.5rem;
+            font-size: 1rem; /* Reduced size */
         }
 
     .table-responsive {
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        overflow-x: auto; /* Horizontal scrolling */
+        overflow-y: hidden; /* Prevent vertical scrollbar conflict */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        min-width: 600px; /* Reduced width */
+        white-space: nowrap;
     }
 
     .table {
         font-family: 'Open Sans', sans-serif;
         background-color: transparent;
         margin-bottom: 0;
-        border-collapse: separate;
+        border-collapse: collapse;
         border-spacing: 0;
+        width: 100%;
+        table-layout: fixed;
     }
 
     .thead-dark th {
@@ -1556,11 +223,13 @@
         font-family: 'Oswald', sans-serif;
         text-transform: uppercase;
         font-weight: 700;
-        letter-spacing: 1px;
+        letter-spacing: 0.3px; /* Reduced spacing */
         border: none;
-        padding: 20px 16px;
-        font-size: 0.9rem;
+        padding: 6px 3px; /* Reduced padding */
+        font-size: 0.6rem; /* Reduced size */
         position: relative;
+        white-space: nowrap;
+        width: 60px; /* Reduced width */
     }
 
         .thead-dark th::after {
@@ -1569,17 +238,21 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 1px; /* Reduced height */
             background: #FFD23F;
         }
 
     .table td, .table th {
-        padding: 18px 16px;
+        padding: 4px 3px; /* Reduced padding */
         vertical-align: middle;
         text-align: center;
         border: none;
-        border-bottom: 2px solid #F1F5F9;
+        border-bottom: 1px solid #F1F5F9;
         font-weight: 500;
+        white-space: nowrap;
+        width: 60px; /* Reduced width */
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .table tbody tr {
@@ -1601,79 +274,177 @@
         font-weight: 700;
         background: linear-gradient(135deg, #FFD23F, #FF8C42);
         color: #1A1A1A;
-        font-size: 1.2rem;
+        font-size: 0.9rem; /* Reduced size */
         border: none;
-        padding: 25px 16px;
+        padding: 6px 3px; /* Reduced padding */
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.3px; /* Reduced spacing */
+        width: 80px; /* Adjusted width */
     }
 
     /* Product Image in Table */
     .product-image-cell img {
-        width: 70px;
-        height: 70px;
+        width: 25px; /* Reduced size */
+        height: 25px; /* Reduced size */
         object-fit: cover;
-        border-radius: 12px;
-        border: 3px solid #E0E0E0;
+        border-radius: 3px; /* Reduced radius */
+        border: 1px solid #E0E0E0;
         transition: all 0.3s ease;
     }
 
         .product-image-cell img:hover {
             border-color: #FF6B35;
-            transform: scale(1.1);
-            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+            transform: scale(1.02); /* Reduced scale */
+            box-shadow: 0 2px 5px rgba(255, 107, 53, 0.2);
+        }
+
+    /* Quantity Controls */
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px; /* Reduced gap */
+    }
+
+    .btn-quantity {
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: #FFFFFF;
+        border: none;
+        width: 16px; /* Reduced size */
+        height: 16px; /* Reduced size */
+        border-radius: 2px; /* Reduced radius */
+        font-size: 0.6rem; /* Reduced size */
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-quantity:hover {
+            background: linear-gradient(135deg, #C1272D, #8B0000);
+            transform: scale(1.02); /* Reduced scale */
+        }
+
+    .quantity-display {
+        background: #FFD23F;
+        color: #1A1A1A;
+        padding: 1px 2px; /* Reduced padding */
+        border-radius: 2px; /* Reduced radius */
+        font-weight: 600;
+        min-width: 18px; /* Reduced width */
+        text-align: center;
+    }
+
+    /* Size Dropdown */
+    .size-select {
+        padding: 1px 2px; /* Reduced padding */
+        border-radius: 2px; /* Reduced radius */
+        border: 1px solid #FF6B35;
+        background: #FFFFFF;
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 600;
+        color: #2D3748;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 35px; /* Reduced width */
+    }
+
+        .size-select:hover {
+            border-color: #FFD23F;
+            background: #F8F9FA;
+        }
+
+    /* Description Input */
+    .description-input {
+        padding: 1px 2px; /* Reduced padding */
+        border-radius: 2px; /* Reduced radius */
+        border: 1px solid #FF6B35;
+        background: #FFFFFF;
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 500;
+        color: #2D3748;
+        width: 45px; /* Reduced width */
+        transition: all 0.3s ease;
+    }
+
+        .description-input:focus {
+            border-color: #FFD23F;
+            outline: none;
+            box-shadow: 0 0 2px rgba(255, 107, 53, 0.2);
+        }
+
+    /* Remove Button */
+    .btn-remove {
+        background: linear-gradient(135deg, #C1272D, #8B0000);
+        color: #FFFFFF;
+        border: none;
+        padding: 2px 5px; /* Reduced padding */
+        border-radius: 2px; /* Reduced radius */
+        font-family: 'Oswald', sans-serif;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 0.5rem; /* Reduced size */
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .btn-remove:hover {
+            background: linear-gradient(135deg, #FF6B35, #C1272D);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(255, 107, 53, 0.2);
         }
 
     /* Payment Summary Section */
     .payment-summary {
         background: #FFFFFF;
-        border-radius: 20px;
-        box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15);
-        padding: 35px;
-        border: 3px solid #FF8C42;
+        border-radius: 10px;
+        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.12);
+        padding: 15px;
+        border: 2px solid #FF8C42;
         height: fit-content;
         position: sticky;
-        top: 20px;
+        top: 15px;
     }
 
     .summary-title {
         font-family: 'Oswald', sans-serif;
-        font-size: 1.8rem;
+        font-size: 1.4rem;
         color: #2D3748;
-        margin-bottom: 25px;
+        margin-bottom: 15px;
         text-transform: uppercase;
         font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 8px;
     }
 
         .summary-title::before {
             content: '💰';
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
 
     .summary-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 0;
-        border-bottom: 2px solid #F1F5F9;
+        padding: 8px 0;
+        border-bottom: 1px solid #F1F5F9;
         font-family: 'Open Sans', sans-serif;
         font-weight: 500;
     }
 
         .summary-row:last-child {
             border-bottom: none;
-            margin-top: 10px;
-            padding: 20px 0;
+            margin-top: 8px;
+            padding: 10px 0;
             background: linear-gradient(135deg, #FFD23F, #FF8C42);
-            margin: 20px -20px -20px;
-            padding-left: 20px;
-            padding-right: 20px;
-            border-radius: 0 0 16px 16px;
+            margin: 10px -10px -10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border-radius: 0 0 8px 8px;
             font-weight: 700;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             color: #1A1A1A;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -1684,16 +455,16 @@
         background: linear-gradient(135deg, #FF6B35, #C1272D);
         color: #FFFFFF;
         border: none;
-        padding: 18px 35px;
-        border-radius: 12px;
+        padding: 10px 20px;
+        border-radius: 8px;
         font-family: 'Oswald', sans-serif;
         text-transform: uppercase;
         font-weight: 700;
-        font-size: 1.1rem;
-        letter-spacing: 1px;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
         transition: all 0.3s ease;
         cursor: pointer;
-        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        box-shadow: 0 4px 10px rgba(255, 107, 53, 0.3);
         width: 100%;
         position: relative;
         overflow: hidden;
@@ -1716,20 +487,20 @@
 
         .btn-red:hover {
             background: linear-gradient(135deg, #C1272D, #8B0000);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(255, 107, 53, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
             color: #FFFFFF;
         }
 
     /* QR Code Section */
     .qr-container {
         background: #FFFFFF;
-        padding: 35px;
-        border-radius: 20px;
-        box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15);
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.12);
         text-align: center;
-        border: 3px solid #FF8C42;
-        margin-top: 30px;
+        border: 2px solid #FF8C42;
+        margin-top: 15px;
         position: relative;
         overflow: hidden;
     }
@@ -1740,7 +511,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 6px;
+            height: 4px;
             background: linear-gradient(90deg, #FF6B35, #FFD23F, #C1272D);
             background-size: 200% 100%;
             animation: gradient-flow 3s linear infinite;
@@ -1748,58 +519,58 @@
 
         .qr-container h4 {
             font-family: 'Oswald', sans-serif;
-            font-size: 2rem;
+            font-size: 1.6rem;
             background: linear-gradient(135deg, #C1272D, #FF6B35);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             text-transform: uppercase;
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
         }
 
             .qr-container h4::before {
                 content: '📱';
-                font-size: 1.8rem;
+                font-size: 1.3rem;
                 -webkit-text-fill-color: initial;
             }
 
     .payment-info {
-        margin-bottom: 30px;
+        margin-bottom: 15px;
         font-family: 'Open Sans', sans-serif;
         color: #2D3748;
         background: linear-gradient(135deg, #FFF8F6, #FFF0ED);
-        padding: 25px;
-        border-radius: 16px;
-        border: 3px solid #FFD23F;
+        padding: 15px;
+        border-radius: 8px;
+        border: 2px solid #FFD23F;
         position: relative;
     }
 
         .payment-info::before {
             content: '💳';
             position: absolute;
-            top: -15px;
-            left: 25px;
+            top: -10px;
+            left: 15px;
             background: #FFFFFF;
-            padding: 8px 12px;
+            padding: 4px 8px;
             border-radius: 50%;
-            font-size: 1.5rem;
-            border: 3px solid #FFD23F;
+            font-size: 1.1rem;
+            border: 2px solid #FFD23F;
         }
 
         .payment-info p {
-            margin: 12px 0;
-            font-size: 1.1rem;
-            line-height: 1.6;
+            margin: 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding: 4px 0;
             border-bottom: 1px solid #E0E0E0;
         }
 
@@ -1816,20 +587,20 @@
             }
 
     .qr-image-wrapper {
-        margin: 30px 0;
-        padding: 25px;
+        margin: 15px 0;
+        padding: 15px;
         background: linear-gradient(135deg, #F8F9FA, #E8F4FD);
-        border-radius: 16px;
-        border: 3px dashed #FF6B35;
+        border-radius: 8px;
+        border: 2px dashed #FF6B35;
         position: relative;
     }
 
         .qr-image-wrapper::before {
             content: '⚡';
             position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 1.5rem;
+            top: 6px;
+            right: 10px;
+            font-size: 1.1rem;
             opacity: 0.6;
             animation: pulse 2s infinite;
         }
@@ -1844,32 +615,32 @@
 
     50% {
         opacity: 1;
-        transform: scale(1.1);
+        transform: scale(1.05);
     }
 
     }
 
     #qrcodeImg {
-        width: 250px;
-        height: 250px;
-        border-radius: 16px;
-        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
-        border: 4px solid #FFFFFF;
+        width: 150px;
+        height: 150px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(255, 107, 53, 0.2);
+        border: 2px solid #FFFFFF;
         transition: all 0.3s ease;
     }
 
         #qrcodeImg:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
+            transform: scale(1.03);
+            box-shadow: 0 6px 15px rgba(255, 107, 53, 0.3);
         }
 
     #spinner {
-        margin: 25px auto;
-        border: 6px solid #FFD23F;
+        margin: 15px auto;
+        border: 4px solid #FFD23F;
         border-radius: 50%;
-        border-top: 6px solid #FF6B35;
-        width: 60px;
-        height: 60px;
+        border-top: 4px solid #FF6B35;
+        width: 40px;
+        height: 40px;
         animation: spin 1s linear infinite;
     }
 
@@ -1890,32 +661,33 @@
         color: #28a745;
         font-family: 'Oswald', sans-serif;
         font-weight: 700;
-        margin-top: 20px;
-        font-size: 1.4rem;
+        margin-top: 10px;
+        font-size: 1rem;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        padding: 20px;
+        letter-spacing: 0.5px;
+        padding: 10px;
         background: linear-gradient(135deg, #D4EDDA, #C3E6CB);
-        border-radius: 12px;
-        border: 3px solid #28a745;
+        border-radius: 8px;
+        border: 2px solid #28a745;
         position: relative;
         overflow: hidden;
     }
 
         #successMessage::before {
             content: '✅';
-            margin-right: 10px;
-            font-size: 1.6rem;
+            margin-right: 6px;
+            font-size: 1.2rem;
         }
 
     /* Alert Styling */
     .alert {
-        padding: 20px 25px;
-        border-radius: 16px;
-        margin-bottom: 25px;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
         font-family: 'Open Sans', sans-serif;
         font-weight: 600;
-        74f3c4b5c4e7" title="Cart.cshtml" contentType="text/html"> font-size: 1.1rem; border: 3px solid;
+        font-size: 0.9rem;
+        border: 2px solid;
     }
 
     .alert-danger {
@@ -1926,49 +698,49 @@
 
         .alert-danger::before {
             content: '⚠️ ';
-            font-size: 1.3rem;
-            margin-right: 8px;
+            font-size: 1rem;
+            margin-right: 4px;
         }
 
     /* Empty Cart State */
     .empty-cart {
         text-align: center;
-        padding: 60px 20px;
+        padding: 40px 15px;
         background: #FFFFFF;
-        border-radius: 20px;
-        box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15);
-        border: 3px solid #FF8C42;
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.12);
+        border: 2px solid #FF8C42;
     }
 
         .empty-cart::before {
             content: '🛒';
-            font-size: 8rem;
+            font-size: 5rem;
             opacity: 0.3;
             display: block;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .empty-cart h3 {
             font-family: 'Oswald', sans-serif;
-            font-size: 2rem;
+            font-size: 1.6rem;
             color: #2D3748;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             text-transform: uppercase;
         }
 
         .empty-cart p {
             font-family: 'Open Sans', sans-serif;
             color: #718096;
-            font-size: 1.1rem;
-            margin-bottom: 30px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
         }
 
     .btn-shop {
         background: linear-gradient(135deg, #FFD23F, #FF8C42);
         color: #1A1A1A;
         border: none;
-        padding: 15px 30px;
-        border-radius: 12px;
+        padding: 10px 20px;
+        border-radius: 8px;
         font-family: 'Oswald', sans-serif;
         text-transform: uppercase;
         font-weight: 700;
@@ -1978,8 +750,8 @@
     }
 
         .btn-shop:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 210, 63, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 210, 63, 0.3);
             color: #1A1A1A;
             text-decoration: none;
         }
@@ -1990,7 +762,7 @@
 
     {
         grid-template-columns: 1fr;
-        gap: 30px;
+        gap: 15px;
     }
 
     .payment-summary {
@@ -2003,18 +775,18 @@
         .bannerHeadline
 
     {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     .heading.small {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
     }
 
     .cart-table-section,
     .payment-summary,
     .qr-container {
-        padding: 25px;
-        margin: 0 10px;
+        padding: 10px;
+        margin: 0 5px;
     }
 
     .table-responsive {
@@ -2022,22 +794,22 @@
     }
 
     .table {
-        min-width: 700px;
+        min-width: 500px; /* Reduced width */
     }
 
         .table td, .table th {
-            padding: 12px 8px;
-            font-size: 14px;
+            padding: 4px 2px; /* Reduced padding */
+            font-size: 0.8rem; /* Reduced size */
         }
 
     .product-image-cell img {
-        width: 50px;
-        height: 50px;
+        width: 20px; /* Reduced size */
+        height: 20px; /* Reduced size */
     }
 
     #qrcodeImg {
-        width: 200px;
-        height: 200px;
+        width: 120px;
+        height: 120px;
     }
 
     }
@@ -2046,30 +818,30 @@
         .container
 
     {
-        padding: 0 10px;
+        padding: 0 5px;
     }
 
     .bannerHeadline {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 
     .heading.small {
-        font-size: 1.8rem;
+        font-size: 1.4rem;
     }
 
     .table {
-        min-width: 600px;
+        min-width: 400px; /* Reduced width */
     }
 
     .btn-red {
-        padding: 16px 25px;
-        font-size: 1rem;
+        padding: 8px 15px;
+        font-size: 0.8rem;
     }
 
     .payment-info p {
         flex-direction: column;
         align-items: flex-start;
-        gap: 5px;
+        gap: 3px;
     }
 
     }
@@ -2089,10 +861,10 @@
     }
 
     .loading-spinner {
-        width: 80px;
-        height: 80px;
-        border: 8px solid #FFD23F;
-        border-top: 8px solid #FF6B35;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #FFD23F;
+        border-top: 4px solid #FF6B35;
         border-radius: 50%;
         animation: spin 1s linear infinite;
     }
@@ -2112,17 +884,17 @@
     .modal-content {
         background-color: #fefefe;
         margin: 15% auto;
-        padding: 20px;
+        padding: 10px;
         border: 1px solid #888;
         width: 80%;
-        max-width: 500px;
+        max-width: 350px;
         border-radius: 5px;
     }
 
     .close {
         color: #aaa;
         float: right;
-        font-size: 28px;
+        font-size: 20px;
         font-weight: bold;
     }
 
@@ -2134,17 +906,17 @@
         }
 
     .form-group {
-        margin-bottom: 15px;
+        margin-bottom: 10px;
     }
 
     .form-control {
         width: 100%;
-        padding: 8px;
+        padding: 4px;
         box-sizing: border-box;
     }
 
     .btn {
-        padding: 10px 20px;
+        padding: 6px 12px;
         cursor: pointer;
     }
 
@@ -2203,7 +975,7 @@
                                 <th>Số lượng</th>
                                 <th>Đơn giá</th>
                                 <th>Thành tiền</th>
-
+                                <th>Mô tả</th>
                                 <th>Hành động</th>
                             </tr>
                         </thead>
@@ -2312,7 +1084,7 @@
             // Lấy dữ liệu giỏ hàng từ API
             async function fetchCartData() {
                 try {
-                    const response = await fetch('https://api.soccer.soccertips.org/api/cart/checkout', {
+                    const response = await fetch('https://localhost:7237/api/cart/checkout', {
                         method: 'GET',
                         credentials: 'include'
                     });
@@ -2329,8 +1101,29 @@
                 }
             }
 
+            // Lấy danh sách kích thước sản phẩm
+            async function fetchProductSizes(productId) {
+                try {
+                    const response = await fetch(`https://localhost:7237/api/cart/sizes/${productId}`, {
+                        method: 'GET',
+                        credentials: 'include'
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    const sizes = await response.json();
+                    return sizes.map(size => ({
+                        sizeId: size.sizeName.sizeId,
+                        sizeName: size.sizeName.sizeName
+                    }));
+                } catch (error) {
+                    console.error('Error fetching sizes:', error);
+                    return [];
+                }
+            }
+
             // Hiển thị sản phẩm trong giỏ hàng
-            function displayCartItems(items) {
+            async function displayCartItems(items) {
                 const cartBody = document.getElementById('cartBody');
                 const totalCartPriceElement = document.getElementById('totalCartPrice');
                 const subtotalElement = document.getElementById('subtotal');
@@ -2347,9 +1140,14 @@
                 document.getElementById('cartContent').style.display = 'grid';
 
                 cartBody.innerHTML = '';
-                items.forEach(item => {
+                for (const item of items) {
                     const totalPrice = item.quantity * item.unitPrice;
                     totalCartPrice += totalPrice;
+                    const sizes = await fetchProductSizes(item.productId);
+                    const sizeOptions = sizes.map(size =>
+                        `<option value="${size.sizeId}" ${size.sizeId === item.sizeId ? 'selected' : ''}>${size.sizeName}</option>`
+                    ).join('');
+
                     const row = `
                         <tr>
                             <td class="product-image-cell">
@@ -2358,16 +1156,26 @@
                             </td>
                             <td><strong>${item.productName}</strong></td>
                             <td><span style="color: #FF6B35; font-weight: 600;">#${item.productId}</span></td>
-                            <td><span style="background: #FFD23F; color: #1A1A1A; padding: 4px 8px; border-radius: 6px; font-weight: 600;">${item.sizeName}</span></td>
-                            <td><span style="background: #FF6B35; color: #FFFFFF; padding: 4px 8px; border-radius: 6px; font-weight: 600;">${item.quantity}</span></td>
+                            <td>
+                                <select class="size-select" data-product-id="${item.productId}" data-size-id="${item.sizeId}">
+                                    ${sizeOptions}
+                                </select>
+                            </td>
+                            <td>
+                                <div class="quantity-controls">
+                                    <button class="btn-quantity btn-minus" data-product-id="${item.productId}" data-size-id="${item.sizeId}">-</button>
+                                    <span class="quantity-display">${item.quantity}</span>
+                                    <button class="btn-quantity btn-plus" data-product-id="${item.productId}" data-size-id="${item.sizeId}">+</button>
+                                </div>
+                            </td>
                             <td><strong style="color: #C1272D;">${item.unitPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></td>
-                            <td><strong style="color: #C1272D; font-size: 1.1rem;">${totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></td>
-
+                            <td><strong style="color: #C1272D;">${totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></td>
+                            <td><input type="text" class="description-input" data-product-id="${item.productId}" data-size-id="${item.sizeId}" value="${item.description || ''}" placeholder="Nhập mô tả..."></td>
                             <td><button class="btn-remove" data-product-id="${item.productId}" data-size-id="${item.sizeId}">Xóa</button></td>
                         </tr>
                     `;
                     cartBody.innerHTML += row;
-                });
+                }
 
                 // Thêm sự kiện cho các nút xóa
                 document.querySelectorAll('.btn-remove').forEach(button => {
@@ -2377,45 +1185,101 @@
                     });
                 });
 
-                // Thêm sự kiện cho các input mô tả
-                document.querySelectorAll('.description-input').forEach(input => {
-                    input.addEventListener('change', async () => {
-                        const productId = input.getAttribute('data-product-id');
-                        const sizeId = input.getAttribute('data-size-id');
-                        const description = input.value || null; // Gửi null nếu chuỗi rỗng
-                        const quantity = items.find(item => item.productId == productId && item.sizeId == sizeId).quantity;
-
-                        console.log('Payload gửi lên:', { productId, sizeId, quantity, description }); // Debug payload
-
-                        try {
-                            const url = `https://api.soccer.soccertips.org/api/cart/update?productId=${Number(productId)}&sizeId=${Number(sizeId)}&quantity=${quantity}&description=${encodeURIComponent(description || '')}`;
-                            const response = await fetch(url, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                credentials: 'include'
-                            });
-
-                            if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(`HTTP error! Status: ${response.status} - ${errorText}`);
-                            }
-
-                            console.log('Description updated successfully');
-                            await fetchCartData(); // Tải lại giỏ hàng
-                        } catch (error) {
-                            console.error('Error updating description:', error);
-                            document.getElementById('errorMessage').textContent = 'Lỗi khi cập nhật mô tả: ' + error.message;
-                            document.getElementById('errorMessage').style.display = 'block';
+                // Thêm sự kiện cho các nút tăng/giảm số lượng
+                document.querySelectorAll('.btn-minus').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const productId = button.getAttribute('data-product-id');
+                        const sizeId = button.getAttribute('data-size-id');
+                        const item = cartItems.find(i => i.productId == productId && i.sizeId == sizeId);
+                        if (item && item.quantity > 1) {
+                            await updateCartItem(productId, sizeId, item.quantity - 1, item.description);
                         }
                     });
                 });
 
+                document.querySelectorAll('.btn-plus').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const productId = button.getAttribute('data-product-id');
+                        const sizeId = button.getAttribute('data-size-id');
+                        const item = cartItems.find(i => i.productId == productId && i.sizeId == sizeId);
+                        await updateCartItem(productId, sizeId, item.quantity + 1, item.description);
+                    });
+                });
+
+
+
+
+                  document.querySelectorAll('.size-select').forEach(select => {
+            select.addEventListener('change', async () => {
+                const productId = select.getAttribute('data-product-id');
+                const newSizeId = select.value;
+                const currentSizeId = select.getAttribute('data-size-id');
+                const item = cartItems.find(i => i.productId == productId && i.sizeId == currentSizeId);
+
+                if (item) {
+                    // Xóa mục có sizeId cũ khỏi cartItems
+                    const itemIndex = cartItems.findIndex(i => i.productId == productId && i.sizeId == currentSizeId);
+                    if (itemIndex !== -1) {
+                        cartItems[itemIndex].sizeId = Number(newSizeId);
+                        select.setAttribute('data-size-id', newSizeId);
+                    }
+
+                    // Cập nhật API với kích thước mới
+                    await updateCartItem(productId, newSizeId, item.quantity, item.description);
+
+
+                }
+            });
+        });
+
+                // Thêm sự kiện cho input mô tả
+                document.querySelectorAll('.description-input').forEach(input => {
+                    input.addEventListener('blur', async () => {
+                        const productId = input.getAttribute('data-product-id');
+                        const sizeId = input.getAttribute('data-size-id');
+                        const description = input.value || null;
+                        const item = cartItems.find(i => i.productId == productId && i.sizeId == sizeId);
+                        if (item) {
+                            item.description = description;
+                            await updateCartItem(productId, sizeId, item.quantity, description);
+                        }
+                    });
+                });
 
                 totalCartPriceElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
                 subtotalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
                 totalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            }
+
+            // Cập nhật giỏ hàng
+            async function updateCartItem(productId, sizeId, quantity, description) {
+                try {
+                    const url = `https://localhost:7237/api/cart/update?productId=${Number(productId)}&sizeId=${Number(sizeId)}&quantity=${quantity}&description=${encodeURIComponent(description || '')}`;
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'include'
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`HTTP error! Status: ${response.status} - ${errorText}`);
+                    }
+
+                    const updatedItem = await response.json();
+                    const itemIndex = cartItems.findIndex(i => i.productId == productId && i.sizeId == sizeId);
+                    if (itemIndex !== -1) {
+                        cartItems[itemIndex] = { ...cartItems[itemIndex], ...updatedItem, sizeId: Number(sizeId), quantity, description };
+                    }
+                    console.log('Cart item updated successfully');
+                    await fetchCartData();
+                } catch (error) {
+                    console.error('Error updating cart item:', error);
+                    document.getElementById('errorMessage').textContent = 'Lỗi khi cập nhật giỏ hàng: ' + error.message;
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
             }
 
             function getImageUrl(imageUrl) {
@@ -2427,7 +1291,7 @@
             // Lấy danh sách địa chỉ
             async function fetchUserAddresses() {
                 try {
-                    const response = await fetch('https://api.soccer.soccertips.org/api/Cart/addresses', {
+                    const response = await fetch('https://localhost:7237/api/Cart/addresses', {
                         method: 'GET',
                         credentials: 'include'
                     });
@@ -2450,7 +1314,7 @@
                     }
                 } catch (error) {
                     console.error('Error fetching addresses:', error);
-                    alert('Lỗi khi lấy danh sách địa chỉ:(vui lòng đăng nhập và thêm địa chỉ vào phần hồ sơ) ' + error.message);
+                    alert('Lỗi khi lấy danh sách địa chỉ: (vui lòng đăng nhập) ' + error.message);
                     window.location.href = '/Auth/Login';
                 }
             }
@@ -2459,7 +1323,7 @@
             async function removeItem(productId) {
                 try {
                     console.log('removeItem called with productId:', productId, 'Type:', typeof productId);
-                    const url = `https://api.soccer.soccertips.org/api/cart/remove?productId=${Number(productId)}`;
+                    const url = `https://localhost:7237/api/cart/remove?productId=${Number(productId)}`;
                     console.log('Sending remove request - URL:', url);
 
                     const response = await fetch(url, {
@@ -2592,12 +1456,12 @@
                         productId: item.productId,
                         sizeId: item.sizeId,
                         quantity: item.quantity,
-                        description: item.description || null // Gửi description, null nếu không có
+                        description: item.description || null
                     }))
                 };
 
                 try {
-                    const response = await fetch('https://api.soccer.soccertips.org/api/cart/confirm-payment', {
+                    const response = await fetch('https://localhost:7237/api/cart/confirm-payment', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload),
@@ -2632,11 +1496,11 @@
                 for (let i = 0; i < 50; i++) {
                     const confetti = document.createElement('div');
                     confetti.style.position = 'absolute';
-                    confetti.style.width = '10px';
-                    confetti.style.height = '10px';
+                    confetti.style.width = '8px';
+                    confetti.style.height = '8px';
                     confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                     confetti.style.left = Math.random() * 100 + '%';
-                    confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                    confetti.style.animationDuration = Math.random() * 2.5 + 1.5 + 's';
                     confetti.style.animationName = 'fall';
                     confetti.style.animationIterationCount = '1';
                     confetti.style.animationFillMode = 'forwards';
@@ -2655,7 +1519,7 @@
                 setTimeout(() => {
                     document.body.removeChild(confettiContainer);
                     document.head.removeChild(style);
-                }, 5000);
+                }, 4000);
             }
 
             // Address Editing Logic
@@ -2686,7 +1550,7 @@
                 };
 
                 try {
-                    const response = await fetch(`https://api.soccer.soccertips.org/api/cart/update-address`, {
+                    const response = await fetch(`https://localhost:7237/api/cart/update-address`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(updatedAddress),
