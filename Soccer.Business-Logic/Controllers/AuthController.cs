@@ -155,9 +155,9 @@ namespace Soccer.Business_Logic.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            /*var confirmationLink = $"https://localhost:7237/api/Auth/confirm-email?token={confirmationToken}";
+            var confirmationLink = $"https://api.soccer.soccertips.org/api/Auth/confirm-email?token={confirmationToken}";
 
-            await _emailService.SendConfirmationEmail(model.Email, confirmationLink);*/
+            await _emailService.SendConfirmationEmail(model.Email, confirmationLink);
 
             return Ok(new
             {
@@ -175,7 +175,7 @@ namespace Soccer.Business_Logic.Controllers
 
             if (user == null)
             {
-                return Redirect("https://localhost:7170/Auth/Login?error=invalid_token");
+                return Redirect("https://www.soccer.soccertips.org/Auth/Login?error=invalid_token");
             }
 
             user.IsActive = true;
@@ -184,7 +184,7 @@ namespace Soccer.Business_Logic.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Redirect("https://localhost:7170/Auth/Login?verified=true");
+            return Redirect("https://www.soccer.soccertips.org/Auth/Login?verified=true");
         }
 
         [HttpPost("forgot-password")]
@@ -204,7 +204,7 @@ namespace Soccer.Business_Logic.Controllers
 
                 await _context.SaveChangesAsync();
 
-                var resetLink = $"https://localhost:7170/ForgotPW/ResetPassword?token={resetToken}";
+                var resetLink = $"https://www.soccer.soccertips.org/ForgotPW/ResetPassword?token={resetToken}";
                 try
                 {
                     await _emailService.SendPasswordResetEmail(model.Email, resetLink);

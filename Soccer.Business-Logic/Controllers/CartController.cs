@@ -319,6 +319,29 @@ namespace Soccer.Business_Logic.Controllers
             }
         }
 
+        [HttpPost("add-address")]
+        public async Task<IActionResult> AddAddress([FromBody] AddressModelforUpdate address)
+        {
+            var userId = GetUserIdFromToken();
+            if (userId == null)
+            {
+                return Unauthorized("Invalid user ID or token invalid");
+            }
+
+            var newAddress = new Address
+            {
+                UserId = userId.Value,
+                RecipientName = address.RecipientName,
+                StreetAddress = address.StreetAddress,
+                CityProvince = address.CityProvince,
+                PostalCode = address.PostalCode
+            };
+
+            _context.Addresses.Add(newAddress);
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Address added successfully", addressId = newAddress.AddressId });
+        }
+
         private int? GetUserIdFromToken()
         {
             var token = HttpContext.Session.GetString("JwtToken");
