@@ -158,7 +158,7 @@
                                     <div class="form-group">
                                         <input type="text" name="fieldName" class="form-control" placeholder="Tên sân (tùy chọn)">
                                     </div>
-                                    <button type="submit" class="btn btn-book">Kiểm tra và đặt sân</button>
+                                    <a href="/Book" class="btn btn-book">Kiểm tra và đặt sân</a>
                                 </form>
                             </div>
                         </div>
@@ -246,7 +246,7 @@
 
 <section class="booking bookticket">
     <div class=container>
-        <div class=booking-fig><h2>SCC football club</h2></div>
+        <div class=booking-fig><h2>Soccer club</h2></div>
         <div class=booking-content><a asp-action="Index" asp-controller="Book" class="btn btn-white">Đặt sân ngay</a></div>
     </div>
 </section>
@@ -359,7 +359,7 @@
                                     </div>
                                 </div>
                                 <ul class="oswald16 product_info">
-                                    <li class="detailsContainer">
+                                   @*  <li class="detailsContainer">
                                         <span>Còn lại</span>
                                         @if (product.StockQuantity > 0)
                                         {
@@ -369,7 +369,7 @@
                                         {
                                             <span style="color: red;"><i class="fa fa-cubes"></i>Hết hàng</span>
                                         }
-                                    </li>
+                                    </li> *@
                                     <li class="cartContainer">
                                         <span class="price">@string.Format("{0:N0}đ", product.SalePrice)</span>
                                         <!-- THÊM NÚT ADD TO CART -->
@@ -1405,19 +1405,19 @@
         }
 
         // Xử lý chọn combo
-        function selectCombo(comboType) {
-            trackClick(`combo_${comboType}`);
+        // function selectCombo(comboType) {
+        //     trackClick(`combo_${comboType}`);
 
-            // Hiển thị thông báo
-            const message = comboType === 'combo1'
-                ? 'Bạn đã chọn Combo 3 sản phẩm + Đặt sân (Giảm 25%)'
-                : 'Bạn đã chọn Combo 5 sản phẩm + Đặt 2 sân (Giảm 40% + Tặng 1 sân)';
+        //     Hiển thị thông báo
+        //     const message = comboType === 'combo1'
+        //         ? 'Bạn đã chọn Combo 3 sản phẩm + Đặt sân (Giảm 25%)'
+        //         : 'Bạn đã chọn Combo 5 sản phẩm + Đặt 2 sân (Giảm 40% + Tặng 1 sân)';
 
-            alert(message + '\n\nChúng tôi sẽ liên hệ với bạn trong ít phút!');
+        //     alert(message + '\n\nChúng tôi sẽ liên hệ với bạn trong ít phút!');
 
-            // Có thể redirect đến trang đặt hàng
-            // window.location.href = `/booking?combo=${comboType}`;
-        }
+        //     Có thể redirect đến trang đặt hàng
+        //     window.location.href = `/booking?combo=${comboType}`;
+        // }
 
         // Smooth scroll cho các liên kết
         function smoothScroll(target) {
