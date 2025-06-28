@@ -16,7 +16,17 @@ namespace Soccer.Business_Logic.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts(string sort = null, int? colorId = null, int? sizeId = null, int? categoryId = null, int? brandId = null, decimal? minPrice = null, decimal? maxPrice = null, int page = 1, int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts(
+            string sort = null,
+            int? colorId = null,
+            int? sizeId = null,
+            int? categoryId = null,
+            int? brandId = null,
+            decimal? minPrice = null,
+            decimal? maxPrice = null,
+            string search = null,  // THÊM THAM SỐ NÀY
+            int page = 1,
+            int pageSize = 10)
         {
             var query = _context.Products
                 .Include(p => p.Category)
@@ -25,8 +35,19 @@ namespace Soccer.Business_Logic.Controllers
                 .Include(p => p.ProductReviews)
                 .Include(p => p.ProductColors)
                 .Include(p => p.ProductSizes)
-                .AsSplitQuery() //mới thêm để tránh quá nhiều include gây duplicate
+                .AsSplitQuery()
                 .AsQueryable();
+
+            // THÊM LOGIC TÌM KIẾM
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.Trim();
+                query = query.Where(p =>
+                    p.ProductName.ToLower().Contains(search.ToLower()) ||
+                    p.Description.ToLower().Contains(search.ToLower()) ||
+                    p.Category.CategoryName.ToLower().Contains(search.ToLower()) ||
+                    p.Brand.BrandName.ToLower().Contains(search.ToLower()));
+            }
 
             // Lọc theo danh mục
             if (categoryId.HasValue)
@@ -112,7 +133,7 @@ namespace Soccer.Business_Logic.Controllers
                 TotalItems = totalItems,
                 Page = page,
                 PageSize = pageSize,
-                Data = result
+                Products = result  // Đổi từ "Data" thành "Products" để khớp với frontend
             });
         }
 
@@ -293,3 +314,5 @@ namespace Soccer.Business_Logic.Controllers
         public int SizeOrder { get; set; }
     }
 }
+
+

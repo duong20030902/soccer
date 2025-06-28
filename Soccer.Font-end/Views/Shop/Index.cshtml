@@ -1572,6 +1572,14 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+
+                $('#searchForm').on('submit', function(e) {
+            e.preventDefault();
+            console.log('Top search form submitted');
+            const searchValue = $(this).find('input[name="search"]').val();
+            console.log('Search value from top form:', searchValue);
+            submitSearchOnly(searchValue);
+        });
             // Auto-submit khi thay đổi dropdown (trừ price range)
             $('select[name="categoryId"], select[name="sort"]').on('change', function() {
                 autoSubmitFilter();
@@ -1718,6 +1726,21 @@
             });
         });
 
+                function submitSearchOnly(searchValue) {
+            const url = new URL(window.location);
+
+            // Chỉ cập nhật search parameter, giữ nguyên các filter khác
+            if (searchValue && searchValue.trim() !== '') {
+                url.searchParams.set('search', searchValue.trim());
+            } else {
+                url.searchParams.delete('search');
+            }
+
+            url.searchParams.set('page', '1');
+            console.log('Redirecting to:', url.toString());
+            window.location.href = url.toString();
+        }
+
         // Xử lý thay đổi page size
         $('#pageSizeSelect').on('change', function() {
             const pageSize = $(this).val();
@@ -1846,7 +1869,7 @@
                     this.textContent = 'Đang thêm...';
                     this.disabled = true;
 
-                    fetch(`https://api.soccer.soccertips.org/api/cart/add?productId=${productId}&quantity=${quantity}&sizeId=${sizeId}`, {
+                    fetch(`https://localhost:7237/api/cart/add?productId=${productId}&quantity=${quantity}&sizeId=${sizeId}`, {
                         method: 'POST',
                         credentials: 'include',
                         headers: {
@@ -1882,7 +1905,7 @@
 
         // Hàm cập nhật số lượng giỏ hàng
         function updateCartCount() {
-            fetch('https://api.soccer.soccertips.org/api/cart/checkout', {
+            fetch('https://localhost:7237/api/cart/checkout', {
                 credentials: 'include'
             })
             .then(response => response.json())
@@ -1917,3 +1940,4 @@
             }
     </style>
 }
+
