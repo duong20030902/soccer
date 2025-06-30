@@ -1033,6 +1033,7 @@
 
             // Submit booking to Google Sheet
         window.submitBooking = async function () {
+         const token = localStorage.getItem('access_token');
             const scheduleId = document.getElementById('scheduleId').value;
             const notes = document.getElementById('notes').value;
 
@@ -1052,7 +1053,7 @@
                         'Content-Type': 'application/json',
                         // Nếu API yêu cầu xác thực, thêm access token:
                         // 'Authorization': `Bearer ${yourToken}`
-                        'Authorization': `Bearer ${token}`
+                         'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({
                         scheduleId: parseInt(scheduleId),
@@ -1082,6 +1083,7 @@
             // Cải thiện updateFieldsGrid function
             function updateFieldsGrid(fields) {
                 console.log('Fields data:', fields); // Debug log
+                
                 var html = '';
                 if (fields && fields.length > 0) {
                     var groupedFields = fields.reduce((acc, field) => {

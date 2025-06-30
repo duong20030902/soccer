@@ -401,6 +401,7 @@
                 if (result && result.token) {
                     // Token đã được lưu trong session ở back-end, không lưu ở front-end
                     // Chuyển hướng đến trang chủ
+                     localStorage.setItem('access_token', result.token);
                     window.location.href = "/Home/Index";
                 } else {
                     const alertDiv = document.createElement("div");
