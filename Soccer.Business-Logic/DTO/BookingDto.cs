@@ -33,6 +33,18 @@ namespace Soccer.Business_Logic.DTO
         public string? Notes { get; set; }
     }
 
+    public class CreateBookingRequestUser
+    {
+        [Required(ErrorMessage = "ScheduleId là bắt buộc")]
+        [Range(1, int.MaxValue, ErrorMessage = "ScheduleId phải lớn hơn 0")]
+        public int ScheduleId { get; set; }
+
+
+        [MaxLength(500, ErrorMessage = "Ghi chú không được vượt quá 500 ký tự")]
+        public string? Notes { get; set; }
+    }
+
+
     // Response model - kế thừa từ BookingDto để tránh trùng lặp
     public class BookingResponseDto : BookingDto
     {

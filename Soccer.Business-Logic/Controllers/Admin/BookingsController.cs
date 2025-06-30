@@ -281,11 +281,6 @@ namespace Soccer.Business_Logic.Controllers.Admin
                     return BadRequest("Lịch không khả dụng hoặc không tồn tại");
                 }
 
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == request.UserId && u.IsActive);
-                if (user == null)
-                {
-                    return BadRequest("Người dùng không tồn tại hoặc không hoạt động");
-                }
 
                 var booking = new Booking
                 {

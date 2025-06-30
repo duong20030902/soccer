@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Soccer.Business_Logic.DTO;
 using Soccer.Data_Access.Models;
@@ -17,8 +18,9 @@ namespace Soccer.Business_Logic.Controllers
             _context = context;
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<BookingResponseDto>> CreateBooking(CreateBookingRequest request)
+        public async Task<ActionResult<BookingResponseDto>> CreateBooking(CreateBookingRequestUser request)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -67,13 +69,8 @@ namespace Soccer.Business_Logic.Controllers
                 };
 
                 _context.Bookings.Add(booking);
-
-                // Cập nhật status của schedule từ Available thành Booked
-                schedule.Status = "Available";
-
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-
                 var response = new BookingResponseDto
                 {
                     BookingId = booking.BookingId,
@@ -89,6 +86,7 @@ namespace Soccer.Business_Logic.Controllers
                     Notes = booking.Notes
                 };
 
+                // Trả về DTO thay vì entity:
                 return CreatedAtAction(nameof(GetBooking), new { id = booking.BookingId }, response);
             }
             catch (Exception ex)
@@ -238,6 +236,7 @@ namespace Soccer.Business_Logic.Controllers
             }
         }
 
+
         [HttpPut("{id}/cancel")]
         public async Task<IActionResult> CancelBooking(int id)
         {
@@ -343,15 +342,15 @@ namespace Soccer.Business_Logic.Controllers
 
         private int? GetCurrentUserId()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdClaim = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (int.TryParse(userIdClaim, out int userId))
             {
                 return userId;
             }
 
-            // Hardcode cho test
-            return 1;
+            return null; // không hardcode
         }
+
     }
 
     // THÊM MỚI: Request model cho update status
@@ -359,4 +358,7 @@ namespace Soccer.Business_Logic.Controllers
     {
         public string Status { get; set; } = null!;
     }
+
+
 }
+

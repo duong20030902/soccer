@@ -1032,57 +1032,52 @@
             };
 
             // Submit booking to Google Sheet
-            window.submitBooking = function () {
-                const formData = {
-                    fieldName: document.getElementById('modalFieldName').textContent,
-                    time: document.getElementById('modalTime').textContent,
-                    customerName: document.getElementById('customerName').value,
-                    phoneNumber: document.getElementById('phoneNumber').value,
-                    notes: document.getElementById('notes').value
-                };
+        window.submitBooking = async function () {
+            const scheduleId = document.getElementById('scheduleId').value;
+            const notes = document.getElementById('notes').value;
 
-                console.log('Submitting booking:', formData);
+            if (!scheduleId) {
+                document.getElementById('modalError').textContent = 'Thiếu mã lịch sân.';
+                document.getElementById('modalError').style.display = 'block';
+                return;
+            }
 
-                // Basic validation
-                if (!formData.customerName || !formData.phoneNumber) {
-                    document.getElementById('modalError').textContent = 'Vui lòng điền đầy đủ thông tin.';
-                    document.getElementById('modalError').style.display = 'block';
-                    return;
-                }
+            document.getElementById('modalLoading').style.display = 'block';
+            document.getElementById('modalError').style.display = 'none';
 
-                // Phone number validation (Vietnamese phone numbers)
-                const phoneRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
-                if (!phoneRegex.test(formData.phoneNumber)) {
-                    document.getElementById('modalError').textContent = 'Số điện thoại không hợp lệ.';
-                    document.getElementById('modalError').style.display = 'block';
-                    return;
-                }
-
-                document.getElementById('modalLoading').style.display = 'block';
-                document.getElementById('modalError').style.display = 'none';
-
-                // Send data to Google Apps Script
-                fetch('https://script.google.com/macros/s/AKfycbzCUJk0z8pty1wQbez-9ySGLoACqx66pSXxSu9p1rLlnZ4cVZ-gSGlZyccqY-XiSkg7/exec', {
+            try {
+                const response = await fetch('https://api.soccer.soccertips.org/api/Booking', {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/json',
+                        // Nếu API yêu cầu xác thực, thêm access token:
+                        // 'Authorization': `Bearer ${yourToken}`
+                        'Authorization': `Bearer ${token}`
                     },
-                    body: new URLSearchParams(formData).toString()
-                })
-                .then(() => {
-                    document.getElementById('modalLoading').style.display = 'none';
-                    alert('Đặt sân thành công! Thông tin đã được gửi. Vui lòng để ý điện thoại để nhận cuộc gọi xác nhận từ chúng tôi nhé!');
-                    closeModal();
-                    $('#searchForm').submit(); // Refresh fields grid
-                })
-                .catch(error => {
-                    document.getElementById('modalLoading').style.display = 'none';
-                    console.error('Booking failed:', error);
-                    document.getElementById('modalError').textContent = 'Có lỗi xảy ra khi gửi dữ liệu. Vui lòng thử lại.';
-                    document.getElementById('modalError').style.display = 'block';
+                    body: JSON.stringify({
+                        scheduleId: parseInt(scheduleId),
+                        notes: notes
+                    })
                 });
-            };
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert('Đặt sân thành công! Mã booking: ' + data.bookingId);
+                    closeModal();
+                    $('#searchForm').submit(); // Làm mới lại danh sách sân
+                } else {
+                    const errorText = await response.text();
+                    document.getElementById('modalError').textContent = errorText || 'Có lỗi xảy ra.';
+                    document.getElementById('modalError').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('modalError').textContent = 'Không thể kết nối tới server.';
+                document.getElementById('modalError').style.display = 'block';
+            } finally {
+                document.getElementById('modalLoading').style.display = 'none';
+            }
+        };
 
             // Cải thiện updateFieldsGrid function
             function updateFieldsGrid(fields) {
