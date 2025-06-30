@@ -12,7 +12,7 @@ namespace Soccer.Font_end.Areas.Services
         public PaymentMethodService(HttpClient httpClient)
         {
             _httpClient = new HttpClient();
-            _apiBaseUrl = "https://localhost:7237/api/admin/PaymentMethods";
+            _apiBaseUrl = "https://api.soccer.soccertips.org/api/admin/PaymentMethods";
             _jsonOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,

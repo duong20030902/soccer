@@ -12,7 +12,7 @@ namespace Soccer.Font_end.Areas.Services
         public ShippingMethodService(HttpClient httpClient)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            _apiBaseUrl = "https://localhost:7237/api/admin/ShippingMethods";
+            _apiBaseUrl = "https://api.soccer.soccertips.org/api/admin/ShippingMethods";
             _jsonOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,

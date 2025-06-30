@@ -7,9 +7,7 @@
     string bankOwner = "Nguyen Viet Nam";
 }
 
-<!-- Use <text> to ensure CSS is not parsed as Razor code -->
 <style>
-    <text >
     /* Modern Cart Page Design - Đồng nhất với Shop Theme */
     .cart-page {
         padding: 20px 0;
@@ -40,17 +38,14 @@
             animation: float 6s ease-in-out infinite;
         }
 
-    float {
-        0%, 100%
+    @@keyframes float {
+        0%, 100% {
+            transform: translate(-50%, -50%) translateY(0px);
+        }
 
-    {
-        transform: translate(-50%, -50%) translateY(0px);
-    }
-
-    50% {
-        transform: translate(-50%, -50%) translateY(-15px);
-    }
-
+        50% {
+            transform: translate(-50%, -50%) translateY(-15px);
+        }
     }
 
     .innerbanner {
@@ -106,17 +101,14 @@
             animation: gradient-flow 3s linear infinite;
         }
 
-    gradient-flow {
-        0%
+    @@keyframes gradient-flow {
+        0% {
+            background-position: 0% 0%;
+        }
 
-    {
-        background-position: 0% 0%;
-    }
-
-    100% {
-        background-position: 200% 0%;
-    }
-
+        100% {
+            background-position: 200% 0%;
+        }
     }
 
     .heading.small {
@@ -150,22 +142,19 @@
     .cart-content {
         display: grid;
         grid-template-columns: 2fr 1fr;
-        gap: 20px;
+        gap: 30px;
         margin-bottom: 20px;
     }
 
     /* Cart Table Section */
     .cart-table-section {
         background: #FFFFFF;
-        border-radius: 10px;
+        border-radius: 15px;
         box-shadow: 0 8px 25px rgba(255, 107, 53, 0.12);
-        padding: 10px; /* Reduced padding */
+        padding: 25px;
         border: 2px solid #FF8C42;
         position: relative;
         overflow: hidden;
-        width: 100%;
-        max-height: 200px; /* Reduced height */
-        overflow-y: auto; /* Vertical scrolling */
     }
 
         .cart-table-section::before {
@@ -176,45 +165,46 @@
             right: -2px;
             bottom: -2px;
             background: linear-gradient(45deg, #FF6B35, #FFD23F, #C1272D, #FF6B35);
-            border-radius: 10px;
+            border-radius: 15px;
             z-index: -1;
             opacity: 0.1;
         }
 
     .section-title {
         font-family: 'Oswald', sans-serif;
-        font-size: 1.2rem; /* Reduced size */
+        font-size: 1.8rem;
         color: #2D3748;
-        margin-bottom: 10px; /* Reduced margin */
+        margin-bottom: 20px;
         text-transform: uppercase;
         font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 6px; /* Reduced gap */
+        gap: 12px;
+        background: linear-gradient(135deg, #C1272D, #FF6B35);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
         .section-title::before {
-            content: '📋';
-            font-size: 1rem; /* Reduced size */
+            content: '🛒';
+            font-size: 1.5rem;
+            -webkit-text-fill-color: initial;
         }
 
     .table-responsive {
-        border-radius: 10px;
-        overflow-x: auto; /* Horizontal scrolling */
-        overflow-y: hidden; /* Prevent vertical scrollbar conflict */
+        border-radius: 12px;
+        overflow: hidden;
         box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        min-width: 600px; /* Reduced width */
-        white-space: nowrap;
+        background: white;
     }
 
     .table {
         font-family: 'Open Sans', sans-serif;
-        background-color: transparent;
+        background-color: white;
         margin-bottom: 0;
         border-collapse: collapse;
-        border-spacing: 0;
         width: 100%;
-        table-layout: fixed;
     }
 
     .thead-dark th {
@@ -223,13 +213,12 @@
         font-family: 'Oswald', sans-serif;
         text-transform: uppercase;
         font-weight: 700;
-        letter-spacing: 0.3px; /* Reduced spacing */
+        letter-spacing: 1px;
         border: none;
-        padding: 6px 3px; /* Reduced padding */
-        font-size: 0.6rem; /* Reduced size */
+        padding: 18px 15px;
+        font-size: 0.9rem;
         position: relative;
-        white-space: nowrap;
-        width: 60px; /* Reduced width */
+        text-align: center;
     }
 
         .thead-dark th::after {
@@ -238,32 +227,28 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 1px; /* Reduced height */
+            height: 3px;
             background: #FFD23F;
         }
 
     .table td, .table th {
-        padding: 4px 3px; /* Reduced padding */
+        padding: 15px;
         vertical-align: middle;
         text-align: center;
         border: none;
         border-bottom: 1px solid #F1F5F9;
         font-weight: 500;
-        white-space: nowrap;
-        width: 60px; /* Reduced width */
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     .table tbody tr {
-        transition: none;
+        transition: all 0.3s ease;
         background: #FFFFFF;
     }
 
         .table tbody tr:hover {
-            background: #FFFFFF;
-            transform: none;
-            box-shadow: none;
+            background: linear-gradient(135deg, #FFF8F6, #FFF0ED);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.1);
         }
 
         .table tbody tr:last-child td {
@@ -274,28 +259,28 @@
         font-weight: 700;
         background: linear-gradient(135deg, #FFD23F, #FF8C42);
         color: #1A1A1A;
-        font-size: 0.9rem; /* Reduced size */
+        font-size: 1.1rem;
         border: none;
-        padding: 6px 3px; /* Reduced padding */
+        padding: 20px 15px;
         text-transform: uppercase;
-        letter-spacing: 0.3px; /* Reduced spacing */
-        width: 80px; /* Adjusted width */
+        letter-spacing: 1px;
     }
 
     /* Product Image in Table */
     .product-image-cell img {
-        width: 25px; /* Reduced size */
-        height: 25px; /* Reduced size */
+        width: 80px;
+        height: 80px;
         object-fit: cover;
-        border-radius: 3px; /* Reduced radius */
-        border: 1px solid #E0E0E0;
+        border-radius: 12px;
+        border: 3px solid #FFD23F;
         transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(255, 107, 53, 0.2);
     }
 
         .product-image-cell img:hover {
             border-color: #FF6B35;
-            transform: scale(1.02); /* Reduced scale */
-            box-shadow: 0 2px 5px rgba(255, 107, 53, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(255, 107, 53, 0.3);
         }
 
     /* Quantity Controls */
@@ -303,204 +288,235 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 3px; /* Reduced gap */
+        gap: 8px;
+        background: linear-gradient(135deg, #FFF8F6, #FFF0ED);
+        border-radius: 8px;
+        padding: 4px;
+        border: 2px solid #FFD23F;
     }
 
     .btn-quantity {
-        background: linear-gradient(135deg, #FF6B35, #C1272D);
-        color: #FFFFFF;
+        width: 30px;
+        height: 30px;
         border: none;
-        width: 16px; /* Reduced size */
-        height: 16px; /* Reduced size */
-        border-radius: 2px; /* Reduced radius */
-        font-size: 0.6rem; /* Reduced size */
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: white;
+        border-radius: 6px;
         cursor: pointer;
-        transition: all 0.3s ease;
+        font-weight: 700;
+        transition: all 0.2s ease;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
         .btn-quantity:hover {
-            background: linear-gradient(135deg, #C1272D, #8B0000);
-            transform: scale(1.02); /* Reduced scale */
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
         }
 
     .quantity-display {
-        background: #FFD23F;
-        color: #1A1A1A;
-        padding: 1px 2px; /* Reduced padding */
-        border-radius: 2px; /* Reduced radius */
-        font-weight: 600;
-        min-width: 18px; /* Reduced width */
+        min-width: 30px;
         text-align: center;
+        font-weight: 700;
+        color: #C1272D;
     }
 
-    /* Size Dropdown */
-    .size-select {
-        padding: 1px 2px; /* Reduced padding */
-        border-radius: 2px; /* Reduced radius */
-        border: 1px solid #FF6B35;
-        background: #FFFFFF;
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 600;
-        color: #2D3748;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        min-width: 35px; /* Reduced width */
-    }
-
-        .size-select:hover {
-            border-color: #FFD23F;
-            background: #F8F9FA;
-        }
-
-    /* Description Input */
-    .description-input {
-        padding: 1px 2px; /* Reduced padding */
-        border-radius: 2px; /* Reduced radius */
-        border: 1px solid #FF6B35;
-        background: #FFFFFF;
-        font-family: 'Open Sans', sans-serif;
+    /* Form Controls */
+    .size-select, .description-input {
+        padding: 8px 12px;
+        border: 2px solid #FFD23F;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        transition: border-color 0.2s ease;
+        background: white;
         font-weight: 500;
-        color: #2D3748;
-        width: 45px; /* Reduced width */
-        transition: all 0.3s ease;
     }
 
-        .description-input:focus {
-            border-color: #FFD23F;
+        .size-select:focus, .description-input:focus {
             outline: none;
-            box-shadow: 0 0 2px rgba(255, 107, 53, 0.2);
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
         }
 
     /* Remove Button */
     .btn-remove {
-        background: linear-gradient(135deg, #C1272D, #8B0000);
-        color: #FFFFFF;
+        background: linear-gradient(135deg, #C1272D, #991b1b);
+        color: white;
         border: none;
-        padding: 2px 5px; /* Reduced padding */
-        border-radius: 2px; /* Reduced radius */
-        font-family: 'Oswald', sans-serif;
-        text-transform: uppercase;
-        font-weight: 700;
-        font-size: 0.5rem; /* Reduced size */
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
 
         .btn-remove:hover {
-            background: linear-gradient(135deg, #FF6B35, #C1272D);
             transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(255, 107, 53, 0.2);
+            box-shadow: 0 4px 8px rgba(193, 39, 45, 0.3);
         }
 
-    /* Payment Summary Section */
+    /* Payment Summary */
     .payment-summary {
         background: #FFFFFF;
-        border-radius: 10px;
+        border-radius: 15px;
         box-shadow: 0 8px 25px rgba(255, 107, 53, 0.12);
-        padding: 15px;
+        padding: 25px;
         border: 2px solid #FF8C42;
-        height: fit-content;
         position: sticky;
-        top: 15px;
+        top: 20px;
+        height: fit-content;
     }
 
     .summary-title {
         font-family: 'Oswald', sans-serif;
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         color: #2D3748;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         text-transform: uppercase;
         font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
+        background: linear-gradient(135deg, #C1272D, #FF6B35);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
         .summary-title::before {
             content: '💰';
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            -webkit-text-fill-color: initial;
         }
 
     .summary-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 8px 0;
+        padding: 12px 0;
         border-bottom: 1px solid #F1F5F9;
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 500;
+        font-weight: 600;
     }
 
         .summary-row:last-child {
             border-bottom: none;
             margin-top: 8px;
-            padding: 10px 0;
-            background: linear-gradient(135deg, #FFD23F, #FF8C42);
-            margin: 10px -10px -10px;
-            padding-left: 10px;
-            padding-right: 10px;
-            border-radius: 0 0 8px 8px;
+            padding-top: 16px;
+            border-top: 2px solid #FFD23F;
             font-weight: 700;
-            font-size: 1.1rem;
-            color: #1A1A1A;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 1.2rem;
+            color: #C1272D;
         }
 
-    /* Buttons */
     .btn-red {
-        background: linear-gradient(135deg, #FF6B35, #C1272D);
-        color: #FFFFFF;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-family: 'Oswald', sans-serif;
-        text-transform: uppercase;
-        font-weight: 700;
-        font-size: 0.9rem;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        box-shadow: 0 4px 10px rgba(255, 107, 53, 0.3);
         width: 100%;
-        position: relative;
-        overflow: hidden;
+        padding: 15px 20px;
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 20px;
+        font-family: 'Oswald', sans-serif;
     }
 
-        .btn-red::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-red:hover::before {
-            left: 100%;
-        }
-
         .btn-red:hover {
-            background: linear-gradient(135deg, #C1272D, #8B0000);
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
-            color: #FFFFFF;
+        }
+
+        .btn-red:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+    /* Address Form */
+    .address-form {
+        background: #FFFFFF;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.12);
+        padding: 25px;
+        border: 2px solid #FF8C42;
+        margin-bottom: 20px;
+    }
+
+        .address-form h5 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            color: #2D3748;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: linear-gradient(135deg, #C1272D, #FF6B35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2D3748;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #FFD23F;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        transition: border-color 0.2s ease;
+        background: white;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+    .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-right: 10px;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #FF6B35, #C1272D);
+        color: white;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
         }
 
     /* QR Code Section */
     .qr-container {
         background: #FFFFFF;
-        padding: 15px;
-        border-radius: 10px;
+        padding: 30px;
+        border-radius: 15px;
         box-shadow: 0 8px 25px rgba(255, 107, 53, 0.12);
         text-align: center;
         border: 2px solid #FF8C42;
-        margin-top: 15px;
         position: relative;
         overflow: hidden;
     }
@@ -519,34 +535,34 @@
 
         .qr-container h4 {
             font-family: 'Oswald', sans-serif;
-            font-size: 1.6rem;
+            font-size: 2rem;
             background: linear-gradient(135deg, #C1272D, #FF6B35);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
             text-transform: uppercase;
             font-weight: 700;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
         }
 
             .qr-container h4::before {
                 content: '📱';
-                font-size: 1.3rem;
+                font-size: 1.8rem;
                 -webkit-text-fill-color: initial;
             }
 
     .payment-info {
-        margin-bottom: 15px;
+        margin-bottom: 25px;
         font-family: 'Open Sans', sans-serif;
         color: #2D3748;
         background: linear-gradient(135deg, #FFF8F6, #FFF0ED);
-        padding: 15px;
-        border-radius: 8px;
+        padding: 20px;
+        border-radius: 12px;
         border: 2px solid #FFD23F;
         position: relative;
     }
@@ -554,23 +570,23 @@
         .payment-info::before {
             content: '💳';
             position: absolute;
-            top: -10px;
-            left: 15px;
+            top: -12px;
+            left: 20px;
             background: #FFFFFF;
-            padding: 4px 8px;
+            padding: 6px 10px;
             border-radius: 50%;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             border: 2px solid #FFD23F;
         }
 
         .payment-info p {
-            margin: 8px 0;
-            font-size: 0.9rem;
-            line-height: 1.4;
+            margin: 12px 0;
+            font-size: 1rem;
+            line-height: 1.6;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 4px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #E0E0E0;
         }
 
@@ -587,87 +603,81 @@
             }
 
     .qr-image-wrapper {
-        margin: 15px 0;
-        padding: 15px;
+        margin: 25px 0;
+        padding: 25px;
         background: linear-gradient(135deg, #F8F9FA, #E8F4FD);
-        border-radius: 8px;
-        border: 2px dashed #FF6B35;
+        border-radius: 15px;
+        border: 3px dashed #FF6B35;
         position: relative;
     }
 
         .qr-image-wrapper::before {
             content: '⚡';
             position: absolute;
-            top: 6px;
-            right: 10px;
-            font-size: 1.1rem;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
             opacity: 0.6;
             animation: pulse 2s infinite;
         }
 
-    pulse {
-        0%, 100%
+    @@keyframes pulse {
+        0%, 100% {
+            opacity: 0.6;
+            transform: scale(1);
+        }
 
-    {
-        opacity: 0.6;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 1;
-        transform: scale(1.05);
-    }
-
+        50% {
+            opacity: 1;
+            transform: scale(1.1);
+        }
     }
 
     #qrcodeImg {
-        width: 150px;
-        height: 150px;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(255, 107, 53, 0.2);
-        border: 2px solid #FFFFFF;
+        width: 200px;
+        height: 200px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+        border: 4px solid #FFFFFF;
         transition: all 0.3s ease;
     }
 
         #qrcodeImg:hover {
-            transform: scale(1.03);
-            box-shadow: 0 6px 15px rgba(255, 107, 53, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(255, 107, 53, 0.4);
         }
 
     #spinner {
-        margin: 15px auto;
-        border: 4px solid #FFD23F;
+        margin: 25px auto;
+        border: 5px solid #FFD23F;
         border-radius: 50%;
-        border-top: 4px solid #FF6B35;
-        width: 40px;
-        height: 40px;
+        border-top: 5px solid #FF6B35;
+        width: 50px;
+        height: 50px;
         animation: spin 1s linear infinite;
     }
 
-    spin {
-        0%
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
 
-    {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-
+        100% {
+            transform: rotate(360deg);
+        }
     }
 
     #successMessage {
         color: #28a745;
         font-family: 'Oswald', sans-serif;
         font-weight: 700;
-        margin-top: 10px;
-        font-size: 1rem;
+        margin-top: 20px;
+        font-size: 1.2rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        padding: 10px;
+        letter-spacing: 1px;
+        padding: 15px;
         background: linear-gradient(135deg, #D4EDDA, #C3E6CB);
-        border-radius: 8px;
+        border-radius: 12px;
         border: 2px solid #28a745;
         position: relative;
         overflow: hidden;
@@ -675,8 +685,8 @@
 
         #successMessage::before {
             content: '✅';
-            margin-right: 6px;
-            font-size: 1.2rem;
+            margin-right: 10px;
+            font-size: 1.5rem;
         }
 
     /* Alert Styling */
@@ -756,123 +766,11 @@
             text-decoration: none;
         }
 
-    /* Responsive Design */
-    (max-width: 1024px) {
-        .cart-content
-
-    {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .payment-summary {
-        position: static;
-    }
-
-    }
-
-    (max-width: 768px) {
-        .bannerHeadline
-
-    {
-        font-size: 2rem;
-    }
-
-    .heading.small {
-        font-size: 1.8rem;
-    }
-
-    .cart-table-section,
-    .payment-summary,
-    .qr-container {
-        padding: 10px;
-        margin: 0 5px;
-    }
-
-    .table-responsive {
-        overflow-x: auto;
-    }
-
-    .table {
-        min-width: 500px; /* Reduced width */
-    }
-
-        .table td, .table th {
-            padding: 4px 2px; /* Reduced padding */
-            font-size: 0.8rem; /* Reduced size */
-        }
-
-    .product-image-cell img {
-        width: 20px; /* Reduced size */
-        height: 20px; /* Reduced size */
-    }
-
-    #qrcodeImg {
-        width: 120px;
-        height: 120px;
-    }
-
-    }
-
-    (max-width: 480px) {
-        .container
-
-    {
-        padding: 0 5px;
-    }
-
-    .bannerHeadline {
-        font-size: 1.5rem;
-    }
-
-    .heading.small {
-        font-size: 1.4rem;
-    }
-
-    .table {
-        min-width: 400px; /* Reduced width */
-    }
-
-    .btn-red {
-        padding: 8px 15px;
-        font-size: 0.8rem;
-    }
-
-    .payment-info p {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 3px;
-    }
-
-    }
-
-    /* Loading States */
-    .loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-    }
-
-    .loading-spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid #FFD23F;
-        border-top: 4px solid #FF6B35;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
+    /* Modal Styles */
     .modal {
         display: none;
         position: fixed;
-        z-index: 1;
+        z-index: 1000;
         left: 0;
         top: 0;
         width: 100%;
@@ -884,55 +782,110 @@
     .modal-content {
         background-color: #fefefe;
         margin: 15% auto;
-        padding: 10px;
-        border: 1px solid #888;
+        padding: 20px;
+        border: 2px solid #FF8C42;
         width: 80%;
-        max-width: 350px;
-        border-radius: 5px;
+        max-width: 400px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
     }
 
     .close {
-        color: #aaa;
+        color: #FF6B35;
         float: right;
-        font-size: 20px;
+        font-size: 28px;
         font-weight: bold;
+        cursor: pointer;
+        transition: color 0.2s ease;
     }
 
         .close:hover,
         .close:focus {
-            color: black;
+            color: #C1272D;
             text-decoration: none;
-            cursor: pointer;
         }
 
-    .form-group {
-        margin-bottom: 10px;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 4px;
-        box-sizing: border-box;
-    }
-
-    .btn {
-        padding: 6px 0px;
-        cursor: pointer;
-        width: 160px;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        margin-top: 10px;
-    }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
+    /* Responsive Design */
+    @@media (max-width: 1024px) {
+        .cart-content {
+            grid-template-columns: 1fr;
+            gap: 20px;
         }
 
-    </text >
+        .payment-summary {
+            position: static;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .bannerHeadline {
+            font-size: 2rem;
+        }
+
+        .heading.small {
+            font-size: 1.8rem;
+        }
+
+        .cart-table-section,
+        .payment-summary,
+        .qr-container,
+        .address-form {
+            padding: 15px;
+            margin: 0 10px 20px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            min-width: 700px;
+        }
+
+            .table td, .table th {
+                padding: 10px 8px;
+                font-size: 0.8rem;
+            }
+
+        .product-image-cell img {
+            width: 60px;
+            height: 60px;
+        }
+
+        #qrcodeImg {
+            width: 160px;
+            height: 160px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .container {
+            padding: 0 10px;
+        }
+
+        .bannerHeadline {
+            font-size: 1.5rem;
+        }
+
+        .heading.small {
+            font-size: 1.4rem;
+        }
+
+        .table {
+            min-width: 600px;
+        }
+
+        .btn-red {
+            padding: 12px 16px;
+            font-size: 0.9rem;
+        }
+
+        .payment-info p {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+    }
 </style>
 
 <!-- Hero Banner -->
@@ -956,6 +909,7 @@
         </div>
 
         <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+
         <div id="emptyCart" class="empty-cart" style="display: none;">
             <h3>Giỏ hàng trống</h3>
             <p>Bạn chưa có sản phẩm nào trong giỏ hàng. Hãy khám phá cửa hàng của chúng tôi!</p>
@@ -976,7 +930,6 @@
                                 <th>Size</th>
                                 <th>Số lượng</th>
                                 <th>Đơn giá</th>
-
                                 <th>Mô tả</th>
                                 <th>Hành động</th>
                             </tr>
@@ -1020,30 +973,30 @@
             <h5>Địa chỉ giao hàng</h5>
             <div class="form-group">
                 <label for="addressSelect">Chọn địa chỉ đã lưu:</label>
-                <select id="addressSelect" class="form-control">
+                <select id="addressSelect" class="form-control" style="font-size: 12px;padding:0px 12px">
                     <option value="">-- Chọn địa chỉ hoặc thêm mới --</option>
                 </select>
             </div>
             <button id="addAddressBtn" class="btn btn-primary">Thêm Địa chỉ</button>
-            <button id="updateAddressBtn" class="btn btn-primary" style="display: none;">Sửa  Địa Chỉ</button>
+            <button id="updateAddressBtn" class="btn btn-primary" style="display: none;">Sửa Địa Chỉ</button>
         </div>
 
         <!-- Add Address Modal -->
         <div id="addAddressModal" class="modal">
             <div class="modal-content">
-                <span class="close">×</span>
+                <span class="close">&times;</span>
                 <h5>Thêm Địa chỉ Mới</h5>
                 <div class="form-group">
                     <label for="addModalRecipientName">Tên người nhận:</label>
-                    <input type="text" id="addModalRecipientName" class="form-control">
+                    <input type="text" id="addModalRecipientName" class="form-control" style="font-size: 16px;">
                 </div>
                 <div class="form-group">
                     <label for="addModalStreetAddress">Địa chỉ:</label>
-                    <input type="text" id="addModalStreetAddress" class="form-control">
+                    <input type="text" id="addModalStreetAddress" class="form-control" style="font-size: 16px;">
                 </div>
                 <div class="form-group">
                     <label for="addModalCityProvince">Thành phố/Tỉnh:</label>
-                    <input type="text" id="addModalCityProvince" class="form-control">
+                    <input type="text" id="addModalCityProvince" class="form-control" style="font-size: 16px;">
                 </div>
                 <div class="form-group" hidden>
                     <label for="addModalPostalCode">Mã bưu điện:</label>
@@ -1053,22 +1006,22 @@
             </div>
         </div>
 
-        <!-- Update Address Modal (unchanged, included for completeness) -->
+        <!-- Update Address Modal -->
         <div id="addressModal" class="modal">
             <div class="modal-content">
-                <span class="close">×</span>
+                <span class="close">&times;</span>
                 <h5>Chỉnh sửa Địa chỉ</h5>
                 <div class="form-group">
                     <label for="modalRecipientName">Tên người nhận:</label>
-                    <input type="text" id="modalRecipientName" class="form-control">
+                    <input type="text" id="modalRecipientName" class="form-control" style="font-size: 16px;">
                 </div>
                 <div class="form-group">
                     <label for="modalStreetAddress">Địa chỉ:</label>
-                    <input type="text" id="modalStreetAddress" class="form-control">
+                    <input type="text" id="modalStreetAddress" class="form-control" style="font-size: 16px;">
                 </div>
                 <div class="form-group">
                     <label for="modalCityProvince">Thành phố/Tỉnh:</label>
-                    <input type="text" id="modalCityProvince" class="form-control">
+                    <input type="text" id="modalCityProvince" class="form-control" style="font-size: 16px;">
                 </div>
                 <div class="form-group" hidden>
                     <label for="modalPostalCode">Mã bưu điện:</label>
@@ -1090,6 +1043,7 @@
         </div>
     </div>
 </section>
+
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -1121,7 +1075,7 @@
                     if (redirectToLogin) {
                         window.location.href = '/Auth/Login';
                     }
-                }, 2000); // Hide after 2 seconds, redirect if needed
+                }, 3000);
             }
 
             // Lấy dữ liệu giỏ hàng từ API
@@ -1193,7 +1147,8 @@
                     const row = `
                         <tr>
                             <td class="product-image-cell">
-                                <img src="${getImageUrl(item.imageUrl)}" alt="${item.productName}"
+                                <img src="${getImageUrl(item.imageUrl)}"
+                        alt="${item.productName}"
                                      onerror="this.src='https://i.pinimg.com/564x/f8/e3/d9/f8e3d945eeb3f45efa550fa7c03ba79c.jpg';" />
                             </td>
                             <td><strong>${item.productName}</strong></td>
@@ -1211,7 +1166,6 @@
                                 </div>
                             </td>
                             <td><strong style="color: #C1272D;">${item.unitPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></td>
-
                             <td><input type="text" class="description-input" data-product-id="${item.productId}" data-size-id="${item.sizeId}" value="${item.description || ''}" placeholder="Nhập mô tả..."></td>
                             <td><button class="btn-remove" data-product-id="${item.productId}" data-size-id="${item.sizeId}">Xóa</button></td>
                         </tr>
@@ -1219,7 +1173,18 @@
                     cartBody.innerHTML += row;
                 }
 
-                // Thêm sự kiện cho các nút xóa
+                // Thêm sự kiện cho các nút
+                attachEventListeners();
+
+                // Cập nhật tổng tiền
+                totalCartPriceElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                subtotalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                totalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            }
+
+            // Gắn sự kiện cho các nút
+            function attachEventListeners() {
+                // Nút xóa
                 document.querySelectorAll('.btn-remove').forEach(button => {
                     button.addEventListener('click', () => {
                         const productId = button.getAttribute('data-product-id');
@@ -1227,7 +1192,7 @@
                     });
                 });
 
-                // Thêm sự kiện cho các nút tăng/giảm số lượng
+                // Nút tăng/giảm số lượng
                 document.querySelectorAll('.btn-minus').forEach(button => {
                     button.addEventListener('click', async () => {
                         const productId = button.getAttribute('data-product-id');
@@ -1248,6 +1213,7 @@
                     });
                 });
 
+                // Select size
                 document.querySelectorAll('.size-select').forEach(select => {
                     select.addEventListener('change', async () => {
                         const productId = select.getAttribute('data-product-id');
@@ -1263,6 +1229,7 @@
                     });
                 });
 
+                // Input mô tả
                 document.querySelectorAll('.description-input').forEach(input => {
                     input.addEventListener('blur', async () => {
                         const productId = input.getAttribute('data-product-id');
@@ -1275,10 +1242,6 @@
                         }
                     });
                 });
-
-                totalCartPriceElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-                subtotalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-                totalElement.textContent = totalCartPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             }
 
             // Cập nhật giỏ hàng
@@ -1311,10 +1274,41 @@
                 }
             }
 
+            // Xóa sản phẩm
+            async function removeItem(productId) {
+                try {
+                    const url = `https://api.soccer.soccertips.org/api/cart/remove?productId=${Number(productId)}`;
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'include',
+                    });
+
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.message || `HTTP error! Status: ${response.status}`);
+                    }
+
+                    await fetchCartData();
+                    document.getElementById('errorMessage').style.display = 'none';
+                    return data;
+                } catch (error) {
+                    console.error('Error details:', error);
+                    showErrorMessage(`Lỗi khi xóa sản phẩm: ${error.message}`);
+                    throw error;
+                }
+            }
+
             function getImageUrl(imageUrl) {
-                return imageUrl?.startsWith("http://") || imageUrl?.startsWith("https://")
-                    ? imageUrl
-                    : `/images/${(imageUrl ?? "default-product").replace(/[ /]/g, "_")}.jpg`;
+                if (!imageUrl || imageUrl.trim() === "") {
+                    return "/images/default-product.jpg";
+                }
+                if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+                    return imageUrl;
+                }
+                return `/images/${imageUrl}.jpg`;
             }
 
             // Lấy danh sách địa chỉ
@@ -1326,7 +1320,6 @@
                     });
                     if (!response.ok) {
                         if (response.status === 404) {
-                            // Không có địa chỉ, hiển thị tùy chọn mặc định
                             addressSelect.innerHTML = '<option value="">-- Chọn địa chỉ hoặc thêm mới --</option>';
                             document.getElementById('updateAddressBtn').style.display = 'none';
                             return;
@@ -1354,33 +1347,6 @@
                 }
             }
 
-            // Thêm logic xóa sản phẩm
-            async function removeItem(productId) {
-                try {
-                    const url = `https://api.soccer.soccertips.org/api/cart/remove?productId=${Number(productId)}`;
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        credentials: 'include',
-                    });
-
-                    const data = await response.json();
-                    if (!response.ok) {
-                        throw new Error(data.message || `HTTP error! Status: ${response.status}`);
-                    }
-
-                    await fetchCartData();
-                    document.getElementById('errorMessage').style.display = 'none';
-                    return data;
-                } catch (error) {
-                    console.error('Error details:', error);
-                    showErrorMessage(`Lỗi khi xóa sản phẩm: ${error.message}`);
-                    throw error;
-                }
-            }
-
             // Tạo mã QR thanh toán
             if (generateQRButton) {
                 generateQRButton.addEventListener('click', async () => {
@@ -1391,7 +1357,6 @@
                     }
 
                     try {
-                        // Kiểm tra xem người dùng có đăng nhập không bằng cách gọi API addresses
                         const response = await fetch('https://api.soccer.soccertips.org/api/Cart/addresses', {
                             method: 'GET',
                             credentials: 'include'
@@ -1425,7 +1390,7 @@
                         generateQRButton.disabled = true;
 
                         setTimeout(() => {
-                            generateQRButton.innerHTML = '✅ QR đã tạo';
+                            generateQRButton.innerHTML = '✅ QR đã tạo - Đang chờ thanh toán';
                             startPaymentCheck();
                         }, 1000);
                     } catch (error) {
@@ -1471,7 +1436,7 @@
                     console.log("Danh sách giao dịch:", transactions);
 
                     const transaction = transactions.find(item =>
-                        item["content"] === paymentContent &&
+                        item["content"]?.includes(paymentContent) &&
                         item["price"] == totalCartPrice &&
                         item["Số tài khoản"] === bankAccount
                     );
@@ -1484,7 +1449,7 @@
                             if (spinner) spinner.style.display = "none";
                             if (successMessage) {
                                 successMessage.style.display = "block";
-                                successMessage.textContent = `Đơn hàng đã được xác nhận! Mã đơn hàng: ${confirmationResult.orderId}`;
+                                successMessage.textContent = `✅ Đơn hàng đã được xác nhận! Mã đơn hàng: ${confirmationResult.orderId}`;
                             }
                             createConfetti();
 
@@ -1567,7 +1532,7 @@
 
                 const style = document.createElement('style');
                 style.textContent = `
-        fall {
+                    @@keyframes fall {
                         0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
                         100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
                     }
@@ -1580,10 +1545,9 @@
                 }, 4000);
             }
 
-            // Address Editing Logic
+            // Address management
             const updateAddressBtn = document.getElementById('updateAddressBtn');
             const addressModal = document.getElementById('addressModal');
-            const closeModal = document.querySelectorAll('.close');
             const saveAddressBtn = document.getElementById('saveAddressBtn');
             const addAddressBtn = document.getElementById('addAddressBtn');
             const addAddressModal = document.getElementById('addAddressModal');
@@ -1637,7 +1601,6 @@
                     PostalCode: document.getElementById('modalPostalCode').value
                 };
 
-                // Client-side validation
                 if (!updatedAddress.RecipientName || !updatedAddress.StreetAddress || !updatedAddress.CityProvince || !updatedAddress.PostalCode) {
                     showErrorMessage('Vui lòng điền đầy đủ thông tin địa chỉ!');
                     return;
@@ -1669,26 +1632,8 @@
             });
 
             // Open add address modal
-            addAddressBtn.addEventListener('click', async () => {
-                try {
-                    // Kiểm tra xem người dùng có đăng nhập không
-                    const response = await fetch('https://api.soccer.soccertips.org/api/Cart/addresses', {
-                        method: 'GET',
-                        credentials: 'include'
-                    });
-                    if (response.status === 401) {
-                        showErrorMessage('Bạn cần đăng nhập để thêm địa chỉ!', true);
-                        return;
-                    }
-                    document.getElementById('addModalRecipientName').value = '';
-                    document.getElementById('addModalStreetAddress').value = '';
-                    document.getElementById('addModalCityProvince').value = '';
-                    document.getElementById('addModalPostalCode').value = '123';
-                    addAddressModal.style.display = 'block';
-                } catch (error) {
-                    console.error('Error checking login status:', error);
-                    showErrorMessage('Lỗi khi kiểm tra trạng thái đăng nhập: ' + error.message);
-                }
+            addAddressBtn.addEventListener('click', () => {
+                addAddressModal.style.display = 'block';
             });
 
             // Save new address
@@ -1700,7 +1645,6 @@
                     PostalCode: document.getElementById('addModalPostalCode').value
                 };
 
-                // Client-side validation
                 if (!newAddress.RecipientName || !newAddress.StreetAddress || !newAddress.CityProvince || !newAddress.PostalCode) {
                     showErrorMessage('Vui lòng điền đầy đủ thông tin địa chỉ!');
                     return;
@@ -1713,10 +1657,23 @@
                         body: JSON.stringify(newAddress),
                         credentials: 'include'
                     });
+
                     if (response.ok) {
+                        const result = await response.json();
                         alert('Địa chỉ mới đã được thêm thành công!');
                         addAddressModal.style.display = 'none';
-                        fetchUserAddresses();
+
+                        // Clear form
+                        document.getElementById('addModalRecipientName').value = '';
+                        document.getElementById('addModalStreetAddress').value = '';
+                        document.getElementById('addModalCityProvince').value = '';
+                        document.getElementById('addModalPostalCode').value = '123';
+
+                        // Refresh addresses and select the new one
+                        await fetchUserAddresses();
+                        if (result.addressId) {
+                            addressSelect.value = result.addressId;
+                        }
                     } else {
                         if (response.status === 401) {
                             showErrorMessage('Bạn cần đăng nhập để thêm địa chỉ!', true);
@@ -1731,27 +1688,122 @@
                 }
             });
 
-            // Close modals
-            closeModal.forEach(closeBtn => {
-                closeBtn.addEventListener('click', () => {
-                    addressModal.style.display = 'none';
-                    addAddressModal.style.display = 'none';
+            // Address selection change handler
+            addressSelect.addEventListener('change', () => {
+                const hasSelectedAddress = addressSelect.value !== '';
+                document.getElementById('updateAddressBtn').style.display = hasSelectedAddress ? 'inline-block' : 'none';
+            });
+
+            // Modal handling
+            const modals = document.querySelectorAll('.modal');
+            const closeButtons = document.querySelectorAll('.close');
+
+            closeButtons.forEach(closeBtn => {
+                closeBtn.addEventListener('click', (e) => {
+                    e.target.closest('.modal').style.display = 'none';
                 });
             });
 
             window.addEventListener('click', (event) => {
-                if (event.target == addressModal) {
-                    addressModal.style.display = 'none';
+                modals.forEach(modal => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+
+            // Form validation
+            function validateForm(inputs) {
+                let isValid = true;
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        input.style.borderColor = '#C1272D';
+                        input.style.backgroundColor = '#FFF5F5';
+                        isValid = false;
+                    } else {
+                        input.style.borderColor = '#FFD23F';
+                        input.style.backgroundColor = '#FFFFFF';
+                    }
+                });
+                return isValid;
+            }
+
+            // Add input event listeners for real-time validation
+            document.querySelectorAll('.form-control').forEach(input => {
+                input.addEventListener('input', () => {
+                    if (input.value.trim()) {
+                        input.style.borderColor = '#FF6B35';
+                        input.style.backgroundColor = '#FFF8F6';
+                    } else {
+                        input.style.borderColor = '#FFD23F';
+                        input.style.backgroundColor = '#FFFFFF';
+                    }
+                });
+
+                input.addEventListener('focus', () => {
+                    input.style.borderColor = '#FF6B35';
+                    input.style.backgroundColor = '#FFF8F6';
+                });
+
+                input.addEventListener('blur', () => {
+                    if (!input.value.trim()) {
+                        input.style.borderColor = '#FFD23F';
+                        input.style.backgroundColor = '#FFFFFF';
+                    }
+                });
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // ESC to close modals
+                if (e.key === 'Escape') {
+                    modals.forEach(modal => {
+                        if (modal.style.display === 'block') {
+                            modal.style.display = 'none';
+                        }
+                    });
                 }
-                if (event.target == addAddressModal) {
-                    addAddressModal.style.display = 'none';
+
+                // Ctrl+Enter to generate QR (if not disabled)
+                if (e.ctrlKey && e.key === 'Enter' && !generateQRButton.disabled) {
+                    generateQRButton.click();
                 }
             });
 
-            // Tải dữ liệu khi trang được load
-            fetchCartData();
-            fetchUserAddresses();
+            // Enhanced error handling
+            window.addEventListener('unhandledrejection', (event) => {
+                console.error('Unhandled promise rejection:', event.reason);
+                showErrorMessage('Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.');
+            });
+
+            // Initialize everything
+            async function initialize() {
+                try {
+                    console.log('🚀 Đang khởi tạo giao diện thanh toán...');
+
+                    await fetchCartData();
+                    await fetchUserAddresses();
+
+                    console.log('✅ Giao diện thanh toán đã sẵn sàng!');
+                } catch (error) {
+                    console.error('❌ Lỗi khởi tạo:', error);
+                    showErrorMessage('Lỗi khởi tạo trang: ' + error.message);
+                }
+            }
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+                if (paymentCheckInterval) {
+                    clearInterval(paymentCheckInterval);
+                }
+            });
+
+            // Start the application
+            initialize();
+
+            console.log('🔥 Giao diện thanh toán với color scheme cam đỏ đã hoàn thành!');
         });
     </script>
 }
+
 

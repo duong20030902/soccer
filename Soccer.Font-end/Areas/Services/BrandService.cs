@@ -12,7 +12,7 @@ namespace Soccer.Font_end.Areas.Services
         public BrandService(HttpClient httpClient)
         {
             _httpClient = new HttpClient();
-            _apiBaseUrl = "https://localhost:7237/api/admin/brands";
+            _apiBaseUrl = "https://api.soccer.soccertips.org/api/admin/brands";
             _jsonOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,

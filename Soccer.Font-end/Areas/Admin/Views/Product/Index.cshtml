@@ -112,7 +112,22 @@
                                 </select>
                             </div>
                         </div>
+                        @{
+                            string GetImageUrl(string imageUrl)
+                            {
+                                if (string.IsNullOrEmpty(imageUrl))
+                                    return "/images/default-product.jpg";
 
+                                // Kiểm tra nếu là URL đầy đủ
+                                if (imageUrl.StartsWith("http://") || imageUrl.StartsWith("https://"))
+                                    return imageUrl;
+
+                                // Nếu là đường dẫn local
+                                return $"/images/{imageUrl}.jpg";
+                            }
+                        }
+
+    
                         <!-- Product Grid -->
                         <div class="row" id="productGrid">
                             @foreach (var product in Model)
@@ -124,7 +139,7 @@
                                         <div class="card-header p-2">
                                             @if (product.ImageUrls.Any())
                                             {
-                                                <img src="@product.ImageUrls.First()" class="card-img-top" alt="@product.ProductName" style="height: 200px; object-fit: cover;">
+                                                <img src="@GetImageUrl(product.ImageUrls.First())" class="card-img-top" alt="@product.ProductName" style="height: 200px; object-fit: cover;">
                                             }
                                             else
                                             {

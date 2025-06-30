@@ -13,7 +13,7 @@ namespace Soccer.Font_end.Areas.Services
         public ProductService(HttpClient httpClient)
         {
             _httpClient = new HttpClient();
-            _apiBaseUrl = "https://localhost:7237/api/admin";
+            _apiBaseUrl = "https://api.soccer.soccertips.org/api/admin";
             _jsonOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,

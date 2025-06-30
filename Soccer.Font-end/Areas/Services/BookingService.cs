@@ -12,7 +12,7 @@ namespace Soccer.Font_end.Areas.Services
         public BookingService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _apiBaseUrl = "https://localhost:7237/api";
+            _apiBaseUrl = "https://api.soccer.soccertips.org/api";
             _jsonOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
