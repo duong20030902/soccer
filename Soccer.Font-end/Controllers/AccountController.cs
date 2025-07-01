@@ -9,5 +9,9 @@ namespace Soccer.Font_end.Controllers
         {
             return View(new UserProfileViewModel());
         }
+        public IActionResult HistoryOrder()
+        {
+            return View(new UserProfileViewModel());
+        }
     }
 }

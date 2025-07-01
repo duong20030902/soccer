@@ -1068,7 +1068,7 @@
                     $('#searchForm').submit(); // Làm mới lại danh sách sân
                 } else {
                     const errorText = await response.text();
-                    document.getElementById('modalError').textContent = errorText || 'Có lỗi xảy ra.';
+                    document.getElementById('modalError').textContent = errorText || 'Vui lòng đăng nhập trước khi đặt sân.';
                     document.getElementById('modalError').style.display = 'block';
                 }
             } catch (error) {

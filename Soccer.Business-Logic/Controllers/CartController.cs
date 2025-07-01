@@ -63,6 +63,48 @@ namespace Soccer.Business_Logic.Controllers
             return Ok(cart);
         }
 
+        [HttpGet("listOrder")]
+        [Authorize] 
+        public IActionResult GetUserOrders()
+        {
+            // Lấy ID người dùng từ token hoặc session
+            var userId = GetCurrentUserId();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            // Lấy đơn hàng của user từ DB
+            var orders = _context.Orders
+                .Where(o => o.UserId == (int) userId)
+                .OrderByDescending(o => o.OrderDate)
+                .Select(o => new
+                {
+                    o.OrderId,
+                    o.OrderDate,
+                    o.TotalAmount,
+                    o.Status,
+                    Items = o.OrderItems.Select(i => new {
+                        i.ProductId,
+                        i.Product.ProductName,
+                        i.Quantity,
+                        i.UnitPrice
+                    }).ToList()
+                }).ToList();
+
+            return Ok(orders);
+        }
+        private int? GetCurrentUserId()
+        {
+            var userIdClaim = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(userIdClaim, out int userId))
+            {
+                return userId;
+            }
+
+            return null; // không hardcode
+        }
+
         [HttpGet("checkout")]
         public IActionResult Checkout()
         {
@@ -173,6 +215,7 @@ namespace Soccer.Business_Logic.Controllers
             return Ok(new { message = "Item removed successfully", cart });
         }
 
+  
         [HttpPost("confirm-payment")]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmPayment(int? addressId = null, string orderDescription = null)
